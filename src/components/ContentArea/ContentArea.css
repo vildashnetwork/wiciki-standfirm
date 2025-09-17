@@ -2,6 +2,7 @@
 .app-container {
   display: flex;
   height: 100vh;
+  /* margin-bottom: 150px; */
   position: relative;
 }
 
@@ -29,7 +30,11 @@
 
 /* Mobile adjustments for content area spacing with bottom nav */
 @media (max-width: 768px) {
-  .content-area { padding: 16px; padding-bottom: 100px; }
+  .content-area { 
+    padding: 16px; 
+    padding-bottom: 100px !important;
+    /* margin-bottom: 150px; */
+   }
 }
 
 @media (max-width: 480px) {

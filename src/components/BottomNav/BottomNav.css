@@ -52,7 +52,8 @@
 }
 
 .bottom-nav-item ion-icon { font-size: 24px; margin-bottom: 4px; transition: all 0.3s ease; }
-.bottom-nav-item.active ion-icon { transform: scale(1.1); filter: drop-shadow(0 0 8px var(--accent-red)); }
+.bottom-nav-item.active ion-icon { transform: scale(1.1); filter: drop-shadow(0 0 8px var(--accent-red)); 
+}
 .bottom-nav-label { font-size: 12px; font-weight: 500; }
 
 /* Show bottom nav on mobile */

@@ -56,6 +56,11 @@
   text-align: left;
   font-size: 16px;
 }
+.nav-item.hovered {
+  background: linear-gradient(90deg, rgba(220, 20, 60, 0.1), transparent);
+  color: var(--accent-red);
+  transform: translateX(8px);
+}
 
 .nav-item:hover,
 .nav-item.active {

@@ -1,3 +1,60 @@
+🔑 How to Generate a GitHub Personal Access Token (PAT)
+
+Log in to GitHub
+Go to https://github.com
+ and make sure you’re signed in with the account you’ll use for the repo.
+
+Open Developer Settings
+
+Click your profile picture (top right).
+
+Go to Settings.
+
+Scroll down → Developer settings.
+
+Go to Personal Access Tokens
+
+In the left menu, click Personal access tokens → Tokens (classic).
+
+Click Generate new token → Generate new token (classic).
+
+Set the Token Scopes
+
+Give it a name (e.g., Repo Access).
+
+Select an expiration (e.g., 90 days).
+
+Under scopes, check ✅ repo (this gives full access to private repos you’re a collaborator on).
+
+Generate and Copy the Token
+
+Click Generate token.
+
+Copy the token shown (you won’t see it again later).
+
+💻 How to Use the Token When Cloning
+
+In your terminal, run:
+
+git clone https://github.com/OWNER-NAME/REPO-NAME.git
+
+
+Git will ask for:
+
+Username → enter your GitHub username.
+
+Password → paste the token you just generated (not your real password).
+
+⚠️ Notes
+
+Keep your PAT safe — don’t share it.
+
+If you already tried cloning before, Git might have cached wrong credentials. Run:
+
+git credential-cache exit
+
+
+
 🚀 Git Workflow Guide for manfess-web
 1️⃣ Clone the Repository
 

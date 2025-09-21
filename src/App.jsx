@@ -18,6 +18,7 @@ import LoginPage from './pages/Login/LoginPage';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import WICIKIOnboarding from './pages/Questionings/Questionings';
 import PostCreatePage from './pages/Gists/PostCreation/Add';
+import AddStatusModal from './pages/Gists/AddStatusModal/AddStatusModal';
 
 function AppContent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -109,6 +110,12 @@ function AppContent() {
                   <PostCreatePage onCreatePost={handleCreatePost} />
                 </ProtectedRoute>
               } />
+              <Route path="/story-create" element={
+                <ProtectedRoute>
+                  <AddStatusModal />
+                </ProtectedRoute>
+              } />
+
             </Routes>
           </div>
         </div>

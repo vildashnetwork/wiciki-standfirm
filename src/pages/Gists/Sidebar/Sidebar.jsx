@@ -2,7 +2,7 @@
    import SuggestedMentors from "../SuggestedMentors/SuggestedMentors"
         const Sidebar = () => {
             return (
-                <div className="sidebar">
+                <div className="sidebarshow">
                     <FriendRequests />
                     <SuggestedMentors />
                 </div>

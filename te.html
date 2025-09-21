@@ -1,553 +1,230 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Social Media Feed</title>
+    <title>Premium Status Creator</title>
     <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
     <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
-    <script src="https://unpkg.com/react@18/umd/react.development.js"></script>
-    <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
-    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
     <style>
+        :root {
+            --primary-bg: #0f0f13;
+            --secondary-bg: #1a1a23;
+            --tertiary-bg: #252536;
+            --primary-color: #6366f1;
+            --primary-hover: #4f46e5;
+            --text-primary: #f8fafc;
+            --text-secondary: #cbd5e1;
+            --divider-color: #3f3f5a;
+            --success: #22c55e;
+            --error: #ef4444;
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+            --shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+            --accent-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+        }
+
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-        }
-
-        :root {
-            --primary-bg: #0d0d0d;
-            --secondary-bg: #1a1a1a;
-            --card-bg: #262626;
-            --accent-red: #e53935;
-            --accent-red-light: #ff6f61;
-            --accent-red-dark: #ab000d;
-            --accent-white: #ffffff;
-            --text-primary: #f5f5f5;
-            --text-secondary: #dcdcdc;
-            --text-muted: #a6a6a6;
-            --border-color: #333333;
-            --glow-color: rgba(229, 57, 53, 0.25);
-            --success-color: #43a047;
-            --warning-color: #ff7043;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
         }
 
         body {
-            background-color: var(--primary-bg);
+            background-color: #0a0a10;
             color: var(--text-primary);
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            line-height: 1.6;
-        }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 16px;
-        }
-
-        .main-layout {
             display: flex;
-            gap: 24px;
-            flex-wrap: wrap;
-        }
-
-        .main-content {
-            flex: 1;
-            min-width: 300px;
-            max-width: 600px;
-        }
-
-        .sidebar {
-            width: 320px;
-            min-width: 280px;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            margin-bottom: 16px;
-            overflow: hidden;
-        }
-
-        .card-padding {
-            padding: 16px;
-        }
-
-        /* Stories Section */
-        .stories-container {
-            display: flex;
-            gap: 12px;
-            overflow-x: auto;
-            padding-bottom: 8px;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .stories-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .story-item {
-            flex-shrink: 0;
-            cursor: pointer;
-            text-align: center;
-        }
-
-        .story-card {
-            width: 80px;
-            height: 112px;
-            background-color: var(--secondary-bg);
-            border-radius: 12px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
             justify-content: center;
-            position: relative;
-            overflow: hidden;
-            border: 1px solid var(--border-color);
-            transition: all 0.3s ease;
-            margin-bottom: 8px;
-        }
-
-        .story-card:hover {
-            box-shadow: 0 0 20px var(--glow-color);
-        }
-
-        .story-ring {
-            background: conic-gradient(from 0deg, var(--accent-red), var(--accent-red-light), var(--accent-red));
-            border-radius: 12px;
-            padding: 2px;
-        }
-
-        .story-content {
-            width: 100%;
-            height: 100%;
-            background-color: var(--card-bg);
-            border-radius: 10px;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .story-media {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 10px;
-        }
-
-        .story-avatar {
-            width: 32px;
-            height: 32px;
-            border-radius: 50%;
-            background-color: var(--secondary-bg);
-            display: flex;
             align-items: center;
-            justify-content: center;
-            position: absolute;
-            top: 8px;
-            left: 8px;
-            z-index: 2;
-            border: 2px solid white;
+            min-height: 100vh;
+            padding: 20px;
         }
 
-        .story-add-btn {
-            width: 20px;
-            height: 20px;
-            background-color: var(--accent-red);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: absolute;
-            bottom: 8px;
-            right: 8px;
-            color: white;
-            font-weight: bold;
-            font-size: 12px;
-        }
-
-        .story-name {
-            font-size: 12px;
-            color: var(--text-muted);
-            font-weight: 500;
-            margin-top: 4px;
-            padding: 0 4px;
-        }
-
-        /* Post Creation */
-        .post-creation {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background-color: var(--secondary-bg);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .post-input {
-            flex: 1;
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 24px;
-            padding: 12px 16px;
-            color: var(--text-primary);
-            outline: none;
-            cursor: pointer;
-            transition: border-color 0.3s ease;
-        }
-
-        .post-input:focus {
-            border-color: var(--accent-red);
-        }
-
-        .post-actions {
-            display: flex;
-            justify-content: space-around;
-            padding-top: 12px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .post-action-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            border-radius: 8px;
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-            flex: 1;
-            justify-content: center;
-        }
-
-        .post-action-btn:hover {
-            background-color: var(--secondary-bg);
-        }
-
-        /* Feed Posts */
-        .post-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .post-author {
-            flex: 1;
-        }
-
-        .post-author h3 {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-        }
-
-        .post-time {
-            font-size: 14px;
-            color: var(--text-muted);
-        }
-
-        .post-menu-btn {
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            padding: 4px;
-            border-radius: 4px;
-            transition: color 0.3s ease;
-        }
-
-        .post-menu-btn:hover {
-            color: var(--text-primary);
-        }
-
-        .post-content {
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            line-height: 1.5;
-        }
-
-        .post-media {
-            border-radius: 8px;
-            margin-bottom: 12px;
-            overflow: hidden;
-        }
-
-        .post-image {
-            width: 100%;
-            height: auto;
-            max-height: 400px;
-            object-fit: cover;
-            display: block;
-        }
-
-        .post-video {
-            width: 100%;
-            height: auto;
-            max-height: 400px;
-            display: block;
-        }
-
-        .post-reactions {
-            display: flex;
-            justify-content: space-around;
-            padding: 8px 0;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .reaction-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            border-radius: 8px;
-            background: none;
-            border: none;
-            color: var(--text-muted);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            flex: 1;
-            justify-content: center;
-        }
-
-        .reaction-btn:hover {
-            background-color: var(--secondary-bg);
-        }
-
-        .reaction-btn.liked {
-            color: var(--accent-red);
-        }
-
-        /* Sidebar */
-        .sidebar-section {
-            margin-bottom: 16px;
-        }
-
-        .sidebar-title {
-            font-size: 16px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 16px;
-        }
-
-        .friend-request, .mentor-suggestion {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-
-        .friend-info, .mentor-info {
-            flex: 1;
-            min-width: 0;
-        }
-
-        .friend-name, .mentor-name {
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-primary);
-            margin-bottom: 2px;
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .friend-mutual, .mentor-role {
-            font-size: 12px;
-            color: var(--text-muted);
-            white-space: nowrap;
-            overflow: hidden;
-            text-overflow: ellipsis;
-        }
-
-        .friend-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 8px;
-        }
-
-        .btn-primary {
-            background-color: var(--accent-red);
-            color: white;
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-primary:hover {
-            background-color: var(--accent-red-dark);
-        }
-
-        .btn-secondary {
-            background-color: var(--secondary-bg);
-            color: var(--text-muted);
-            border: none;
-            padding: 6px 12px;
-            border-radius: 6px;
-            font-size: 12px;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
-        }
-
-        .btn-secondary:hover {
-            background-color: var(--border-color);
-        }
-
-        /* Modals */
+        /* Modal Overlay */
         .modal-overlay {
             position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
+            inset: 0;
             background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(8px);
             display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
             z-index: 1000;
-            padding: 16px;
+            padding: 20px;
         }
 
+        /* Modal Container */
         .modal {
-            background-color: var(--card-bg);
-            border-radius: 12px;
+            background-color: var(--primary-bg);
+            border-radius: var(--border-radius);
             width: 100%;
-            max-width: 500px;
-            max-height: 90vh;
-            overflow-y: auto;
+            max-width: 1000px;
+            box-shadow: var(--shadow);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid var(--divider-color);
         }
 
+        /* Modal Header */
         .modal-header {
             display: flex;
-            align-items: center;
             justify-content: space-between;
-            padding: 16px;
-            border-bottom: 1px solid var(--border-color);
+            align-items: center;
+            padding: 20px 24px;
+            border-bottom: 1px solid var(--divider-color);
+            background-color: var(--secondary-bg);
         }
 
         .modal-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: var(--text-primary);
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--accent-gradient);
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
         }
 
         .modal-close {
             background: none;
             border: none;
-            color: var(--text-muted);
             cursor: pointer;
-            padding: 4px;
-            border-radius: 4px;
-            transition: color 0.3s ease;
+            font-size: 1.5rem;
+            color: var(--text-secondary);
+            transition: var(--transition);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
         }
 
         .modal-close:hover {
+            background-color: var(--tertiary-bg);
             color: var(--text-primary);
         }
 
+        /* Modal Body - Split Layout */
         .modal-body {
-            padding: 16px;
-        }
-
-        .form-group {
-            margin-bottom: 16px;
-        }
-
-        .form-label {
-            display: block;
-            font-size: 14px;
-            font-weight: 500;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
-        }
-
-        .form-input, .form-select, .form-textarea {
-            width: 100%;
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 12px;
-            color: var(--text-primary);
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            border-color: var(--accent-red);
-        }
-
-        .form-textarea {
-            resize: none;
-            height: 96px;
-        }
-
-        .color-picker {
             display: flex;
-            gap: 8px;
-            margin-top: 8px;
+            min-height: 500px;
         }
 
-        .color-option {
-            width: 32px;
-            height: 32px;
-            border-radius: 6px;
-            border: 2px solid transparent;
-            cursor: pointer;
-            transition: border-color 0.3s ease;
+        /* Form Section */
+        .form-section {
+            flex: 1;
+            padding: 24px;
+            border-right: 1px solid var(--divider-color);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            overflow-y: auto;
         }
 
-        .color-option.selected {
-            border-color: white;
-        }
-
-        /* Status Modal */
-        .status-modal-overlay {
-            background-color: rgba(0, 0, 0, 0.95);
-        }
-
-        .status-modal {
+        /* Preview Section */
+        .preview-section {
+            flex: 1;
+            padding: 24px;
+            background-color: var(--secondary-bg);
+            display: flex;
+            flex-direction: column;
             position: relative;
-            width: 100%;
-            max-width: 400px;
-            height: 600px;
-            background: linear-gradient(135deg, var(--secondary-bg), var(--card-bg));
-            border-radius: 12px;
+        }
+
+        .preview-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .preview-title ion-icon {
+            color: var(--primary-color);
+        }
+
+        .preview-container {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: var(--primary-bg);
+            border-radius: var(--border-radius);
+            padding: 20px;
+            position: relative;
             overflow: hidden;
+        }
+
+        .status-preview {
+            width: 280px;
+            height: 500px;
+            border-radius: 16px;
+            overflow: hidden;
+            position: relative;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
+            transition: var(--transition);
+            display: flex;
+            flex-direction: column;
+            background: var(--preview-bg, var(--selected-color, #e53935));
+            color: white;
+        }
+
+        .status-header {
+            padding: 16px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .status-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, #6366f1, #8b5cf6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 600;
+        }
+
+        .status-user-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .status-username {
+            font-weight: 600;
+            font-size: 1rem;
+        }
+
+        .status-time {
+            font-size: 0.8rem;
+            opacity: 0.8;
         }
 
         .status-content {
-            position: absolute;
-            inset: 0;
+            flex: 1;
             display: flex;
             flex-direction: column;
-            align-items: center;
             justify-content: center;
-            padding: 32px;
+            align-items: center;
+            padding: 20px;
             text-align: center;
+            word-break: break-word;
         }
 
-        .status-media-container {
-            width: 100%;
-            height: 100%;
-            position: relative;
-            overflow: hidden;
-            border-radius: 12px;
+        .status-text {
+            font-size: 1.5rem;
+            font-weight: 500;
+            line-height: 1.4;
+            max-height: 100%;
+            overflow: auto;
         }
 
         .status-media {
@@ -556,1242 +233,523 @@
             object-fit: cover;
         }
 
-        .status-text-overlay {
-            position: absolute;
-            bottom: 80px;
-            left: 16px;
-            right: 16px;
-            color: white;
-            font-size: 18px;
-            font-weight: 600;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
-            text-align: center;
-        }
-
-        .status-progress {
-            position: absolute;
-            top: 16px;
-            left: 16px;
-            right: 64px;
+        /* Form Elements */
+        .form-group {
             display: flex;
-            gap: 4px;
+            flex-direction: column;
+            gap: 8px;
         }
 
-        .progress-bar {
-            flex: 1;
-            height: 3px;
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 2px;
-        }
-
-        .progress-bar.active {
-            background-color: white;
-        }
-
-        .status-info {
-            position: absolute;
-            bottom: 16px;
-            left: 16px;
-            right: 16px;
-            color: white;
-        }
-
-        .status-name {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .status-time {
-            font-size: 12px;
-            opacity: 0.8;
-        }
-
-        .status-nav {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: background-color 0.3s ease;
-        }
-
-        .status-nav:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        .status-nav.prev {
-            left: 16px;
-        }
-
-        .status-nav.next {
-            right: 16px;
-        }
-
-        .status-close {
-            position: absolute;
-            top: 16px;
-            right: 16px;
-            background: none;
-            border: none;
-            color: white;
-            cursor: pointer;
-            padding: 8px;
-            border-radius: 50%;
-            transition: background-color 0.3s ease;
-            z-index: 10;
-        }
-
-        .status-close:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-        }
-
-        /* Comments Section */
-        .comments-section {
-            padding: 16px;
-            border-top: 1px solid var(--border-color);
-        }
-
-        .comment-input-container {
+        .form-label {
+            font-size: 0.9rem;
+            font-weight: 500;
+            color: var(--text-secondary);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 6px;
         }
 
-        .comment-input {
-            flex: 1;
-            background-color: var(--secondary-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 8px 16px;
-            color: var(--text-primary);
-            outline: none;
-            transition: border-color 0.3s ease;
-        }
-
-        .comment-input:focus {
-            border-color: var(--accent-red);
-        }
-
-        /* Load More Button */
-        .load-more-container {
-            text-align: center;
-            padding: 16px;
-        }
-
-        .load-more-btn {
-            background-color: var(--accent-red);
-            color: white;
-            border: none;
-            padding: 12px 24px;
+        .form-select,
+        .form-input,
+        .form-textarea {
+            padding: 12px 16px;
             border-radius: 8px;
-            font-weight: 500;
-            cursor: pointer;
-            transition: background-color 0.3s ease;
+            border: 1px solid var(--divider-color);
+            font-size: 1rem;
+            background-color: var(--tertiary-bg);
+            color: var(--text-primary);
+            width: 100%;
+            transition: var(--transition);
         }
 
-        .load-more-btn:hover {
-            background-color: var(--accent-red-dark);
+        .form-select:focus,
+        .form-input:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
         }
 
         /* Media Preview */
         .media-preview {
-            margin-top: 12px;
+            margin-top: 8px;
             border-radius: 8px;
             overflow: hidden;
-            max-height: 200px;
         }
 
-        .media-preview img, .media-preview video {
+        .media-preview img,
+        .media-preview video {
             width: 100%;
-            height: auto;
+            border-radius: 8px;
             max-height: 200px;
             object-fit: cover;
         }
 
+        /* Color Picker */
+        .color-picker {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .color-option {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            border: 2px solid transparent;
+            cursor: pointer;
+            transition: var(--transition);
+            position: relative;
+        }
+
+        .color-option.selected {
+            transform: scale(1.1);
+            box-shadow: 0 0 0 3px var(--text-primary);
+        }
+
+        .color-option.selected::after {
+            content: '✓';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            color: white;
+            font-weight: bold;
+            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+        }
+
+        /* Buttons */
+        .btn-primary {
+            background: var(--accent-gradient);
+            color: #fff;
+            border: none;
+            border-radius: 8px;
+            padding: 14px 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+        }
+
+        .btn-secondary {
+            background-color: var(--tertiary-bg);
+            color: var(--text-primary);
+            border: 1px solid var(--divider-color);
+            border-radius: 8px;
+            padding: 10px 16px;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-secondary:hover {
+            background-color: var(--divider-color);
+        }
+
         /* Responsive Design */
-        @media (max-width: 768px) {
-            .container {
-                padding: 8px;
-            }
-
-            .main-layout {
-                flex-direction: column;
-                gap: 16px;
-            }
-
-            .sidebar {
-                width: 100%;
-                order: -1;
-            }
-
-            .main-content {
-                max-width: none;
-            }
-
-            .story-card {
-                width: 72px;
-                height: 100px;
-            }
-
-            .story-avatar {
-                width: 28px;
-                height: 28px;
-                top: 6px;
-                left: 6px;
-            }
-
-            .story-add-btn {
-                width: 18px;
-                height: 18px;
-                bottom: 6px;
-                right: 6px;
-                font-size: 10px;
-            }
-
-            .post-actions {
-                flex-direction: column;
-                gap: 8px;
-            }
-
-            .post-action-btn {
-                justify-content: flex-start;
-            }
-
-            .post-reactions {
-                flex-direction: column;
-                gap: 8px;
-            }
-
-            .reaction-btn {
-                justify-content: flex-start;
-            }
-
-            .friend-actions {
-                flex-direction: column;
-                gap: 4px;
-            }
-
-            .modal {
-                margin: 16px;
-                max-height: calc(100vh - 32px);
-            }
-
-            .status-modal {
-                height: 500px;
-                max-width: 350px;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .card-padding {
-                padding: 12px;
-            }
-
-            .story-card {
-                width: 64px;
-                height: 88px;
-            }
-
-            .avatar {
-                width: 36px;
-                height: 36px;
-            }
-
-            .post-input {
-                padding: 10px 14px;
-                font-size: 14px;
-            }
-
+        @media (max-width: 900px) {
             .modal-body {
-                padding: 12px;
+                flex-direction: column;
             }
 
-            .status-modal {
-                height: 450px;
-                max-width: 320px;
+            .form-section {
+                border-right: none;
+                border-bottom: 1px solid var(--divider-color);
+            }
+
+            .status-preview {
+                width: 100%;
+                max-width: 280px;
+                height: 400px;
             }
         }
 
-        /* Hidden class */
-        .hidden {
-            display: none !important;
+        @media (max-width: 600px) {
+            .modal-overlay {
+                padding: 10px;
+            }
+
+            .modal-header {
+                padding: 16px;
+            }
+
+            .form-section,
+            .preview-section {
+                padding: 16px;
+            }
+
+            .status-preview {
+                height: 350px;
+            }
+        }
+
+        /* Animation for modal appearance */
+        @keyframes modalAppear {
+            from {
+                opacity: 0;
+                transform: translateY(20px) scale(0.95);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .modal {
+            animation: modalAppear 0.3s ease-out;
+        }
+
+        /* Scrollbar styling */
+        .form-section::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .form-section::-webkit-scrollbar-track {
+            background: var(--secondary-bg);
+        }
+
+        .form-section::-webkit-scrollbar-thumb {
+            background: var(--primary-color);
+            border-radius: 3px;
         }
     </style>
 </head>
+
 <body>
-    <div id="root"></div>
+    <!-- Demo button to show modal -->
+    <button id="demo-button" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
+            padding: 12px 24px; background: var(--accent-gradient); color: white; border: none; 
+            border-radius: 8px; cursor: pointer; font-weight: 600; z-index: 10;">
+        Show Status Modal
+    </button>
 
-    <script type="text/babel">
-        const { useState, useEffect } = React;
+    <!-- Modal Component -->
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 class="modal-title">Create New Status</h3>
+                <button class="modal-close" id="modal-close">
+                    <ion-icon name="close"></ion-icon>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <div class="form-group">
+                        <label class="form-label">
+                            <ion-icon name="options"></ion-icon>
+                            Status Type
+                        </label>
+                        <select class="form-select" id="status-type">
+                            <option value="text">Text Status</option>
+                            <option value="image">Image Status</option>
+                            <option value="video">Video Status</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <ion-icon name="create"></ion-icon>
+                            Content
+                        </label>
+                        <textarea class="form-textarea" placeholder="What's happening?" id="status-text"></textarea>
+                    </div>
+                    <div class="form-group" id="media-input-group">
+                        <label class="form-label">
+                            <ion-icon name="image"></ion-icon>
+                            Media URL
+                        </label>
+                        <input type="url" class="form-input" placeholder="Enter image or video URL" id="media-url" />
+                        <button type="button" class="btn-secondary" id="random-media-btn" style="margin-top: 8px">
+                            <ion-icon name="shuffle"></ion-icon>
+                            Use Random Media
+                        </button>
+                        <div class="media-preview" id="media-preview"></div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">
+                            <ion-icon name="color-palette"></ion-icon>
+                            Background Color
+                        </label>
+                        <div class="color-picker" id="color-picker">
+                            <!-- Color options will be added by JavaScript -->
+                        </div>
+                    </div>
+                    <button class="btn-primary" id="submit-btn">
+                        <ion-icon name="add-circle"></ion-icon>
+                        Add Status
+                    </button>
+                </div>
+                <div class="preview-section">
+                    <h4 class="preview-title">
+                        <ion-icon name="eye"></ion-icon>
+                        Live Preview
+                    </h4>
+                    <div class="preview-container">
+                        <div class="status-preview" id="status-preview">
+                            <div class="status-header">
+                                <div class="status-avatar">Y</div>
+                                <div class="status-user-info">
+                                    <div class="status-username">You</div>
+                                    <div class="status-time">Just now</div>
+                                </div>
+                            </div>
+                            <div class="status-content">
+                                <div class="status-text" id="preview-text">Your status preview will appear here</div>
+                                <img src="" class="status-media" id="preview-image" style="display: none;">
+                                <video class="status-media" id="preview-video" style="display: none;" controls></video>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
-        // LocalStorage utilities
-        const storage = {
-            get: (key) => {
-                try {
-                    const item = localStorage.getItem(key);
-                    return item ? JSON.parse(item) : null;
-                } catch (error) {
-                    console.error('Error reading from localStorage:', error);
-                    return null;
-                }
-            },
-            set: (key, value) => {
-                try {
-                    localStorage.setItem(key, JSON.stringify(value));
-                } catch (error) {
-                    console.error('Error writing to localStorage:', error);
-                }
-            }
-        };
-
-        // Sample media URLs
+    <script>
+        // Sample media for demonstration
         const sampleImages = [
-            'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
-            'https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=400&h=300&fit=crop',
-            'https://images.unsplash.com/photo-1441974231531-c6227db76b6e?w=400&h=300&fit=crop',
-            'https://images.unsplash.com/photo-1518837695005-2083093ee35b?w=400&h=300&fit=crop',
-            'https://images.unsplash.com/photo-1501594907352-04cda38ebc29?w=400&h=300&fit=crop'
+            'https://images.unsplash.com/photo-1579546929662-711aa81148cf',
+            'https://images.unsplash.com/photo-1556740758-90de374c12ad',
+            'https://images.unsplash.com/photo-1518837695005-2083093ee35b'
         ];
 
         const sampleVideos = [
-            'https://sample-videos.com/zip/10/mp4/SampleVideo_1280x720_1mb.mp4',
-            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4',
-            'https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/ElephantsDream.mp4'
+            'https://assets.mixkit.co/videos/preview/mixkit-clouds-and-blue-sky-2411-large.mp4',
+            'https://assets.mixkit.co/videos/preview/mixkit-a-girl-blowing-a-bubble-gum-at-an-amusement-park-1226-large.mp4'
         ];
 
-        // Stories Component
-        const Stories = ({ stories, onAddStatus, onViewStatus }) => {
-            return (
-                <div className="card">
-                    <div className="card-padding">
-                        <div className="stories-container">
-                            <div className="story-item" onClick={onAddStatus}>
-                                <div className="story-card">
-                                    <div className="story-avatar">
-                                        <ion-icon name="person"></ion-icon>
-                                    </div>
-                                    <div className="story-add-btn">+</div>
-                                </div>
-                                <div className="story-name">Add Status</div>
-                            </div>
-                            {stories.map((story, index) => (
-                                <div key={story.id} className="story-item" onClick={() => onViewStatus(index)}>
-                                    <div className="story-ring">
-                                        <div className="story-content">
-                                            {story.type === 'image' && story.mediaUrl ? (
-                                                <img 
-                                                    src={story.mediaUrl} 
-                                                    alt="Story" 
-                                                    className="story-media"
-                                                    onError={(e) => {
-                                                        e.target.style.display = 'none';
-                                                        e.target.nextSibling.style.display = 'flex';
-                                                    }}
-                                                />
-                                            ) : story.type === 'video' && story.mediaUrl ? (
-                                                <video 
-                                                    src={story.mediaUrl} 
-                                                    className="story-media"
-                                                    muted
-                                                    onError={(e) => {
-                                                        e.target.style.display = 'none';
-                                                        e.target.nextSibling.style.display = 'flex';
-                                                    }}
-                                                />
-                                            ) : null}
-                                            <div style={{ 
-                                                background: `linear-gradient(135deg, ${story.backgroundColor}, ${story.backgroundColor}aa)`,
-                                                position: 'absolute',
-                                                inset: '0',
-                                                display: story.type === 'text' ? 'flex' : 'none',
-                                                alignItems: 'center',
-                                                justifyContent: 'center',
-                                                color: 'white',
-                                                fontSize: '10px',
-                                                textAlign: 'center',
-                                                padding: '8px'
-                                            }}>
-                                                {story.content.substring(0, 30)}...
-                                            </div>
-                                            <div className="story-avatar">
-                                                <span>{story.avatar}</span>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div className="story-name">{story.name.split(' ')[0]}</div>
-                                </div>
-                            ))}
-                        </div>
-                    </div>
-                </div>
-            );
-        };
+        // Colors for the color picker
+        const colors = ['#e53935', '#ff6f61', '#43a047', '#1976d2', '#7b1fa2', '#ff7043', '#00acc1', '#fdd835', '#5e35b1', '#d81b60'];
 
-        // Post Creation Component
-        const PostCreation = ({ onCreatePost }) => {
-            const [showModal, setShowModal] = useState(false);
-            const [postContent, setPostContent] = useState('');
-            const [postType, setPostType] = useState('text');
-            const [mediaUrl, setMediaUrl] = useState('');
+        // DOM Elements
+        const modalOverlay = document.getElementById('modal-overlay');
+        const demoButton = document.getElementById('demo-button');
+        const modalClose = document.getElementById('modal-close');
+        const statusType = document.getElementById('status-type');
+        const statusText = document.getElementById('status-text');
+        const mediaUrl = document.getElementById('media-url');
+        const randomMediaBtn = document.getElementById('random-media-btn');
+        const mediaPreview = document.getElementById('media-preview');
+        const colorPicker = document.getElementById('color-picker');
+        const submitBtn = document.getElementById('submit-btn');
+        const statusPreview = document.getElementById('status-preview');
+        const previewText = document.getElementById('preview-text');
+        const previewImage = document.getElementById('preview-image');
+        const previewVideo = document.getElementById('preview-video');
+        const mediaInputGroup = document.getElementById('media-input-group');
 
-            const handleSubmit = () => {
-                if (postContent.trim()) {
-                    onCreatePost({
-                        content: postContent,
-                        type: postType,
-                        mediaUrl: mediaUrl || null
-                    });
-                    setPostContent('');
-                    setMediaUrl('');
-                    setPostType('text');
-                    setShowModal(false);
-                }
-            };
+        // State
+        let selectedColor = colors[0];
+        let currentStatusType = 'text';
 
-            const getRandomMedia = (type) => {
-                if (type === 'image') {
-                    return sampleImages[Math.floor(Math.random() * sampleImages.length)];
-                } else if (type === 'video') {
-                    return sampleVideos[Math.floor(Math.random() * sampleVideos.length)];
-                }
-                return '';
-            };
+        // Initialize the modal
+        function initModal() {
+            // Initially hide the modal
+            modalOverlay.style.display = 'none';
 
-            return (
-                <>
-                    <div className="card">
-                        <div className="card-padding">
-                            <div className="post-creation">
-                                <div className="avatar">
-                                    <ion-icon name="person"></ion-icon>
-                                </div>
-                                <input 
-                                    type="text" 
-                                    className="post-input" 
-                                    placeholder="What's on your mind?"
-                                    onClick={() => setShowModal(true)}
-                                    readOnly
-                                />
-                            </div>
-                            <div className="post-actions">
-                                <button className="post-action-btn" onClick={() => {
-                                    setPostType('image');
-                                    setMediaUrl(getRandomMedia('image'));
-                                    setShowModal(true);
-                                }}>
-                                    <ion-icon name="image" style={{ color: 'var(--success-color)' }}></ion-icon>
-                                    <span>Photo</span>
-                                </button>
-                                <button className="post-action-btn" onClick={() => {
-                                    setPostType('video');
-                                    setMediaUrl(getRandomMedia('video'));
-                                    setShowModal(true);
-                                }}>
-                                    <ion-icon name="videocam" style={{ color: 'var(--accent-red)' }}></ion-icon>
-                                    <span>Video</span>
-                                </button>
-                                <button className="post-action-btn" onClick={() => setShowModal(true)}>
-                                    <ion-icon name="happy" style={{ color: 'var(--warning-color)' }}></ion-icon>
-                                    <span>Feeling</span>
-                                </button>
-                            </div>
-                        </div>
-                    </div>
-
-                    {showModal && (
-                        <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && setShowModal(false)}>
-                            <div className="modal">
-                                <div className="modal-header">
-                                    <h3 className="modal-title">Create Post</h3>
-                                    <button className="modal-close" onClick={() => setShowModal(false)}>
-                                        <ion-icon name="close"></ion-icon>
-                                    </button>
-                                </div>
-                                <div className="modal-body">
-                                    <div className="post-creation">
-                                        <div className="avatar">
-                                            <ion-icon name="person"></ion-icon>
-                                        </div>
-                                        <div style={{ flex: 1 }}>
-                                            <h4 style={{ color: 'var(--text-primary)', marginBottom: '4px' }}>Your Name</h4>
-                                            <select className="form-select" style={{ width: 'auto', padding: '4px 8px', fontSize: '12px' }}>
-                                                <option>Public</option>
-                                                <option>Friends</option>
-                                                <option>Only me</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    
-                                    <div className="form-group" style={{ marginTop: '16px' }}>
-                                        <label className="form-label">Post Type</label>
-                                        <select 
-                                            className="form-select" 
-                                            value={postType}
-                                            onChange={(e) => {
-                                                setPostType(e.target.value);
-                                                if (e.target.value !== 'text') {
-                                                    setMediaUrl(getRandomMedia(e.target.value));
-                                                } else {
-                                                    setMediaUrl('');
-                                                }
-                                            }}
-                                        >
-                                            <option value="text">Text Only</option>
-                                            <option value="image">With Image</option>
-                                            <option value="video">With Video</option>
-                                        </select>
-                                    </div>
-
-                                    <textarea 
-                                        className="form-textarea"
-                                        placeholder="What's on your mind?"
-                                        value={postContent}
-                                        onChange={(e) => setPostContent(e.target.value)}
-                                        style={{ height: '120px', fontSize: '16px' }}
-                                    />
-
-                                    {postType !== 'text' && (
-                                        <div className="form-group">
-                                            <label className="form-label">Media URL</label>
-                                            <input 
-                                                type="url" 
-                                                className="form-input"
-                                                placeholder="Enter image or video URL"
-                                                value={mediaUrl}
-                                                onChange={(e) => setMediaUrl(e.target.value)}
-                                            />
-                                            <button 
-                                                type="button"
-                                                className="btn-secondary"
-                                                onClick={() => setMediaUrl(getRandomMedia(postType))}
-                                                style={{ marginTop: '8px' }}
-                                            >
-                                                Use Random {postType === 'image' ? 'Image' : 'Video'}
-                                            </button>
-                                            {mediaUrl && (
-                                                <div className="media-preview">
-                                                    {postType === 'image' ? (
-                                                        <img src={mediaUrl} alt="Preview" onError={(e) => e.target.style.display = 'none'} />
-                                                    ) : (
-                                                        <video src={mediaUrl} controls onError={(e) => e.target.style.display = 'none'} />
-                                                    )}
-                                                </div>
-                                            )}
-                                        </div>
-                                    )}
-
-                                    <button className="btn-primary" onClick={handleSubmit} style={{ width: '100%', marginTop: '16px', padding: '12px' }}>
-                                        Post
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                    )}
-                </>
-            );
-        };
-
-        // Feed Post Component
-        const FeedPost = ({ post, onLike, onComment }) => {
-            const [showComments, setShowComments] = useState(false);
-            const [commentText, setCommentText] = useState('');
-
-            const formatTime = (timestamp) => {
-                const now = Date.now();
-                const diff = now - timestamp;
-                const minutes = Math.floor(diff / (1000 * 60));
-                const hours = Math.floor(diff / (1000 * 60 * 60));
-                const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-                
-                if (minutes < 60) return `${minutes}m ago`;
-                if (hours < 24) return `${hours}h ago`;
-                return `${days}d ago`;
-            };
-
-            const handleComment = () => {
-                if (commentText.trim()) {
-                    onComment(post.id, commentText);
-                    setCommentText('');
-                }
-            };
-
-            return (
-                <div className="card">
-                    <div className="card-padding">
-                        <div className="post-header">
-                            <div className="avatar">
-                                <span>{post.avatar}</span>
-                            </div>
-                            <div className="post-author">
-                                <h3>{post.name}</h3>
-                                <div className="post-time">{formatTime(post.timestamp)}</div>
-                            </div>
-                            <button className="post-menu-btn">
-                                <ion-icon name="ellipsis-vertical"></ion-icon>
-                            </button>
-                        </div>
-                        <div className="post-content">{post.content}</div>
-                        {post.mediaUrl && (
-                            <div className="post-media">
-                                {post.type === 'image' ? (
-                                    <img 
-                                        src={post.mediaUrl} 
-                                        alt="Post content" 
-                                        className="post-image"
-                                        onError={(e) => e.target.style.display = 'none'}
-                                    />
-                                ) : post.type === 'video' ? (
-                                    <video 
-                                        src={post.mediaUrl} 
-                                        className="post-video"
-                                        controls
-                                        onError={(e) => e.target.style.display = 'none'}
-                                    />
-                                ) : null}
-                            </div>
-                        )}
-                    </div>
-                    <div className="post-reactions">
-                        <button 
-                            className={`reaction-btn ${post.liked ? 'liked' : ''}`}
-                            onClick={() => onLike(post.id)}
-                        >
-                            <ion-icon name={post.liked ? "heart" : "heart-outline"}></ion-icon>
-                            <span>{post.liked ? 'Liked' : 'Like'} ({post.likes || 0})</span>
-                        </button>
-                        <button 
-                            className="reaction-btn"
-                            onClick={() => setShowComments(!showComments)}
-                        >
-                            <ion-icon name="chatbubble-outline"></ion-icon>
-                            <span>Comment ({post.comments?.length || 0})</span>
-                        </button>
-                        <button className="reaction-btn">
-                            <ion-icon name="share-outline"></ion-icon>
-                            <span>Share</span>
-                        </button>
-                    </div>
-                    {showComments && (
-                        <div className="comments-section">
-                            {post.comments?.map((comment, index) => (
-                                <div key={index} style={{ marginBottom: '12px', padding: '8px', backgroundColor: 'var(--secondary-bg)', borderRadius: '8px' }}>
-                                    <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginBottom: '4px' }}>
-                                        <div className="avatar" style={{ width: '24px', height: '24px' }}>
-                                            <span style={{ fontSize: '12px' }}>😊</span>
-                                        </div>
-                                        <span style={{ fontSize: '14px', fontWeight: '500', color: 'var(--text-primary)' }}>You</span>
-                                        <span style={{ fontSize: '12px', color: 'var(--text-muted)' }}>{formatTime(comment.timestamp)}</span>
-                                    </div>
-                                    <p style={{ fontSize: '14px', color: 'var(--text-secondary)', marginLeft: '32px' }}>{comment.text}</p>
-                                </div>
-                            ))}
-                            <div className="comment-input-container">
-                                <div className="avatar" style={{ width: '32px', height: '32px' }}>
-                                    <span style={{ fontSize: '14px' }}>😊</span>
-                                </div>
-                                <input 
-                                    type="text" 
-                                    className="comment-input" 
-                                    placeholder="Write a comment..."
-                                    value={commentText}
-                                    onChange={(e) => setCommentText(e.target.value)}
-                                    onKeyPress={(e) => e.key === 'Enter' && handleComment()}
-                                />
-                                <button 
-                                    className="btn-primary"
-                                    onClick={handleComment}
-                                    style={{ padding: '8px 12px' }}
-                                >
-                                    Post
-                                </button>
-                            </div>
-                        </div>
-                    )}
-                </div>
-            );
-        };
-
-        // Feed Component
-        const Feed = ({ posts, onLoadMore, onLike, onComment }) => {
-            return (
-                <div>
-                    {posts.map(post => (
-                        <FeedPost 
-                            key={post.id} 
-                            post={post} 
-                            onLike={onLike}
-                            onComment={onComment}
-                        />
-                    ))}
-                    <div className="load-more-container">
-                        <button className="load-more-btn" onClick={onLoadMore}>
-                            Load More Posts
-                        </button>
-                    </div>
-                </div>
-            );
-        };
-
-        // Friend Requests Component
-        const FriendRequests = () => {
-            const [requests, setRequests] = useState(() => {
-                return storage.get('friendRequests') || [
-                    { id: 1, name: 'John Smith', avatar: '👨', mutualFriends: 2 },
-                    { id: 2, name: 'Lisa Brown', avatar: '👩', mutualFriends: 5 }
-                ];
+            // Set up color picker
+            colors.forEach(color => {
+                const colorOption = document.createElement('button');
+                colorOption.className = 'color-option';
+                if (color === selectedColor) colorOption.classList.add('selected');
+                colorOption.style.backgroundColor = color;
+                colorOption.addEventListener('click', () => selectColor(color, colorOption));
+                colorPicker.appendChild(colorOption);
             });
 
-            useEffect(() => {
-                storage.set('friendRequests', requests);
-            }, [requests]);
+            // Set initial preview background
+            statusPreview.style.setProperty('--preview-bg', selectedColor);
 
-            const handleAccept = (id) => {
-                setRequests(requests.filter(req => req.id !== id));
-            };
+            // Set up event listeners
+            setupEventListeners();
+        }
 
-            const handleDecline = (id) => {
-                setRequests(requests.filter(req => req.id !== id));
-            };
-
-            return (
-                <div className="card sidebar-section">
-                    <div className="card-padding">
-                        <h3 className="sidebar-title">Friend Requests</h3>
-                        {requests.map(request => (
-                            <div key={request.id} className="friend-request">
-                                <div className="avatar">
-                                    <span>{request.avatar}</span>
-                                </div>
-                                <div className="friend-info">
-                                    <div className="friend-name">{request.name}</div>
-                                    <div className="friend-mutual">{request.mutualFriends} mutual friends</div>
-                                    <div className="friend-actions">
-                                        <button className="btn-primary" onClick={() => handleAccept(request.id)}>
-                                            Accept
-                                        </button>
-                                        <button className="btn-secondary" onClick={() => handleDecline(request.id)}>
-                                            Decline
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            );
-        };
-
-        // Suggested Mentors Component
-        const SuggestedMentors = () => {
-            const [mentors, setMentors] = useState(() => {
-                return storage.get('mentors') || [
-                    { id: 1, name: 'Dr. Amanda Wilson', avatar: '👩‍💼', role: 'Senior Software Engineer', connected: false },
-                    { id: 2, name: 'Mark Rodriguez', avatar: '👨‍💼', role: 'Product Manager', connected: false }
-                ];
+        // Set up event listeners
+        function setupEventListeners() {
+            // Demo button to show modal
+            demoButton.addEventListener('click', () => {
+                modalOverlay.style.display = 'flex';
             });
 
-            useEffect(() => {
-                storage.set('mentors', mentors);
-            }, [mentors]);
+            // Close modal
+            modalClose.addEventListener('click', () => {
+                modalOverlay.style.display = 'none';
+            });
 
-            const handleConnect = (id) => {
-                setMentors(mentors.map(mentor => 
-                    mentor.id === id ? { ...mentor, connected: true } : mentor
-                ));
-            };
-
-            return (
-                <div className="card sidebar-section">
-                    <div className="card-padding">
-                        <h3 className="sidebar-title">Suggested Mentors</h3>
-                        {mentors.map(mentor => (
-                            <div key={mentor.id} className="mentor-suggestion">
-                                <div className="avatar">
-                                    <span>{mentor.avatar}</span>
-                                </div>
-                                <div className="mentor-info">
-                                    <div className="mentor-name">{mentor.name}</div>
-                                    <div className="mentor-role">{mentor.role}</div>
-                                    <button 
-                                        className={mentor.connected ? "btn-secondary" : "btn-primary"}
-                                        onClick={() => handleConnect(mentor.id)}
-                                        disabled={mentor.connected}
-                                        style={{ marginTop: '8px' }}
-                                    >
-                                        {mentor.connected ? 'Pending' : 'Connect'}
-                                    </button>
-                                </div>
-                            </div>
-                        ))}
-                    </div>
-                </div>
-            );
-        };
-
-        // Sidebar Component
-        const Sidebar = () => {
-            return (
-                <div className="sidebar">
-                    <FriendRequests />
-                    <SuggestedMentors />
-                </div>
-            );
-        };
-
-        // Status Modal Component
-        const StatusModal = ({ isOpen, onClose, stories, currentIndex, onNext, onPrev }) => {
-            if (!isOpen || !stories.length) return null;
-
-            const story = stories[currentIndex];
-            
-            const formatTime = (timestamp) => {
-                const now = Date.now();
-                const diff = now - timestamp;
-                const hours = Math.floor(diff / (1000 * 60 * 60));
-                return `${hours}h ago`;
-            };
-
-            return (
-                <div className="modal-overlay status-modal-overlay" onClick={onClose}>
-                    <div className="status-modal" onClick={(e) => e.stopPropagation()}>
-                        <button className="status-close" onClick={onClose}>
-                            <ion-icon name="close"></ion-icon>
-                        </button>
-                        
-                        <div className="status-progress">
-                            {stories.map((_, index) => (
-                                <div 
-                                    key={index} 
-                                    className={`progress-bar ${index === currentIndex ? 'active' : ''}`}
-                                />
-                            ))}
-                        </div>
-
-                        <div className="status-media-container">
-                            {story.type === 'image' && story.mediaUrl ? (
-                                <img 
-                                    src={story.mediaUrl} 
-                                    alt="Status" 
-                                    className="status-media"
-                                    onError={(e) => {
-                                        e.target.style.display = 'none';
-                                        e.target.nextSibling.style.display = 'flex';
-                                    }}
-                                />
-                            ) : story.type === 'video' && story.mediaUrl ? (
-                                <video 
-                                    src={story.mediaUrl} 
-                                    className="status-media"
-                                    autoPlay
-                                    muted
-                                    loop
-                                    onError={(e) => {
-                                        e.target.style.display = 'none';
-                                        e.target.nextSibling.style.display = 'flex';
-                                    }}
-                                />
-                            ) : null}
-                            
-                            <div 
-                                className="status-content"
-                                style={{ 
-                                    background: story.type === 'text' ? `linear-gradient(135deg, ${story.backgroundColor}, ${story.backgroundColor}aa)` : 'transparent',
-                                    display: story.type === 'text' ? 'flex' : 'none'
-                                }}
-                            >
-                                <div style={{ fontSize: '48px', marginBottom: '16px' }}>{story.avatar}</div>
-                                <p style={{ fontSize: '18px', fontWeight: '500', color: 'white' }}>{story.content}</p>
-                            </div>
-
-                            {(story.type === 'image' || story.type === 'video') && (
-                                <div className="status-text-overlay">
-                                    {story.content}
-                                </div>
-                            )}
-                        </div>
-
-                        <div className="status-info">
-                            <div className="status-name">{story.name}</div>
-                            <div className="status-time">{formatTime(story.timestamp)}</div>
-                        </div>
-
-                        <button className="status-nav prev" onClick={onPrev}>
-                            <ion-icon name="chevron-back"></ion-icon>
-                        </button>
-                        <button className="status-nav next" onClick={onNext}>
-                            <ion-icon name="chevron-forward"></ion-icon>
-                        </button>
-                    </div>
-                </div>
-            );
-        };
-
-        // Add Status Modal Component
-        const AddStatusModal = ({ isOpen, onClose, onAdd }) => {
-            const [statusType, setStatusType] = useState('text');
-            const [statusText, setStatusText] = useState('');
-            const [mediaUrl, setMediaUrl] = useState('');
-            const [selectedColor, setSelectedColor] = useState('#e53935');
-
-            const colors = ['#e53935', '#ff6f61', '#43a047', '#1976d2', '#7b1fa2', '#ff7043'];
-
-            const getRandomMedia = (type) => {
-                if (type === 'image') {
-                    return sampleImages[Math.floor(Math.random() * sampleImages.length)];
-                } else if (type === 'video') {
-                    return sampleVideos[Math.floor(Math.random() * sampleVideos.length)];
+            // Close modal when clicking outside
+            modalOverlay.addEventListener('click', (e) => {
+                if (e.target === modalOverlay) {
+                    modalOverlay.style.display = 'none';
                 }
-                return '';
-            };
+            });
 
-            const handleSubmit = () => {
-                if (statusText.trim()) {
-                    onAdd({
-                        type: statusType,
-                        content: statusText,
-                        mediaUrl: statusType !== 'text' ? mediaUrl : null,
-                        backgroundColor: selectedColor
-                    });
-                    setStatusText('');
-                    setMediaUrl('');
-                    setStatusType('text');
-                    onClose();
+            // Status type change
+            statusType.addEventListener('change', (e) => {
+                currentStatusType = e.target.value;
+                updateMediaInputVisibility();
+                updatePreview();
+
+                if (currentStatusType !== 'text') {
+                    setRandomMedia();
                 }
-            };
+            });
 
-            if (!isOpen) return null;
+            // Status text input
+            statusText.addEventListener('input', updatePreview);
 
-            return (
-                <div className="modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-                    <div className="modal">
-                        <div className="modal-header">
-                            <h3 className="modal-title">Add Status</h3>
-                            <button className="modal-close" onClick={onClose}>
-                                <ion-icon name="close"></ion-icon>
-                            </button>
-                        </div>
-                        <div className="modal-body">
-                            <div className="form-group">
-                                <label className="form-label">Status Type</label>
-                                <select 
-                                    className="form-select" 
-                                    value={statusType}
-                                    onChange={(e) => {
-                                        setStatusType(e.target.value);
-                                        if (e.target.value !== 'text') {
-                                            setMediaUrl(getRandomMedia(e.target.value));
-                                        } else {
-                                            setMediaUrl('');
-                                        }
-                                    }}
-                                >
-                                    <option value="text">Text Status</option>
-                                    <option value="image">Image Status</option>
-                                    <option value="video">Video Status</option>
-                                </select>
-                            </div>
-                            <div className="form-group">
-                                <label className="form-label">Content</label>
-                                <textarea 
-                                    className="form-textarea"
-                                    placeholder="What's happening?"
-                                    value={statusText}
-                                    onChange={(e) => setStatusText(e.target.value)}
-                                />
-                            </div>
-                            {statusType !== 'text' && (
-                                <div className="form-group">
-                                    <label className="form-label">Media URL</label>
-                                    <input 
-                                        type="url" 
-                                        className="form-input"
-                                        placeholder="Enter image or video URL"
-                                        value={mediaUrl}
-                                        onChange={(e) => setMediaUrl(e.target.value)}
-                                    />
-                                    <button 
-                                        type="button"
-                                        className="btn-secondary"
-                                        onClick={() => setMediaUrl(getRandomMedia(statusType))}
-                                        style={{ marginTop: '8px' }}
-                                    >
-                                        Use Random {statusType === 'image' ? 'Image' : 'Video'}
-                                    </button>
-                                    {mediaUrl && (
-                                        <div className="media-preview">
-                                            {statusType === 'image' ? (
-                                                <img src={mediaUrl} alt="Preview" onError={(e) => e.target.style.display = 'none'} />
-                                            ) : (
-                                                <video src={mediaUrl} controls onError={(e) => e.target.style.display = 'none'} />
-                                            )}
-                                        </div>
-                                    )}
-                                </div>
-                            )}
-                            <div className="form-group">
-                                <label className="form-label">Background Color</label>
-                                <div className="color-picker">
-                                    {colors.map(color => (
-                                        <button
-                                            key={color}
-                                            className={`color-option ${selectedColor === color ? 'selected' : ''}`}
-                                            style={{ backgroundColor: color }}
-                                            onClick={() => setSelectedColor(color)}
-                                        />
-                                    ))}
-                                </div>
-                            </div>
-                            <button className="btn-primary" onClick={handleSubmit} style={{ width: '100%', padding: '12px' }}>
-                                Add Status
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            );
-        };
+            // Media URL input
+            mediaUrl.addEventListener('input', () => {
+                updateMediaPreview();
+                updatePreview();
+            });
 
-        // Main App Component
-        const App = () => {
-            const [posts, setPosts] = useState(() => storage.get('posts') || []);
-            const [stories, setStories] = useState(() => storage.get('stories') || []);
-            const [showStatusModal, setShowStatusModal] = useState(false);
-            const [showAddStatusModal, setShowAddStatusModal] = useState(false);
-            const [currentStatusIndex, setCurrentStatusIndex] = useState(0);
+            // Random media button
+            randomMediaBtn.addEventListener('click', setRandomMedia);
 
-            // Save to localStorage whenever data changes
-            useEffect(() => {
-                storage.set('posts', posts);
-            }, [posts]);
+            // Submit button
+            submitBtn.addEventListener('click', handleSubmit);
+        }
 
-            useEffect(() => {
-                storage.set('stories', stories);
-            }, [stories]);
+        // Select color
+        function selectColor(color, element) {
+            selectedColor = color;
 
-            useEffect(() => {
-                // Initialize sample data if empty
-                if (posts.length === 0) {
-                    const samplePosts = [
-                        {
-                            id: 1,
-                            name: 'Sarah Johnson',
-                            avatar: '👩‍💼',
-                            content: 'Just finished an amazing hike in the mountains! The view was absolutely breathtaking. Nature never fails to inspire me. 🏔️✨',
-                            timestamp: Date.now() - 2 * 60 * 60 * 1000,
-                            type: 'image',
-                            mediaUrl: sampleImages[0],
-                            liked: false,
-                            likes: 12,
-                            comments: []
-                        },
-                        {
-                            id: 2,
-                            name: 'Mike Chen',
-                            avatar: '👨‍💻',
-                            content: 'Excited to share that I just launched my new project! It\'s been months of hard work, but seeing it come to life is incredibly rewarding. 🚀',
-                            timestamp: Date.now() - 4 * 60 * 60 * 1000,
-                            type: 'video',
-                            mediaUrl: sampleVideos[0],
-                            liked: false,
-                            likes: 8,
-                            comments: []
-                        },
-                        {
-                            id: 3,
-                            name: 'Emma Davis',
-                            avatar: '👩‍🎨',
-                            content: 'Coffee and coding session this morning ☕️ Working on some exciting new features.',
-                            timestamp: Date.now() - 6 * 60 * 60 * 1000,
-                            type: 'text',
-                            mediaUrl: null,
-                            liked: false,
-                            likes: 5,
-                            comments: []
-                        }
-                    ];
-                    setPosts(samplePosts);
+            // Update UI
+            document.querySelectorAll('.color-option').forEach(opt => {
+                opt.classList.remove('selected');
+            });
+            element.classList.add('selected');
+
+            // Update preview
+            statusPreview.style.setProperty('--preview-bg', selectedColor);
+        }
+
+        // Update media input visibility based on status type
+        function updateMediaInputVisibility() {
+            if (currentStatusType === 'text') {
+                mediaInputGroup.style.display = 'none';
+            } else {
+                mediaInputGroup.style.display = 'flex';
+                mediaInputGroup.style.flexDirection = 'column';
+            }
+        }
+
+        // Set random media
+        function setRandomMedia() {
+            let randomMedia;
+            if (currentStatusType === 'image') {
+                randomMedia = sampleImages[Math.floor(Math.random() * sampleImages.length)];
+            } else if (currentStatusType === 'video') {
+                randomMedia = sampleVideos[Math.floor(Math.random() * sampleVideos.length)];
+            }
+
+            if (randomMedia) {
+                mediaUrl.value = randomMedia;
+                updateMediaPreview();
+                updatePreview();
+            }
+        }
+
+        // Update media preview
+        function updateMediaPreview() {
+            mediaPreview.innerHTML = '';
+
+            if (mediaUrl.value) {
+                const mediaElement = currentStatusType === 'image'
+                    ? document.createElement('img')
+                    : document.createElement('video');
+
+                mediaElement.src = mediaUrl.value;
+                mediaElement.alt = 'Preview';
+
+                if (currentStatusType === 'video') {
+                    mediaElement.controls = true;
                 }
 
-                if (stories.length === 0) {
-                    const sampleStories = [
-                        {
-                            id: 1,
-                            name: 'Sarah Johnson',
-                            avatar: '👩‍💼',
-                            type: 'image',
-                            content: 'Amazing sunset! 🌅',
-                            mediaUrl: sampleImages[1],
-                            backgroundColor: '#e53935',
-                            timestamp: Date.now() - 2 * 60 * 60 * 1000
-                        },
-                        {
-                            id: 2,
-                            name: 'Mike Chen',
-                            avatar: '👨‍💻',
-                            type: 'video',
-                            content: 'Just launched my project! 🚀',
-                            mediaUrl: sampleVideos[1],
-                            backgroundColor: '#1976d2',
-                            timestamp: Date.now() - 4 * 60 * 60 * 1000
-                        },
-                        {
-                            id: 3,
-                            name: 'Emma Davis',
-                            avatar: '👩‍🎨',
-                            type: 'text',
-                            content: 'Coffee and creativity ☕️',
-                            mediaUrl: null,
-                            backgroundColor: '#43a047',
-                            timestamp: Date.now() - 6 * 60 * 60 * 1000
-                        }
-                    ];
-                    setStories(sampleStories);
-                }
-            }, []);
-
-            const handleCreatePost = (postData) => {
-                const newPost = {
-                    id: Date.now(),
-                    name: 'You',
-                    avatar: '😊',
-                    content: postData.content,
-                    type: postData.type,
-                    mediaUrl: postData.mediaUrl,
-                    timestamp: Date.now(),
-                    liked: false,
-                    likes: 0,
-                    comments: []
+                mediaElement.onerror = () => {
+                    mediaElement.style.display = 'none';
                 };
-                setPosts([newPost, ...posts]);
-            };
 
-            const handleAddStatus = (statusData) => {
-                const newStatus = {
-                    id: Date.now(),
-                    name: 'You',
-                    avatar: '😊',
-                    ...statusData,
-                    timestamp: Date.now()
-                };
-                setStories([newStatus, ...stories]);
-            };
+                mediaPreview.appendChild(mediaElement);
+            }
+        }
 
-            const handleViewStatus = (index) => {
-                setCurrentStatusIndex(index);
-                setShowStatusModal(true);
-            };
+        // Update the status preview
+        function updatePreview() {
+            // Update text
+            previewText.textContent = statusText.value || 'Your status preview will appear here';
 
-            const handleNextStatus = () => {
-                setCurrentStatusIndex((prev) => (prev + 1) % stories.length);
-            };
+            // Update media
+            if (currentStatusType === 'image') {
+                previewImage.style.display = mediaUrl.value ? 'block' : 'none';
+                previewVideo.style.display = 'none';
+                if (mediaUrl.value) {
+                    previewImage.src = mediaUrl.value;
+                }
+            } else if (currentStatusType === 'video') {
+                previewVideo.style.display = mediaUrl.value ? 'block' : 'none';
+                previewImage.style.display = 'none';
+                if (mediaUrl.value) {
+                    previewVideo.src = mediaUrl.value;
+                }
+            } else {
+                previewImage.style.display = 'none';
+                previewVideo.style.display = 'none';
+            }
 
-            const handlePrevStatus = () => {
-                setCurrentStatusIndex((prev) => (prev - 1 + stories.length) % stories.length);
-            };
+            // Update background
+            statusPreview.style.setProperty('--preview-bg', selectedColor);
+        }
 
-            const handleLike = (postId) => {
-                setPosts(posts.map(post => {
-                    if (post.id === postId) {
-                        const newLiked = !post.liked;
-                        return {
-                            ...post,
-                            liked: newLiked,
-                            likes: newLiked ? (post.likes || 0) + 1 : Math.max(0, (post.likes || 0) - 1)
-                        };
-                    }
-                    return post;
-                }));
-            };
+        // Handle form submission
+        function handleSubmit() {
+            if (statusText.value.trim()) {
+                // In a real app, you would pass this data to the parent component
+                console.log({
+                    type: currentStatusType,
+                    content: statusText.value,
+                    mediaUrl: currentStatusType !== 'text' ? mediaUrl.value : null,
+                    backgroundColor: selectedColor
+                });
 
-            const handleComment = (postId, commentText) => {
-                setPosts(posts.map(post => {
-                    if (post.id === postId) {
-                        const newComment = {
-                            text: commentText,
-                            timestamp: Date.now()
-                        };
-                        return {
-                            ...post,
-                            comments: [...(post.comments || []), newComment]
-                        };
-                    }
-                    return post;
-                }));
-            };
+                // Reset form
+                statusText.value = '';
+                mediaUrl.value = '';
+                statusType.value = 'text';
+                currentStatusType = 'text';
+                updateMediaInputVisibility();
+                updatePreview();
 
-            const handleLoadMore = () => {
-                const additionalPosts = [
-                    {
-                        id: Date.now() + 1,
-                        name: 'Alex Wilson',
-                        avatar: '👨‍🎵',
-                        content: 'Just wrapped up an amazing team meeting! Excited about the new project we\'re starting next week. 🚀',
-                        timestamp: Date.now() - 8 * 60 * 60 * 1000,
-                        type: 'image',
-                        mediaUrl: sampleImages[Math.floor(Math.random() * sampleImages.length)],
-                        liked: false,
-                        likes: 3,
-                        comments: []
-                    },
-                    {
-                        id: Date.now() + 2,
-                        name: 'Rachel Green',
-                        avatar: '👩‍🌾',
-                        content: 'Beautiful sunset from my balcony tonight. Sometimes you need to pause and appreciate the simple moments. 🌅',
-                        timestamp: Date.now() - 10 * 60 * 60 * 1000,
-                        type: 'video',
-                        mediaUrl: sampleVideos[Math.floor(Math.random() * sampleVideos.length)],
-                        liked: false,
-                        likes: 7,
-                        comments: []
-                    }
-                ];
-                setPosts([...posts, ...additionalPosts]);
-            };
+                // Close modal
+                modalOverlay.style.display = 'none';
 
-            return (
-                <div className="container">
-                    <div className="main-layout">
-                        <div className="main-content">
-                            <Stories 
-                                stories={stories}
-                                onAddStatus={() => setShowAddStatusModal(true)}
-                                onViewStatus={handleViewStatus}
-                            />
-                            <PostCreation onCreatePost={handleCreatePost} />
-                            <Feed 
-                                posts={posts} 
-                                onLoadMore={handleLoadMore}
-                                onLike={handleLike}
-                                onComment={handleComment}
-                            />
-                        </div>
-                        <Sidebar />
-                    </div>
+                // Show success message (in a real app)
+                alert('Status created successfully!');
+            } else {
+                alert('Please enter some text for your status');
+            }
+        }
 
-                    <StatusModal 
-                        isOpen={showStatusModal}
-                        onClose={() => setShowStatusModal(false)}
-                        stories={stories}
-                        currentIndex={currentStatusIndex}
-                        onNext={handleNextStatus}
-                        onPrev={handlePrevStatus}
-                    />
-
-                    <AddStatusModal 
-                        isOpen={showAddStatusModal}
-                        onClose={() => setShowAddStatusModal(false)}
-                        onAdd={handleAddStatus}
-                    />
-                </div>
-            );
-        };
-
-        ReactDOM.render(<App />, document.getElementById('root'));
+        // Initialize the modal when the page loads
+        document.addEventListener('DOMContentLoaded', initModal);
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98100b4e43d57476',t:'MTc1ODE5MDEyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</body>
+
 </html>

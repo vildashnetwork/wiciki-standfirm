@@ -5,6 +5,9 @@
   padding: 16px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
   margin-bottom: 16px;
+  max-width: 400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .friend-requests-title {
@@ -12,6 +15,7 @@
   font-weight: 600;
   margin-bottom: 12px;
   font-size: 1rem;
+  text-align: center;
 }
 
 /* List */
@@ -24,7 +28,7 @@
 /* Each friend request */
 .friend-request-item {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
   padding: 10px 12px;
   border-radius: 10px;
@@ -42,12 +46,7 @@
   width: 48px;
   height: 48px;
   border-radius: 50%;
-  background: linear-gradient(145deg, #1a1a1a, #262626);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 24px;
-  color: var(--text-primary);
+  object-fit: cover;
   flex-shrink: 0;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) inset;
 }
@@ -91,15 +90,15 @@
 }
 
 .btn-confirm {
-  background: var(--success-color);
+  background: var(--accent-red-dark);
   color: var(--accent-white);
-  box-shadow: 0 4px 12px rgba(67, 160, 71, 0.35);
+  box-shadow: 0 4px 12px rgba(180, 44, 34, 0.35);
 }
 
 .btn-confirm:hover {
-  background: #39903c;
+  background: #791e0e;
   transform: translateY(-1px);
-  box-shadow: 0 6px 18px rgba(67, 160, 71, 0.45);
+  box-shadow: 0 6px 18px rgba(145, 46, 29, 0.712);
 }
 
 .btn-delete {

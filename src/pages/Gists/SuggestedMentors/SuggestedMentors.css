@@ -1,10 +1,9 @@
-/* Container card */
 .cardsuggest.sidebar-section {
   background: var(--secondary-bg);
-  border: 1px solid var(--border-color);
+  border: 1px solid #ddd;
   border-radius: 16px;
   margin-bottom: 20px;
-  color: var(--text-primary);
+  color: #111;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
   transition: transform 0.2s ease;
 }
@@ -14,98 +13,106 @@
 }
 
 .card-padding {
-  padding: 18px;
+  padding: 16px;
 }
 
-/* Title */
 .sidebar-title {
   font-size: 15px;
   font-weight: 600;
-  margin-bottom: 18px;
-  color: var(--text-primary);
-  border-bottom: 1px solid var(--border-color);
-  padding-bottom: 10px;
+  margin-bottom: 16px;
+  color: var(--accent-white);
+  border-bottom: 1px solid #eee;
+  padding-bottom: 8px;
 }
 
-/* Mentor list container */
 .mentor-list {
   display: flex;
   flex-direction: column;
-  gap: 14px;
+  gap: 12px;
 }
 
-/* Mentor row */
 .mentor-suggestion {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
   padding: 8px;
-  border-radius: 10px;
+  border-radius: 12px;
   transition: background 0.2s ease;
 }
 
 .mentor-suggestion:hover {
-  background: var(--hover-bg);
+  background: var(--secondary-bg);
 }
 
-/* Avatar */
-.mentor-suggestion .avatar {
+.avatar {
   width: 46px;
   height: 46px;
-  background: var(--primary-bg);
-  border: 2px solid var(--border-color);
   border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
+  overflow: hidden;
+  flex-shrink: 0;
+  border: 1px solid #ccc;
 }
 
-/* Mentor info */
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
 .mentor-info {
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .mentor-name {
   font-size: 14px;
   font-weight: 600;
-  color: var(--text-primary);
+  color: var(--accent-white);
 }
 
 .mentor-role {
   font-size: 13px;
-  color: var(--text-muted);
-  margin: 2px 0 8px;
+  color: var(--accent-white);
+  margin: 2px 0 6px;
 }
 
-/* Buttons */
 .btn-primary,
 .btn-secondary {
-  padding: 6px 6px;
-  font-size: 13px;
-  border-radius: 8px;
+  font-size: 12px;
+  padding: 4px 10px;
+  border-radius: 6px;
   border: none;
   cursor: pointer;
   transition: all 0.25s ease;
 }
 
 .btn-primary {
-  background: var(--accent-color);
+  background: #0a84ff;
   color: #fff;
   font-weight: 500;
-  padding: "10px !important";
 }
 
 .btn-primary:hover {
-  background: #0b7bc7;
+  background: #006edc;
 }
 
 .btn-secondary {
   background: #f0f0f0;
-  color: var(--text-muted);
+  color: #888;
   cursor: default;
 }
 
-#reduce {
-  padding: "10px !important";
+/* Responsive */
+@media (max-width: 480px) {
+  .mentor-suggestion {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    text-align: center;
+  }
 }

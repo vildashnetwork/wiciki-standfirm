@@ -17,12 +17,13 @@ import CallsPage from './pages/Callspage/CallsPage';
 import LoginPage from './pages/Login/LoginPage';
 import ProtectedRoute from './components/Auth/ProtectedRoute';
 import WICIKIOnboarding from './pages/Questionings/Questionings';
+import PostCreatePage from './pages/Gists/PostCreation/Add';
+
 function AppContent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isFullscreenMode, setIsFullscreenMode] = useState(false);
   const [currentReelIndex, setCurrentReelIndex] = useState(0);
 
-  // Shared reels data (lifted state)
   const [reels, setReels] = useState([
     {
       id: 1,
@@ -54,81 +55,20 @@ function AppContent() {
     },
   ]);
 
-  const toggleMobileMenu = () => setIsMobileMenuOpen(prev => !prev);
-  const closeMobileMenu = () => setIsMobileMenuOpen(false);
-
-  const openFullscreenReels = (index) => {
-    console.log('[App] openFullscreenReels called with index:', index);
-    setCurrentReelIndex(index);
-    setIsFullscreenMode(true);
-  };
-
-  const closeFullscreenReels = () => {
-    setIsFullscreenMode(false);
-  };
-
-  // Get current page from pathname
   const location = useLocation();
   const navigate = useNavigate();
-  const getCurrentPage = () => {
-    const path = location.pathname;
-    if (path === '/') return 'gists';
-    return path.substring(1); // Remove the leading slash
+  const currentPage = location.pathname === '/' ? 'gists' : location.pathname.substring(1);
+  const hideLayout = location.pathname === "/login" || location.pathname === "/questions";
+
+  const handleCreatePost = (post) => {
+    console.log('New post created:', post);
+    // Here you can add logic to update state or send post to backend
+    navigate(-1); // Go back after creating post
   };
-  const currentPage = getCurrentPage();
 
-  const hideLayout = location.pathname === "/login" || location.pathname === "/questions"; 
-  // return (
-  //   <div className="App">
-  //     <div className={`sidebar-overlay ${isMobileMenuOpen ? 'active' : ''}`} onClick={closeMobileMenu} />
-
-  //     <div className="app-container">
-  //       <Sidebar currentPage={currentPage} navigate={navigate} isMobileMenuOpen={isMobileMenuOpen} />
-
-  //       <div className="main-content">
-  //         <Topbar toggleMobileMenu={toggleMobileMenu} navigate={navigate} />
-
-  //         <div className="content-area">
-  //           <Routes>
-  //             <Route path="/" element={<GistsPage />} />
-  //             <Route path="/gists" element={<GistsPage />} />
-  //             <Route path="/profile" element={<ProfilePage />} />
-  //             <Route path="/vibes" element={<VibesPage />} />
-  //             <Route path="/reachouts" element={<ReachoutsPage />} />
-  //             <Route path="/notifications" element={<NotificationsPage />} />
-  //             <Route path="/search" element={<SearchPage />} />
-  //             <Route path="/settings" element={<SettingsPage />} />
-  //             <Route
-  //               path="/reels"
-  //               element={
-  //                 <ReelsPage
-  //                   reels={reels}
-  //                   setReels={setReels}
-  //                   openFullscreenReels={openFullscreenReels}
-  //                 />
-  //               }
-  //             />
-  //             <Route path="/calls" element={<CallsPage />} />
-  //           </Routes>
-  //         </div>
-  //       </div>
-  //     </div>
-
-  //     <BottomNav currentPage={currentPage} navigate={navigate} />
-
-  //     <ReelsFullscreenOverlay
-  //       isFullscreenMode={isFullscreenMode}
-  //       closeFullscreenReels={closeFullscreenReels}
-  //       currentReelIndex={currentReelIndex}
-  //       reels={reels}
-  //     />
-  //   </div>
-  // );
-return (
+  return (
     <div className="App">
-      {!hideLayout && (
-        <div className={`sidebar-overlay ${isMobileMenuOpen ? 'active' : ''}`} />
-      )}
+      {!hideLayout && <div className={`sidebar-overlay ${isMobileMenuOpen ? 'active' : ''}`} />}
 
       <div className="app-container">
         {!hideLayout && (
@@ -146,90 +86,29 @@ return (
 
           <div className="content-area">
             <Routes>
-              {/* Public Route */}
+              {/* Public Routes */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/questions" element={<WICIKIOnboarding />} />
 
               {/* Protected Routes */}
-              <Route
-                path="/"
-                element={
-                  <ProtectedRoute>
-                    <GistsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/profile"
-                element={
-                  <ProtectedRoute>
-                    <ProfilePage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/vibes"
-                element={
-                  <ProtectedRoute>
-                    <VibesPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/reachouts"
-                element={
-                  <ProtectedRoute>
-                    <ReachoutsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/notifications"
-                element={
-                  <ProtectedRoute>
-                    <NotificationsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/search"
-                element={
-                  <ProtectedRoute>
-                    <SearchPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/settings"
-                element={
-                  <ProtectedRoute>
-                    <SettingsPage />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/reels"
-                element={
-                  <ProtectedRoute>
-                    <ReelsPage
-                      reels={reels}
-                      setReels={setReels}
-                      openFullscreenReels={(i) => {
-                        setCurrentReelIndex(i);
-                        setIsFullscreenMode(true);
-                      }}
-                    />
-                  </ProtectedRoute>
-                }
-              />
-              <Route
-                path="/calls"
-                element={
-                  <ProtectedRoute>
-                    <CallsPage />
-                  </ProtectedRoute>
-                }
-              />
+              <Route path="/" element={<ProtectedRoute><GistsPage /></ProtectedRoute>} />
+              <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+              <Route path="/vibes" element={<ProtectedRoute><VibesPage /></ProtectedRoute>} />
+              <Route path="/reachouts" element={<ProtectedRoute><ReachoutsPage /></ProtectedRoute>} />
+              <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
+              <Route path="/search" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
+              <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+              <Route path="/reels" element={<ProtectedRoute>
+                <ReelsPage reels={reels} setReels={setReels} openFullscreenReels={(i) => { setCurrentReelIndex(i); setIsFullscreenMode(true); }} />
+              </ProtectedRoute>} />
+              <Route path="/calls" element={<ProtectedRoute><CallsPage /></ProtectedRoute>} />
+
+              {/* Post Creation */}
+              <Route path="/post-create" element={
+                <ProtectedRoute>
+                  <PostCreatePage onCreatePost={handleCreatePost} />
+                </ProtectedRoute>
+              } />
             </Routes>
           </div>
         </div>

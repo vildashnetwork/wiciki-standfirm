@@ -1,2 +1,239 @@
-/* Calls page shares Reachouts styles; override states if needed */
-/* Intentionally minimal: uses .reachouts-grid and .reachout-card from Reachout.css */
+/* Core WICIKI Styles - Adapted from your branding */
+:root {
+    --primary-red: #E50914;
+    --primary-black: #141414;
+    --secondary-white: #FFFFFF;
+    --medium-gray: #B0B0B0;
+    --light-gray-bg: #F0F2F5;
+    --card-border-color: #333333;
+    --text-color-light: #E0E0E0;
+    --text-color-dark: #FFFFFF;
+    --button-decline-bg: #333333;
+    --button-decline-text: #FFFFFF;
+}
+
+body {
+    background-color: var(--light-gray-bg);
+    margin: 0;
+    font-family: 'Roboto', sans-serif;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+/* Page Container - This will be the main dark box */
+.calls-page-container {
+    width: 95%;
+    max-width: 600px;
+    margin: 40px auto;
+    background-color: var(--primary-black);
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
+    padding: 30px;
+    color: var(--text-color-light);
+}
+
+/* Header & Description */
+.page-title {
+    font-size: 2em;
+    font-weight: 700;
+    color: var(--secondary-white);
+    text-align: center;
+    border-bottom: 2px solid var(--primary-red);
+    padding-bottom: 15px;
+    margin-bottom: 30px;
+}
+
+.section-description {
+    font-size: 1em;
+    color: var(--medium-gray);
+    text-align: center;
+    margin-bottom: 30px;
+}
+
+/* Call Card */
+.call-card {
+    display: flex;
+    align-items: center;
+    padding: 20px;
+    border-bottom: 1px solid var(--card-border-color);
+    transition: background-color 0.2s ease-in-out;
+}
+
+.call-card:hover {
+    background-color: #2a2a2a;
+}
+
+.call-card:last-child {
+    border-bottom: none;
+}
+
+/* Profile Information */
+.profile-info {
+    display: flex;
+    align-items: center;
+    flex-grow: 1;
+}
+
+.profile-avatar-placeholder {
+    width: 68px;
+    height: 68px;
+    background-color: var(--medium-gray);
+    border-radius: 50%;
+    margin-right: 25px;
+    flex-shrink: 0;
+    overflow: hidden; /* This is key to cropping the image */
+    border: 2px solid var(--primary-red);
+}
+
+.profile-avatar-placeholder img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* This makes the image fill the container without stretching */
+    display: block;
+}
+
+.user-details {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.user-name {
+    font-weight: 700;
+    font-size: 1.2em;
+    color: var(--secondary-white);
+    margin: 0 0 6px 0;
+}
+
+.user-skill {
+    display: inline-block;
+    background-color: var(--primary-red);
+    color: var(--secondary-white);
+    padding: 6px 14px;
+    border-radius: 20px;
+    font-size: 0.85em;
+    font-weight: 500;
+    max-width: fit-content;
+    line-height: 1;
+    margin-bottom: 8px;
+}
+
+.user-message {
+    font-size: 0.95em;
+    color: var(--text-color-light);
+    margin-top: 0;
+    line-height: 1.5;
+}
+
+/* Action Buttons */
+.call-actions {
+    display: flex;
+    gap: 12px;
+    flex-shrink: 0;
+}
+
+.action-button {
+    padding: 12px 22px;
+    border: none;
+    border-radius: 28px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+    font-size: 0.95em;
+    min-width: 100px;
+    text-align: center;
+}
+
+.accept-button {
+    background-color: var(--primary-red);
+    color: var(--secondary-white);
+    box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4);
+}
+
+.accept-button:hover {
+    background-color: #C40812;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 6px 15px rgba(229, 9, 20, 0.5);
+}
+
+.decline-button {
+    background-color: var(--button-decline-bg);
+    color: var(--button-decline-text);
+    border: 1px solid #555555;
+}
+
+.decline-button:hover {
+    background-color: #4A4A4A;
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .calls-page-container {
+        width: 100%;
+        margin: 0;
+        border-radius: 0;
+        padding: 20px;
+        box-shadow: none;
+    }
+    
+    .page-title {
+        font-size: 1.6em;
+        margin-bottom: 20px;
+    }
+
+    .section-description {
+        font-size: 0.9em;
+        margin-bottom: 20px;
+    }
+
+    .call-card {
+        padding: 15px 0;
+        flex-direction: column;
+        align-items: flex-start;
+        text-align: left;
+    }
+    
+    .profile-info {
+        width: 100%;
+        margin-bottom: 15px;
+    }
+
+    .profile-avatar-placeholder {
+        width: 60px;
+        height: 60px;
+        margin-right: 15px;
+    }
+    
+    .user-details {
+        align-items: flex-start;
+    }
+
+    .user-name {
+        font-size: 1.1em;
+    }
+
+    .user-skill {
+        padding: 5px 12px;
+        font-size: 0.75em;
+        margin-bottom: 6px;
+    }
+
+    .user-message {
+        font-size: 0.85em;
+    }
+
+    .call-actions {
+        width: 100%;
+        justify-content: space-between;
+        gap: 8px;
+    }
+    
+    .action-button {
+        flex: 1;
+        font-size: 0.8em;
+        padding: 10px;
+        min-width: unset;
+    }
+}

@@ -14,6 +14,19 @@
   cursor: pointer;
 }
 
+@media (max-width: 500px) {
+  .post-creation {
+    flex-direction: column;
+
+  }
+
+  .avatar {
+    width: 60px !important;
+    height: 60px !important;
+    font-size: 3rem;
+  }
+}
+
 .avatar {
   width: 42px;
   height: 42px;

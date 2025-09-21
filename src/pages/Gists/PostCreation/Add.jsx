@@ -47,7 +47,7 @@ const PostCreatePage = ({ onCreatePost }) => {
         <div className="post-page">
             {/* Header */}
             <header className="post-header">
-                <div className="logo"><ion-icon name="arrow-back-outline"></ion-icon></div>
+                <div className="logo" onClick={() => window.location.href = "/"}><ion-icon name="arrow-back-outline"></ion-icon></div>
 
             </header>
 
@@ -58,7 +58,7 @@ const PostCreatePage = ({ onCreatePost }) => {
                     <h2>Create a Post</h2>
 
                     <div className="form-group">
-                        <label>Post Type</label>
+
                         <select
                             value={postType}
                             onChange={(e) => {
@@ -70,6 +70,10 @@ const PostCreatePage = ({ onCreatePost }) => {
                             <option value="text">Text</option>
                             <option value="image">Image</option>
                             <option value="video">Video</option>
+                        </select>
+                        <select>
+                            <option value="text">Public</option>
+                            <option value="image">Private</option>
                         </select>
                     </div>
 

@@ -1,0 +1,134 @@
+/* Card container */
+.friend-requests-card {
+  background: var(--card-bg);
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  margin-bottom: 16px;
+}
+
+.friend-requests-title {
+  color: var(--text-primary);
+  font-weight: 600;
+  margin-bottom: 12px;
+  font-size: 1rem;
+}
+
+/* List */
+.friend-requests-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+/* Each friend request */
+.friend-request-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 10px;
+  background: var(--secondary-bg);
+  transition: background 0.2s ease, transform 0.2s ease;
+}
+
+.friend-request-item:hover {
+  background: var(--hover-bg);
+  transform: translateY(-1px);
+}
+
+/* Avatar */
+.friend-request-item .avatar {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background: linear-gradient(145deg, #1a1a1a, #262626);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  color: var(--text-primary);
+  flex-shrink: 0;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35) inset;
+}
+
+/* Friend info */
+.friend-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.friend-name {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 0.95rem;
+}
+
+.friend-mutual {
+  font-size: 0.8rem;
+  color: var(--text-muted);
+  margin-top: 2px;
+}
+
+/* Actions */
+.friend-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 6px;
+}
+
+/* Buttons */
+.btn-confirm,
+.btn-delete {
+  padding: 6px 14px;
+  border-radius: 6px;
+  font-weight: 500;
+  font-size: 0.85rem;
+  cursor: pointer;
+  border: none;
+  transition: background 0.2s ease, transform 0.1s ease, box-shadow 0.2s ease;
+}
+
+.btn-confirm {
+  background: var(--success-color);
+  color: var(--accent-white);
+  box-shadow: 0 4px 12px rgba(67, 160, 71, 0.35);
+}
+
+.btn-confirm:hover {
+  background: #39903c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(67, 160, 71, 0.45);
+}
+
+.btn-delete {
+  background: var(--secondary-bg);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.25);
+}
+
+.btn-delete:hover {
+  background: rgba(255, 255, 255, 0.05);
+  transform: translateY(-1px);
+}
+
+/* Responsive */
+@media (max-width: 500px) {
+  .friend-request-item {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .friend-actions {
+    width: 100%;
+    justify-content: flex-start;
+  }
+
+  .btn-confirm,
+  .btn-delete {
+    flex: 1;
+    margin-right: 6px;
+  }
+}

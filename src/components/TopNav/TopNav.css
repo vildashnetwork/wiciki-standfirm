@@ -1,82 +1,156 @@
-/* Top Bar */
+/* Topbar container */
 .topbar {
-  height: 80px;
+  height: 72px;
   background: var(--secondary-bg);
   border-bottom: 1px solid var(--border-color);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32px;
-  position: relative;
+  padding: 0 28px;
+  gap: 20px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
 }
 
-.topbar::after {
-  content: '';
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--accent-red), transparent);
+/* Left Section (Logo + Toggle) */
+.topbar-left {
+  display: flex;
+  align-items: center;
+  gap: 16px;
 }
 
-.quick-actions { display: flex; gap: 16px; }
-
-.quick-btn {
-  padding: 12px 24px;
-  background: linear-gradient(135deg, var(--accent-red), var(--accent-red-light));
-  border: none;
-  border-radius: 25px;
-  color: var(--accent-white);
-  font-weight: 600;
+.logo {
+  display: flex;
+  align-items: center;
+  gap: 6px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  font-weight: 700;
+  font-size: 18px;
+  color: var(--text-primary);
+}
+.logo-mark {
+  font-size: 20px;
+}
+.logo-text {
+  background: linear-gradient(90deg, var(--accent-red), var(--accent-red-light));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* Quick Actions (Center Nav) */
+.quick-actions {
+  display: flex;
+  gap: 12px;
+  flex: 1;
+  justify-content: center;
+}
+.quick-btn {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 18px;
+  background: transparent;
+  border: 1px solid var(--border-color);
+  border-radius: 25px;
+  color: var(--text-primary);
+  font-weight: 500;
+  cursor: pointer;
   font-size: 14px;
+  transition: all 0.25s ease;
 }
 .quick-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(220, 20, 60, 0.4);
+  background: var(--hover-bg);
+  border-color: var(--accent-red);
+  color: var(--accent-red);
 }
 
-.profile-section { display: flex; align-items: center; gap: 16px; }
+/* Right Section */
+.topbar-right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+/* Search box */
+.search-box {
+  display: flex;
+  align-items: center;
+  background: var(--primary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 25px;
+  padding: 6px 12px;
+  gap: 8px;
+}
+.search-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  font-size: 14px;
+  color: var(--text-primary);
+}
+.search-box ion-icon {
+  font-size: 18px;
+  color: var(--text-muted);
+}
+
+/* Notification & Icon buttons */
+.icon-btn {
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 8px;
+  border-radius: 8px;
+  transition: background 0.3s ease;
+}
+.icon-btn:hover {
+  background: var(--hover-bg);
+  color: var(--accent-red);
+}
+
+/* Profile Avatar */
 .profile-avatar {
-  width: 48px;
-  height: 48px;
+  width: 42px;
+  height: 42px;
   border-radius: 50%;
   background: linear-gradient(135deg, var(--accent-red), var(--accent-red-dark));
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
+  font-size: 16px;
   font-weight: 600;
+  color: #fff;
   cursor: pointer;
   transition: all 0.3s ease;
 }
-.profile-avatar:hover { box-shadow: 0 0 20px var(--glow-color); }
+.profile-avatar:hover {
+  box-shadow: 0 0 12px var(--glow-color);
+}
 
-/* Mobile menu toggle */
+/* Mobile */
 .mobile-menu-toggle {
   display: none;
   background: none;
   border: none;
-  color: var(--text-primary);
-  font-size: 24px;
+  font-size: 26px;
   cursor: pointer;
-  padding: 8px;
-  border-radius: 8px;
-  transition: all 0.3s ease;
+  padding: 6px;
+  color: var(--text-primary);
 }
 .mobile-menu-toggle:hover {
-  background: rgba(220, 20, 60, 0.2);
   color: var(--accent-red);
 }
 
 @media (max-width: 768px) {
-  .mobile-menu-toggle { display: block; }
-  .topbar { padding: 0 16px; justify-content: space-between; }
-  .quick-actions { display: none; }
-}
-
-@media (max-width: 480px) {
-  .topbar { height: 70px; padding: 0 12px; }
+  .mobile-menu-toggle {
+    display: block;
+  }
+  .quick-actions {
+    display: none;
+  }
+  .search-box {
+    display: none;
+  }
 }

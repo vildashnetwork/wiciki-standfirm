@@ -1,0 +1,330 @@
+.card-postcreation {
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.01), transparent);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  border-radius: 14px;
+  box-shadow: var(--shadow-sm);
+  transition: transform 180ms ease, box-shadow 180ms ease;
+  margin-bottom: 16px;
+  overflow: hidden;
+}
+
+.card-postcreation:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-lg);
+}
+
+.card-postcreation-padding {
+  padding: 14px;
+}
+
+/* Post creation row */
+.post-creation {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Avatar */
+.avatar {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-secondary);
+  font-size: 18px;
+  box-shadow: 0 6px 14px rgba(0, 0, 0, 0.45) inset;
+}
+
+/* Input pill */
+.post-input {
+  flex: 1;
+  padding: 10px 16px;
+  border-radius: 999px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: var(--input-bg);
+  color: var(--text-primary);
+  cursor: pointer;
+  font-size: 14px;
+  transition: box-shadow 200ms ease, border-color 200ms ease, transform 120ms ease;
+}
+
+.post-input:hover {
+  border-color: rgba(255, 255, 255, 0.06);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  transform: translateY(-1px);
+}
+
+.post-input:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 6px 22px var(--accent-color-fade);
+}
+
+/* Actions row */
+.post-actions {
+  display: flex;
+  gap: 10px;
+  margin-top: 12px;
+}
+
+.post-action-btn {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 10px;
+  border-radius: 10px;
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.02);
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 180ms ease, transform 120ms ease, box-shadow 180ms ease;
+  font-size: 13px;
+}
+
+.post-action-btn ion-icon {
+  font-size: 18px;
+}
+
+.post-action-btn:hover {
+  background: var(--hover-bg);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.45);
+}
+
+/* Modal overlay */
+.modal-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(3, 3, 3, 0.6);
+  z-index: 3000;
+  padding: 20px;
+  animation: pc-fade 180ms ease;
+}
+
+@keyframes pc-fade {
+  from {
+    opacity: 0
+  }
+
+  to {
+    opacity: 1
+  }
+}
+
+/* Modal box */
+.modal {
+  width: 100%;
+  max-width: 640px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+  border-radius: 14px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  overflow: hidden;
+  box-shadow: 0 40px 90px rgba(0, 0, 0, 0.75);
+  animation: pc-slide 220ms cubic-bezier(.2, .9, .2, 1);
+}
+
+@keyframes pc-slide {
+  from {
+    transform: translateY(18px) scale(.995);
+    opacity: 0
+  }
+
+  to {
+    transform: translateY(0) scale(1);
+    opacity: 1
+  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+}
+
+.modal-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.modal-close {
+  background: transparent;
+  border: none;
+  color: var(--text-secondary);
+  font-size: 18px;
+  padding: 8px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 140ms ease, color 140ms ease, transform 120ms ease;
+}
+
+.modal-close:hover {
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--accent-red);
+  transform: scale(1.03);
+}
+
+.modal-body {
+  padding: 18px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 14px;
+}
+
+/* Form labels/inputs */
+.form-group {
+  margin-bottom: 6px;
+}
+
+.form-label {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin-bottom: 6px;
+}
+
+.form-input,
+.form-select,
+.form-textarea {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: rgba(255, 255, 255, 0.01);
+  color: var(--text-primary);
+  font-size: 14px;
+  transition: box-shadow 160ms ease, border-color 160ms ease;
+}
+
+.form-select {
+  appearance: none;
+  padding-right: 28px;
+}
+
+.form-input:focus,
+.form-select:focus,
+.form-textarea:focus {
+  outline: none;
+  border-color: var(--accent-color);
+  box-shadow: 0 8px 30px var(--accent-color-fade);
+}
+
+/* textarea */
+.form-textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Media preview */
+.media-preview {
+  margin-top: 8px;
+  border-radius: 10px;
+  overflow: hidden;
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  background: rgba(0, 0, 0, 0.25);
+}
+
+.media-preview img,
+.media-preview video {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+/* Buttons */
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  background: linear-gradient(180deg, var(--accent-color), var(--accent-color-hover));
+  color: var(--accent-white);
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: none;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 140ms ease, box-shadow 180ms ease;
+  box-shadow: 0 10px 30px rgba(229, 57, 53, 0.16);
+}
+
+.btn-primary:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 18px 48px rgba(229, 57, 53, 0.16);
+}
+
+.btn-secondary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  color: var(--text-primary);
+  border: 1px solid rgba(255, 255, 255, 0.03);
+  cursor: pointer;
+  transition: transform 120ms ease, background 120ms ease;
+}
+
+.btn-secondary:hover {
+  transform: translateY(-2px);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* small helpers */
+@media (max-width: 760px) {
+  .modal {
+    max-width: 92%;
+  }
+
+  .card-padding {
+    padding: 12px;
+  }
+
+  .avatar {
+    width: 40px;
+    height: 40px;
+    font-size: 16px;
+  }
+
+  .post-input {
+    padding: 10px 12px;
+  }
+
+  .post-actions {
+    gap: 8px;
+  }
+
+  .post-action-btn {
+    padding: 8px 6px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 420px) {
+  .post-actions {
+    flex-direction: column;
+  }
+
+  .post-action-btn {
+    width: 100%;
+    justify-content: flex-start;
+    padding-left: 12px;
+  }
+
+  .modal-body {
+    padding: 12px;
+  }
+}

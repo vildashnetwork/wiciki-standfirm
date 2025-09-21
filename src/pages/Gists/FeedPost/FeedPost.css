@@ -109,6 +109,12 @@
   padding: 8px 0;
 }
 
+@media (max-width: 500px) {
+  .post-reactions {
+    flex-direction: row;
+  }
+}
+
 .reaction-btn {
   flex: 1;
   display: flex;
@@ -131,7 +137,8 @@
 }
 
 .reaction-btn.liked {
-  color: #e60023; /* Instagram/Facebook red */
+  color: #e60023;
+  /* Instagram/Facebook red */
 }
 
 /* ================================
@@ -201,7 +208,7 @@
 =================================== */
 @media (max-width: 600px) {
   .post-reactions {
-    flex-direction: column;
+    flex-direction: row;
     gap: 4px;
   }
 }

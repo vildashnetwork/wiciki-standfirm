@@ -21,22 +21,34 @@
 }
 
 /* Page visibility */
-.page { display: block; animation: fadeIn 0.5s ease; }
+.page {
+  display: block;
+  animation: fadeIn 0.5s ease;
+}
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(20px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Mobile adjustments for content area spacing with bottom nav */
 @media (max-width: 768px) {
-  .content-area { 
-    padding: 16px; 
+  .content-area {
+    padding: 12px;
     padding-bottom: 100px !important;
     /* margin-bottom: 150px; */
-   }
+  }
 }
 
 @media (max-width: 480px) {
-  .content-area { padding: 12px; }
+  .content-area {
+    padding: 0px;
+  }
 }

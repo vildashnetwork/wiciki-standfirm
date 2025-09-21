@@ -1,27 +1,36 @@
 /* Card wrapper */
 .card-story {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
-  border: 1px solid rgba(255, 255, 255, 0.02);
+  background: #111;
   border-radius: 14px;
   padding: 12px;
   margin-bottom: 16px;
-  color: var(--text-primary);
+  display: flex;
+  flex-direction: row;
+  color: #fff;
+  overflow-x: auto;
+  /* allow horizontal scrolling for large cards */
 }
 
-/* horizontal scroller */
+/* Stories container wrapper */
+.stories-container-wrapper {
+  position: relative;
+  flex: 1;
+  overflow-x: auto;
+  margin-left: 10px !important;
+}
+
+/* Horizontal scroller */
 .stories-container {
   display: flex;
-  gap: 14px;
-  overflow-x: auto;
-  padding: 8px 6px;
+  gap: 16px;
+  padding: 12px 0;
   scroll-snap-type: x mandatory;
   -webkit-overflow-scrolling: touch;
-  position: relative;
 }
 
-/* left/right fade affordances */
-.stories-container::before,
-.stories-container::after {
+/* Left/right fade */
+.stories-container-wrapper::before,
+.stories-container-wrapper::after {
   content: "";
   position: absolute;
   top: 0;
@@ -31,198 +40,217 @@
   z-index: 2;
 }
 
-.stories-container::before {
+.stories-container-wrapper::before {
   left: 0;
-  background: linear-gradient(90deg, var(--primary-bg), transparent);
+  background: linear-gradient(90deg, #111, transparent);
 }
 
-.stories-container::after {
+.stories-container-wrapper::after {
   right: 0;
-  background: linear-gradient(270deg, var(--primary-bg), transparent);
+  background: linear-gradient(270deg, #111, transparent);
 }
 
-/* hide native scrollbar but keep accessibility */
-.stories-container::-webkit-scrollbar {
-  height: 8px;
-}
-
-.stories-container::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.06);
-  border-radius: 999px;
-}
-
-/* story item */
+/* Story item */
 .story-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  min-width: 88px;
-  width: 88px;
+  min-width: 400px;
+  /* same as card width */
   scroll-snap-align: center;
   cursor: pointer;
-  transition: transform .22s cubic-bezier(.2, .8, .2, 1), filter .22s;
-  outline: none;
+  transition: transform 0.22s cubic-bezier(.2, .8, .2, 1), filter 0.22s;
 }
 
-/* keyboard focus */
-.story-item:focus {
-  transform: translateY(-4px) scale(1.02);
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.6), 0 0 18px var(--glow-color);
-  border-radius: 12px;
-  z-index: 3;
+.story-item:hover .story-ring {
+  transform: scale(1.03);
+  box-shadow: 0 10px 28px rgba(255, 0, 0, 0.6), 0 0 20px rgba(255, 0, 0, 0.3);
 }
 
-/* ring (conic gradient) */
+/* Story ring */
 .story-ring {
   padding: 3px;
-  border-radius: 999px;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: conic-gradient(from 180deg, var(--accent-red), var(--accent-red-light), var(--accent-red));
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.5);
-  transition: transform .22s, box-shadow .22s;
+  background: linear-gradient(135deg, #e53935, #ff5252);
+  transition: transform 0.22s, box-shadow 0.22s;
 }
 
-/* interactive hover */
-.story-item:hover .story-ring,
-.story-item:focus .story-ring {
-  transform: scale(1.06);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.6), 0 0 28px var(--glow-color);
+/* Make square for large cards */
+.story-ring.square,
+.story-content.square,
+.story-card.square {
+  border-radius: 12px;
+  width: 400px;
+  height: 400px;
 }
 
-/* inner content circle */
+/* Inner story content */
 .story-content {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
   overflow: hidden;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--card-bg);
+  background: #222;
   position: relative;
-  border: 1px solid var(--border-color);
+  border: 1px solid rgba(255, 255, 255, 0.05);
 }
 
-/* image / video */
+/* Media */
 .story-media {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  display: block;
 }
 
-/* textual story overlay (centered) */
-.story-content .text-story {
+/* Text overlay */
+.text-story-overlay {
   position: absolute;
   inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 8px;
-  text-align: center;
-  color: var(--accent-white);
-  font-size: 12px;
+  color: #fff;
+  font-size: 14px;
   font-weight: 600;
-  line-height: 1.1;
-  pointer-events: none;
+  text-align: center;
+  padding: 12px;
 }
 
-/* small avatar badge */
+/* Avatar badge */
 .story-avatar {
   position: absolute;
-  top: 6px;
-  left: 6px;
-  width: 28px;
-  height: 28px;
+  top: 8px;
+  left: 8px;
+  width: 36px;
+  height: 36px;
   border-radius: 50%;
-  background: var(--secondary-bg);
-  border: 2px solid rgba(255, 255, 255, 0.06);
+  background: #222;
+  border: 2px solid rgba(255, 255, 255, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 14px;
+  font-size: 16px;
   z-index: 4;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
 }
 
-/* Add story special card */
+/* Add status card */
 .story-card {
-  width: 72px;
-  height: 72px;
-  border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
-  border: 1px dashed rgba(255, 255, 255, 0.06);
+  background: #222;
+  border: 1px dashed rgba(255, 255, 255, 0.1);
   position: relative;
 }
 
-/* plus badge */
 .story-add-btn {
   position: absolute;
   bottom: -6px;
   right: -6px;
-  width: 22px;
-  height: 22px;
+  width: 28px;
+  height: 28px;
   border-radius: 50%;
-  background: linear-gradient(180deg, var(--accent-red-light), var(--accent-red));
-  color: white;
+  background: linear-gradient(180deg, #ff5252, #e53935);
+  color: #fff;
   display: flex;
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  box-shadow: 0 8px 18px rgba(229, 57, 53, 0.16);
-  border: 2px solid rgba(255, 255, 255, 0.03);
+  border: 2px solid rgba(255, 255, 255, 0.05);
 }
 
-/* name label */
+/* Story name */
 .story-name {
   margin-top: 8px;
-  font-size: 12px;
-  color: var(--text-muted);
-  max-width: 88px;
+  font-size: 14px;
+  color: #aaa;
+  max-width: 400px;
   text-align: center;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
 }
 
-/* responsive sizes */
-@media (max-width: 768px) {
-  .story-item {
-    min-width: 72px;
-    width: 72px;
+/* Responsive sizes */
+@media (max-width: 1200px) {
+
+  .story-ring.square,
+  .story-content.square,
+  .story-card.square {
+    width: 320px;
+    height: 320px;
   }
 
-  .story-content,
-  .story-card {
-    width: 60px;
-    height: 60px;
+  .story-item {
+    min-width: 320px;
+  }
+
+  .story-avatar {
+    width: 28px;
+    height: 28px;
+    font-size: 14px;
+    top: 6px;
+    left: 6px;
+  }
+
+  .story-name {
+    max-width: 320px;
+    font-size: 13px;
+  }
+}
+
+@media (max-width: 768px) {
+
+  .story-ring.square,
+  .story-content.square,
+  .story-card.square {
+    width: 200px;
+    height: 200px;
+  }
+
+  .story-item {
+    min-width: 200px;
   }
 
   .story-avatar {
     width: 24px;
     height: 24px;
     font-size: 12px;
-    top: 5px;
-    left: 5px;
+    top: 4px;
+    left: 4px;
   }
 
   .story-name {
-    font-size: 11px;
-    max-width: 72px;
+    max-width: 200px;
+    font-size: 12px;
   }
 }
 
-@media (max-width: 420px) {
-  .card-story {
-    padding: 8px;
+@media (max-width: 480px) {
+
+  .story-ring.square,
+  .story-content.square,
+  .story-card.square {
+    width: 140px;
+    height: 140px;
   }
 
-  .stories-container {
-    gap: 10px;
+  .story-item {
+    min-width: 140px;
+  }
+
+  .story-avatar {
+    width: 20px;
+    height: 20px;
+    font-size: 10px;
+    top: 3px;
+    left: 3px;
+  }
+
+  .story-name {
+    max-width: 140px;
+    font-size: 10px;
   }
 }

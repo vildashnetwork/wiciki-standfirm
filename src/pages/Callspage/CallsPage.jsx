@@ -1,27 +1,27 @@
 import React, { useState } from 'react';
-import './CallsPage.css';
+// import './CallsPage.css';
 
 const CallsPage = () => {
     const [calls, setCalls] = useState([
-        { 
-            id: 1, 
-            name: 'Broskii', 
-            skill: 'MERN Expert', 
-            message: 'Wants to Catch and discuss a collaboration on the WICIKI backend.', 
+        {
+            id: 1,
+            name: 'Broskii',
+            skill: 'MERN Expert',
+            message: 'Wants to Catch and discuss a collaboration on the WICIKI backend.',
             avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a56d9007f7c?q=80&w=150&h=150&auto=format&fit=crop'
         },
-        { 
-            id: 2, 
-            name: 'Lewis', 
-            skill: 'UI/UX Designer', 
-            message: 'Looking to Catch you for a UI/UX project.', 
+        {
+            id: 2,
+            name: 'Lewis',
+            skill: 'UI/UX Designer',
+            message: 'Looking to Catch you for a UI/UX project.',
             avatarUrl: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=150&h=150&auto=format&fit=crop'
         },
-        { 
-            id: 3, 
-            name: 'Amanda', 
-            skill: 'Digital Marketer', 
-            message: 'Wants to Catch you to discuss marketing strategies.', 
+        {
+            id: 3,
+            name: 'Amanda',
+            skill: 'Digital Marketer',
+            message: 'Wants to Catch you to discuss marketing strategies.',
             avatarUrl: 'https://images.unsplash.com/photo-1534528736603-ba140bdc8230?q=80&w=150&h=150&auto=format&fit=crop'
         },
     ]);

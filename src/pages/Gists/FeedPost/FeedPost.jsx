@@ -1,11 +1,11 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./FeedPost.css"
 import { Link } from "react-router-dom";
 // Feed Post Component
 const FeedPost = ({ post, onLike, onComment }) => {
     const [showComments, setShowComments] = useState(false);
     const [commentText, setCommentText] = useState('');
-
+    const optionsRef = useRef(null);
     const formatTime = (timestamp) => {
         const now = Date.now();
         const diff = now - timestamp;
@@ -25,21 +25,78 @@ const FeedPost = ({ post, onLike, onComment }) => {
         }
     };
 
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (optionsRef.current && !optionsRef.current.contains(event.target)) {
+                setShowOptions(false);
+            }
+        };
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, []);
+
+    const handleDownload = () => {
+        // Simulate download functionality
+        alert('Downloading media...');
+        setShowOptions(false);
+    };
+
+    const handleReport = () => {
+        // Simulate report functionality
+        alert('Reporting post...');
+        setShowOptions(false);
+    };
+
+    const handleShare = () => {
+        // Simulate share functionality
+        alert('Sharing post...');
+        setShowOptions(false);
+    };
+    const [showOptions, setShowOptions] = useState(false);
     return (
         <div className="cardfeedpost">
             <div className="card-padding">
                 <div className="post-header">
                     <div className="avatar">
-                        <span>{post.avatar}</span>
+
+                        <img src={`${post.avatar}`} alt={post.name} />
+
                     </div>
                     <div className="post-author">
                         <h3>{post.name}</h3>
                         <div className="post-time">{formatTime(post.timestamp)}</div>
                     </div>
-                    <button className="post-menu-btn">
+                    <button className="post-menu-btn" onClick={() => setShowOptions(!showOptions)}>
                         <ion-icon name="ellipsis-vertical"></ion-icon>
                     </button>
                 </div>
+
+
+                {showOptions && (
+                    <div className="fox-menu1" >
+                        <button onClick={handleDownload}>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 16V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V16M16 12L12 16M12 16L8 12M12 16V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            Download
+                        </button>
+                        <button onClick={handleShare}>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M4 12V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V12M16 6L12 2M12 2L8 6M12 2V15" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            Share
+                        </button>
+                        <button onClick={handleReport}>
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 9V14M12 17V17.01M5 3H19C20.1046 3 21 3.89543 21 5V19C21 20.1046 20.1046 21 19 21H5C3.89543 21 3 20.1046 3 19V5C3 3.89543 3.89543 3 5 3Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
+                            </svg>
+                            Report
+                        </button>
+                    </div>
+                )}
+
                 <div className="post-content">{post.content}</div>
                 {post.mediaUrl && (
                     <div className="post-media">

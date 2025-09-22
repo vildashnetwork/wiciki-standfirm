@@ -72,7 +72,7 @@ const GistsPage = () => {
                 {
                     id: 1,
                     name: 'Sarah Johnson',
-                    avatar: '👩‍💼',
+                    avatar: 'https://randomuser.me/api/portraits/men/65.jpg',
                     content: 'Just finished an amazing hike in the mountains! The view was absolutely breathtaking. Nature never fails to inspire me. 🏔️✨',
                     timestamp: Date.now() - 2 * 60 * 60 * 1000,
                     type: 'image',
@@ -84,7 +84,7 @@ const GistsPage = () => {
                 {
                     id: 2,
                     name: 'Mike Chen',
-                    avatar: '👨‍💻',
+                    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
                     content: 'Excited to share that I just launched my new project! It\'s been months of hard work, but seeing it come to life is incredibly rewarding. 🚀',
                     timestamp: Date.now() - 4 * 60 * 60 * 1000,
                     type: 'video',
@@ -96,7 +96,7 @@ const GistsPage = () => {
                 {
                     id: 3,
                     name: 'Emma Davis',
-                    avatar: '👩‍🎨',
+                    avatar: 'https://res.cloudinary.com/dbq5gkepx/image/upload/v1756974124/w3tey25aflrc2cl7cpip.jpg',
                     content: 'Coffee and coding session this morning ☕️ Working on some exciting new features.',
                     timestamp: Date.now() - 6 * 60 * 60 * 1000,
                     type: 'text',
@@ -114,7 +114,7 @@ const GistsPage = () => {
                 {
                     id: 1,
                     name: 'Sarah Johnson',
-                    avatar: '👩‍💼',
+                    avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
                     type: 'image',
                     content: 'Amazing sunset! 🌅',
                     mediaUrl: sampleImages[1],
@@ -124,7 +124,7 @@ const GistsPage = () => {
                 {
                     id: 2,
                     name: 'Mike Chen',
-                    avatar: '👨‍💻',
+                    avatar: 'https://randomuser.me/api/portraits/men/65.jpg',
                     type: 'video',
                     content: 'Just launched my project! 🚀',
                     mediaUrl: sampleVideos[1],
@@ -134,7 +134,7 @@ const GistsPage = () => {
                 {
                     id: 3,
                     name: 'Emma Davis',
-                    avatar: '👩‍🎨',
+                    avatar: 'https://randomuser.me/api/portraits/women/21.jpg',
                     type: 'text',
                     content: 'Coffee and creativity ☕️',
                     mediaUrl: null,
@@ -150,7 +150,7 @@ const GistsPage = () => {
         const newPost = {
             id: Date.now(),
             name: 'You',
-            avatar: '😊',
+            avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
             content: postData.content,
             type: postData.type,
             mediaUrl: postData.mediaUrl,
@@ -166,7 +166,7 @@ const GistsPage = () => {
         const newStatus = {
             id: Date.now(),
             name: 'You',
-            avatar: '😊',
+            avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
             ...statusData,
             timestamp: Date.now()
         };
@@ -221,7 +221,7 @@ const GistsPage = () => {
             {
                 id: Date.now() + 1,
                 name: 'Alex Wilson',
-                avatar: '👨‍🎵',
+                avatar: 'https://randomuser.me/api/portraits/men/32.jpg',
                 content: 'Just wrapped up an amazing team meeting! Excited about the new project we\'re starting next week. 🚀',
                 timestamp: Date.now() - 8 * 60 * 60 * 1000,
                 type: 'image',
@@ -233,7 +233,7 @@ const GistsPage = () => {
             {
                 id: Date.now() + 2,
                 name: 'Rachel Green',
-                avatar: '👩‍🌾',
+                avatar: 'https://randomuser.me/api/portraits/men/65.jpg',
                 content: 'Beautiful sunset from my balcony tonight. Sometimes you need to pause and appreciate the simple moments. 🌅',
                 timestamp: Date.now() - 10 * 60 * 60 * 1000,
                 type: 'video',

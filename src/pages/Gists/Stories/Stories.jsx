@@ -108,7 +108,12 @@ const Stories = ({ stories, onViewStatus }) => {
                                                 </div>
                                             )}
 
-                                            <div className="story-avatar">{story.avatar}</div>
+                                            <div className="avatar story-avatar">
+
+
+                                                <img src={`${story.avatar}`} alt={story.name} />
+
+                                            </div>
                                             <div className="view-count">
                                                 <ion-icon name="eye"></ion-icon> {story.views || 0}
                                             </div>

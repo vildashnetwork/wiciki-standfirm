@@ -46,7 +46,7 @@
 }
 
 /* Avatar */
-.avatar {
+/* .avatar {
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -57,6 +57,22 @@
   font-size: 18px;
   margin-right: 12px;
   flex-shrink: 0;
+} */
+
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  overflow: hidden;
+  margin-right: 8px;
+  flex-shrink: 0;
+}
+
+.avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
 }
 
 /* Post menu button */
@@ -72,8 +88,51 @@
 }
 
 .post-menu-btn:hover {
-  background: var(--accent-light, #f0f2f5);
+  background: rgba(0, 0, 0, 0.05);
 }
+
+.fox-menu1 {
+  position: fixed;
+  top: calc(12px, 100%);
+  /* margin-left: 450px !important; */
+  right: 0;
+  /* margin-top: -70px; */
+  background: var(--premium-dark);
+  border: 1px solid var(--premium-glass-border);
+  border-radius: 12px;
+  padding: 10px;
+  width: 160px;
+  z-index: 1000;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+  /* background: #166fe0;
+  margin-top: 12px;
+  height: 20px;
+  position: absolute; */
+}
+
+.fox-menu1 button {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  width: 100%;
+  padding: 12px;
+  background: none;
+  border: none;
+  color: var(--premium-text);
+  cursor: pointer;
+  border-radius: 8px;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.fox-menu1 button:hover {
+  background: var(--premium-gray);
+}
+
+
+
+
+
 
 /* ================================
    Post Content

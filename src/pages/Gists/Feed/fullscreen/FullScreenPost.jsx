@@ -118,7 +118,7 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
         setLoading(false);
 
         // Disable body scroll
-        document.body.classList.add('fullscreen-open');
+        document.body.classList.add('whale-fullscreen-open');
 
         // Close options when clicking outside
         const handleClickOutside = (event) => {
@@ -130,7 +130,7 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
         document.addEventListener('mousedown', handleClickOutside);
 
         return () => {
-            document.body.classList.remove('fullscreen-open');
+            document.body.classList.remove('whale-fullscreen-open');
             document.removeEventListener('mousedown', handleClickOutside);
         };
     }, [id, posts]);
@@ -289,9 +289,9 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
 
     if (loading) {
         return (
-            <div className="fullscreen-post-container">
-                <div className="fullscreen-post-loading">
-                    <div className="premium-loader"></div>
+            <div className="whale-container">
+                <div className="cheetah-loading">
+                    <div className="cheetah-loader"></div>
                     <p>Loading premium content...</p>
                 </div>
             </div>
@@ -300,11 +300,11 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
 
     if (!post) {
         return (
-            <div className="fullscreen-post-container">
-                <div className="fullscreen-post-error">
+            <div className="whale-container">
+                <div className="rhino-error">
                     <h2>Content Unavailable</h2>
                     <p>The post you're looking for cannot be displayed.</p>
-                    <button className="premium-btn" onClick={() => navigate(-1)}>
+                    <button className="parrot-btn" onClick={() => navigate(-1)}>
                         Return to Feed
                     </button>
                 </div>
@@ -317,11 +317,11 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
         : post.mediaUrl;
 
     return (
-        <div className="fullscreen-post-container">
-            <div className="fullscreen-post-overlay" onClick={() => navigate(-1)}></div>
+        <div className="whale-container">
+            <div className="octopus-overlay" onClick={() => navigate(-1)}></div>
 
-            <div className="media-container">
-                <div className="media-background">
+            <div className="chameleon-container">
+                <div className="chameleon-background">
                     {post.type === 'image' ? (
                         <img src={mediaUrl} alt="Post content" />
                     ) : post.type === 'video' ? (
@@ -335,8 +335,8 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
                             onPause={() => setIsPlaying(false)}
                         />
                     ) : (
-                        <div className="text-post-placeholder">
-                            <div className="text-post-icon">
+                        <div className="owl-placeholder">
+                            <div className="owl-icon">
                                 <svg width="48" height="48" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M14 2H6C4.89543 2 4 2.89543 4 4V20C4 21.1046 4.89543 22 6 22H18C19.1046 22 20 21.1046 20 20V8L14 2Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     <path d="M14 2V8H20M16 13H8M16 17H8M10 9H8" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -347,16 +347,16 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
                     )}
                 </div>
 
-                <div className="media-overlay">
-                    <div className="top-controls">
-                        <button className="close-btn" onClick={() => navigate(-1)}>
+                <div className="chameleon-overlay">
+                    <div className="tiger-controls">
+                        <button className="panda-close" onClick={() => navigate(-1)}>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </button>
 
-                        <div className="top-right-controls">
-                            <button className="options-btn" onClick={() => setShowOptions(!showOptions)}>
+                        <div className="eagle-controls">
+                            <button className="fox-options" onClick={() => setShowOptions(!showOptions)}>
                                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     <path d="M12 13C12.5523 13 13 12.5523 13 12C13 11.4477 12.5523 11 12 11C11.4477 11 11 11.4477 11 12C11 12.5523 11.4477 13 12 13Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                     <path d="M12 6C12.5523 6 13 5.55228 13 5C13 4.44772 12.5523 4 12 4C11.4477 4 11 4.44772 11 5C11 5.55228 11.4477 6 12 6Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -365,7 +365,7 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
                             </button>
 
                             {showOptions && (
-                                <div className="options-menu" ref={optionsRef}>
+                                <div className="fox-menu" ref={optionsRef}>
                                     <button onClick={handleDownload}>
                                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M4 16V20C4 20.5304 4.21071 21.0391 4.58579 21.4142C4.96086 21.7893 5.46957 22 6 22H18C18.5304 22 19.0391 21.7893 19.4142 21.4142C19.7893 21.0391 20 20.5304 20 20V16M16 12L12 16M12 16L8 12M12 16V4" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
@@ -388,15 +388,15 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
                             )}
                         </div>
 
-                        <div className="nav-controls">
+                        <div className="zebra-controls">
                             {post.type === 'image' && Array.isArray(post.mediaUrl) && post.mediaUrl.length > 1 && (
                                 <>
-                                    <button className="nav-btn" onClick={handlePrevImage}>
+                                    <button className="zebra-btn" onClick={handlePrevImage}>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M15 18L9 12L15 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
                                     </button>
-                                    <button className="nav-btn" onClick={handleNextImage}>
+                                    <button className="zebra-btn" onClick={handleNextImage}>
                                         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                             <path d="M9 18L15 12L9 6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                         </svg>
@@ -406,9 +406,9 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
                         </div>
                     </div>
 
-                    <div className="center-controls">
+                    <div className="lion-controls">
                         {post.type === 'video' && (
-                            <button className="play-btn" onClick={togglePlayPause}>
+                            <button className="dolphin-play" onClick={togglePlayPause}>
                                 <svg width="28" height="28" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                     {isPlaying ? (
                                         <>
@@ -423,20 +423,20 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
                         )}
                     </div>
 
-                    <div className="bottom-controls">
+                    <div className="bear-controls">
                         {post.type === 'video' && (
                             <>
-                                <div className="progress-container" onClick={handleSeek}>
+                                <div className="turtle-progress" onClick={handleSeek}>
                                     <div
-                                        className="progress-bar"
+                                        className="turtle-bar"
                                         style={{ width: `${(currentTime / duration) * 100}%` }}
                                     >
-                                        <div className="progress-handle"></div>
+                                        <div className="turtle-handle"></div>
                                     </div>
                                 </div>
-                                <div className="control-buttons">
-                                    <div className="left-controls">
-                                        <button className="control-btn" onClick={togglePlayPause}>
+                                <div className="penguin-buttons">
+                                    <div className="penguin-left">
+                                        <button className="penguin-btn" onClick={togglePlayPause}>
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 {isPlaying ? (
                                                     <>
@@ -448,13 +448,13 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
                                                 )}
                                             </svg>
                                         </button>
-                                        <span className="time-display">
+                                        <span className="owl-time">
                                             {formatMediaTime(currentTime)} / {formatMediaTime(duration)}
                                         </span>
                                     </div>
-                                    <div className="right-controls">
-                                        <div className="volume-control">
-                                            <button className="control-btn">
+                                    <div className="penguin-right">
+                                        <div className="elephant-volume">
+                                            <button className="penguin-btn">
                                                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                     {volume === 0 ? (
                                                         <path d="M13 5L7 9H3V15H7L13 19V5Z" fill="currentColor" />
@@ -465,7 +465,7 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
                                             </button>
                                             <input
                                                 type="range"
-                                                className="volume-slider"
+                                                className="elephant-slider"
                                                 min="0"
                                                 max="1"
                                                 step="0.01"
@@ -473,7 +473,7 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
                                                 onChange={handleVolumeChange}
                                             />
                                         </div>
-                                        <button className="control-btn" onClick={toggleFullscreen}>
+                                        <button className="penguin-btn" onClick={toggleFullscreen}>
                                             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                                 <path d="M8 3H5C4.44772 3 4 3.44772 4 4V7M4 17V20C4 20.5523 4.44772 21 5 21H8M20 17V20C20 20.5523 19.5523 21 19 21H16M16 3H19C19.5523 3 20 3.44772 20 4V7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                                             </svg>
@@ -485,49 +485,49 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
                     </div>
                 </div>
 
-                <div className="fixed-bottom-section">
-                    <div className="user-profile-section">
-                        <div className="user-info">
-                            <div className="premium-avatar large">
+                <div className="gorilla-section">
+                    <div className="peacock-profile">
+                        <div className="peacock-info">
+                            <div className="parrot-avatar large">
                                 <span>{post.avatar}</span>
                             </div>
-                            <div className="user-details">
+                            <div className="peacock-details">
                                 <h3>{post.name}</h3>
                                 <p>@{post.username}</p>
-                                <div className="user-stats">
-                                    <div className="stat">
-                                        <span className="count">{post.posts}</span>
-                                        <span className="label">Posts</span>
+                                <div className="peacock-stats">
+                                    <div className="peacock-stat">
+                                        <span className="peacock-count">{post.posts}</span>
+                                        <span className="peacock-label">Posts</span>
                                     </div>
-                                    <div className="stat">
-                                        <span className="count">{post.followers}</span>
-                                        <span className="label">Followers</span>
+                                    <div className="peacock-stat">
+                                        <span className="peacock-count">{post.followers}</span>
+                                        <span className="peacock-label">Followers</span>
                                     </div>
-                                    <div className="stat">
-                                        <span className="count">{post.following}</span>
-                                        <span className="label">Following</span>
+                                    <div className="peacock-stat">
+                                        <span className="peacock-count">{post.following}</span>
+                                        <span className="peacock-label">Following</span>
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <div className="post-content">
+                        <div className="swan-content">
                             <p>{post.content}</p>
-                            <div className="post-meta">
-                                <span className="post-time">{formatTime(post.timestamp)}</span>
-                                <span className="post-location">Monte Carlo, Monaco</span>
+                            <div className="swan-meta">
+                                <span className="swan-time">{formatTime(post.timestamp)}</span>
+                                <span className="swan-location">Monte Carlo, Monaco</span>
                             </div>
                         </div>
                     </div>
 
-                    <div className="fixed-bottom-controls">
-                        <button className="comments-btn" onClick={() => setShowComments(true)}>
+                    <div className="gorilla-controls">
+                        <button className="monkey-comments" onClick={() => setShowComments(true)}>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M21 15C21 15.5304 20.7893 16.0391 20.4142 16.4142C20.0391 16.7893 19.5304 17 19 17H7L3 21V5C3 4.46957 3.21071 3.96086 3.58579 3.58579C3.96086 3.21071 4.46957 3 5 3H19C19.5304 3 20.0391 3.21071 20.4142 3.58579C20.7893 3.96086 21 4.46957 21 5V15Z" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </button>
 
                         {post.type === 'image' && Array.isArray(post.mediaUrl) && post.mediaUrl.length > 1 && (
-                            <div className="media-counter">
+                            <div className="giraffe-counter">
                                 {currentImageIndex + 1} / {post.mediaUrl.length}
                             </div>
                         )}
@@ -536,38 +536,38 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
             </div>
 
             {showComments && (
-                <div className="comments-modal">
-                    <div className="modal-header">
+                <div className="kangaroo-modal">
+                    <div className="kangaroo-header">
                         <h3>Comments ({post.comments?.length || 0})</h3>
-                        <button className="close-modal" onClick={() => setShowComments(false)}>
+                        <button className="kangaroo-close" onClick={() => setShowComments(false)}>
                             <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
                                 <path d="M18 6L6 18M6 6L18 18" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" />
                             </svg>
                         </button>
                     </div>
-                    <div className="comments-content">
+                    <div className="kangaroo-content">
                         {post.comments?.length > 0 ? (
-                            <div className="comments-list">
+                            <div className="kangaroo-list">
                                 {post.comments.map((comment, index) => (
-                                    <div key={index} className="comment">
-                                        <div className="comment-avatar">
+                                    <div key={index} className="kangaroo-comment">
+                                        <div className="kangaroo-avatar">
                                             <span>{comment.user.charAt(0)}</span>
                                         </div>
-                                        <div className="comment-content">
-                                            <div className="comment-header">
-                                                <span className="comment-author">{comment.user}</span>
-                                                <span className="comment-time">{formatTime(comment.timestamp)}</span>
+                                        <div className="kangaroo-comment-content">
+                                            <div className="kangaroo-comment-header">
+                                                <span className="kangaroo-author">{comment.user}</span>
+                                                <span className="kangaroo-time">{formatTime(comment.timestamp)}</span>
                                             </div>
-                                            <div className="comment-text">{comment.text}</div>
+                                            <div className="kangaroo-text">{comment.text}</div>
                                         </div>
                                     </div>
                                 ))}
                             </div>
                         ) : (
-                            <p className="no-comments">No comments yet</p>
+                            <p className="kangaroo-no-comments">No comments yet</p>
                         )}
                     </div>
-                    <div className="comment-input">
+                    <div className="kangaroo-input">
                         <input
                             type="text"
                             placeholder="Write a comment..."
@@ -575,7 +575,7 @@ const FullScreenPost = ({ posts = [], onLike, onComment }) => {
                             onChange={(e) => setCommentText(e.target.value)}
                             onKeyPress={(e) => e.key === 'Enter' && handleComment()}
                         />
-                        <button className="premium-btn" onClick={handleComment}>
+                        <button className="parrot-btn" onClick={handleComment}>
                             Post
                         </button>
                     </div>

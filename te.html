@@ -4,751 +4,669 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Premium Status Creator</title>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <title>Premium Media Viewer</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap">
     <style>
         :root {
-            --primary-bg: #0f0f13;
-            --secondary-bg: #1a1a23;
-            --tertiary-bg: #252536;
-            --primary-color: #6366f1;
-            --primary-hover: #4f46e5;
-            --text-primary: #f8fafc;
-            --text-secondary: #cbd5e1;
-            --divider-color: #3f3f5a;
-            --success: #22c55e;
-            --error: #ef4444;
-            --border-radius: 12px;
-            --transition: all 0.3s ease;
-            --shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-            --accent-gradient: linear-gradient(135deg, #6366f1, #8b5cf6);
+            --premium-dark: #0a0a0a;
+            --premium-darker: #050505;
+            --premium-gold: #d4af37;
+            --premium-gold-light: #f1e5b9;
+            --premium-gray: #1a1a1a;
+            --premium-gray-light: #2a2a2a;
+            --premium-text: #ffffff;
+            --premium-text-secondary: #b3b3b3;
+            --premium-glass: rgba(255, 255, 255, 0.05);
+            --premium-glass-border: rgba(255, 255, 255, 0.1);
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
         }
 
         body {
-            background-color: #0a0a10;
-            color: var(--text-primary);
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background-color: var(--premium-darker);
+            color: var(--premium-text);
+            overflow: hidden;
+            height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100vh;
-            padding: 20px;
         }
 
-        /* Modal Overlay */
-        .modal-overlay {
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0, 0, 0, 0.8);
-            backdrop-filter: blur(8px);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            padding: 20px;
-        }
-
-        /* Modal Container */
-        .modal {
-            background-color: var(--primary-bg);
-            border-radius: var(--border-radius);
+        .media-container {
+            position: relative;
             width: 100%;
-            max-width: 1000px;
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            border: 1px solid var(--divider-color);
-        }
-
-        /* Modal Header */
-        .modal-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 20px 24px;
-            border-bottom: 1px solid var(--divider-color);
-            background-color: var(--secondary-bg);
-        }
-
-        .modal-title {
-            font-size: 1.5rem;
-            font-weight: 700;
-            background: var(--accent-gradient);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            cursor: pointer;
-            font-size: 1.5rem;
-            color: var(--text-secondary);
-            transition: var(--transition);
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .modal-close:hover {
-            background-color: var(--tertiary-bg);
-            color: var(--text-primary);
-        }
-
-        /* Modal Body - Split Layout */
-        .modal-body {
-            display: flex;
-            min-height: 500px;
-        }
-
-        /* Form Section */
-        .form-section {
-            flex: 1;
-            padding: 24px;
-            border-right: 1px solid var(--divider-color);
-            display: flex;
-            flex-direction: column;
-            gap: 20px;
-            overflow-y: auto;
-        }
-
-        /* Preview Section */
-        .preview-section {
-            flex: 1;
-            padding: 24px;
-            background-color: var(--secondary-bg);
-            display: flex;
-            flex-direction: column;
-            position: relative;
-        }
-
-        .preview-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 16px;
-            color: var(--text-primary);
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .preview-title ion-icon {
-            color: var(--primary-color);
-        }
-
-        .preview-container {
-            flex: 1;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: var(--primary-bg);
-            border-radius: var(--border-radius);
-            padding: 20px;
-            position: relative;
+            height: 100%;
             overflow: hidden;
         }
 
-        .status-preview {
-            width: 280px;
-            height: 500px;
-            border-radius: 16px;
-            overflow: hidden;
-            position: relative;
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-            transition: var(--transition);
-            display: flex;
-            flex-direction: column;
-            background: var(--preview-bg, var(--selected-color, #e53935));
-            color: white;
+        .media-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
         }
 
-        .status-header {
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            background: rgba(0, 0, 0, 0.2);
-        }
-
-        .status-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            background: linear-gradient(45deg, #6366f1, #8b5cf6);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 600;
-        }
-
-        .status-user-info {
-            display: flex;
-            flex-direction: column;
-        }
-
-        .status-username {
-            font-weight: 600;
-            font-size: 1rem;
-        }
-
-        .status-time {
-            font-size: 0.8rem;
-            opacity: 0.8;
-        }
-
-        .status-content {
-            flex: 1;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            text-align: center;
-            word-break: break-word;
-        }
-
-        .status-text {
-            font-size: 1.5rem;
-            font-weight: 500;
-            line-height: 1.4;
-            max-height: 100%;
-            overflow: auto;
-        }
-
-        .status-media {
+        .media-background img,
+        .media-background video {
             width: 100%;
             height: 100%;
             object-fit: cover;
         }
 
-        /* Form Elements */
-        .form-group {
+        .media-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0.3) 30%, transparent 50%, transparent 70%, rgba(0, 0, 0, 0.5) 100%);
+            z-index: 2;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            justify-content: space-between;
         }
 
-        .form-label {
-            font-size: 0.9rem;
-            font-weight: 500;
-            color: var(--text-secondary);
+        .top-controls {
             display: flex;
-            align-items: center;
-            gap: 6px;
+            justify-content: space-between;
+            padding: 20px;
         }
 
-        .form-select,
-        .form-input,
-        .form-textarea {
-            padding: 12px 16px;
-            border-radius: 8px;
-            border: 1px solid var(--divider-color);
-            font-size: 1rem;
-            background-color: var(--tertiary-bg);
-            color: var(--text-primary);
-            width: 100%;
-            transition: var(--transition);
-        }
-
-        .form-select:focus,
-        .form-input:focus,
-        .form-textarea:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.3);
-        }
-
-        .form-textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        /* Media Preview */
-        .media-preview {
-            margin-top: 8px;
-            border-radius: 8px;
-            overflow: hidden;
-        }
-
-        .media-preview img,
-        .media-preview video {
-            width: 100%;
-            border-radius: 8px;
-            max-height: 200px;
-            object-fit: cover;
-        }
-
-        /* Color Picker */
-        .color-picker {
-            display: flex;
-            gap: 10px;
-            flex-wrap: wrap;
-        }
-
-        .color-option {
-            width: 32px;
-            height: 32px;
+        .close-btn {
+            width: 44px;
+            height: 44px;
             border-radius: 50%;
-            border: 2px solid transparent;
+            background: var(--premium-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--premium-glass-border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
             cursor: pointer;
-            transition: var(--transition);
+            color: var(--premium-text);
+            transition: all 0.3s ease;
+        }
+
+        .close-btn:hover {
+            background: rgba(255, 255, 255, 0.1);
+            transform: rotate(90deg);
+        }
+
+        .nav-controls {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-btn {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            background: var(--premium-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--premium-glass-border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: var(--premium-text);
+            transition: all 0.3s ease;
+        }
+
+        .nav-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+        }
+
+        .center-controls {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .play-btn {
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background: var(--premium-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--premium-glass-border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: var(--premium-text);
+            transition: all 0.3s ease;
+        }
+
+        .play-btn:hover {
+            background: rgba(255, 255, 255, 0.2);
+            transform: scale(1.1);
+        }
+
+        .play-btn i {
+            font-size: 28px;
+        }
+
+        .media-info {
+            text-align: center;
+            background: var(--premium-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--premium-glass-border);
+            padding: 12px 24px;
+            border-radius: 30px;
+            max-width: 80%;
+        }
+
+        .media-info h2 {
+            font-size: 18px;
+            margin-bottom: 5px;
+            font-weight: 600;
+        }
+
+        .media-info p {
+            font-size: 14px;
+            color: var(--premium-text-secondary);
+        }
+
+        .bottom-controls {
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .progress-container {
+            width: 100%;
+            height: 4px;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            cursor: pointer;
             position: relative;
         }
 
-        .color-option.selected {
-            transform: scale(1.1);
-            box-shadow: 0 0 0 3px var(--text-primary);
+        .progress-bar {
+            height: 100%;
+            background: var(--premium-gold);
+            border-radius: 2px;
+            width: 35%;
+            position: relative;
         }
 
-        .color-option.selected::after {
-            content: '✓';
+        .progress-handle {
+            width: 14px;
+            height: 14px;
+            border-radius: 50%;
+            background: var(--premium-gold);
             position: absolute;
+            right: -7px;
             top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            color: white;
-            font-weight: bold;
-            text-shadow: 0 0 2px rgba(0, 0, 0, 0.5);
+            transform: translateY(-50%);
+            cursor: pointer;
         }
 
-        /* Buttons */
-        .btn-primary {
-            background: var(--accent-gradient);
-            color: #fff;
+        .control-buttons {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .left-controls,
+        .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .control-btn {
+            background: none;
             border: none;
-            border-radius: 8px;
-            padding: 14px 20px;
-            font-weight: 600;
+            color: white;
             cursor: pointer;
-            transition: var(--transition);
-            margin-top: 10px;
+            font-size: 16px;
             display: flex;
             align-items: center;
             justify-content: center;
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--premium-glass);
+            backdrop-filter: blur(10px);
+            border: 1px solid var(--premium-glass-border);
+            transition: all 0.3s ease;
+        }
+
+        .control-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            color: var(--premium-gold);
+        }
+
+        .time-display {
+            font-size: 14px;
+            color: var(--premium-text);
+            margin: 0 10px;
+        }
+
+        .volume-control {
+            display: flex;
+            align-items: center;
             gap: 8px;
         }
 
-        .btn-primary:hover {
-            opacity: 0.9;
-            transform: translateY(-2px);
-            box-shadow: 0 6px 15px rgba(99, 102, 241, 0.4);
+        .volume-slider {
+            width: 80px;
+            height: 4px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.2);
+            border-radius: 2px;
+            outline: none;
         }
 
-        .btn-secondary {
-            background-color: var(--tertiary-bg);
-            color: var(--text-primary);
-            border: 1px solid var(--divider-color);
-            border-radius: 8px;
-            padding: 10px 16px;
+        .volume-slider::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: var(--premium-gold);
             cursor: pointer;
-            transition: var(--transition);
+        }
+
+        .comments-modal {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 70%;
+            background: var(--premium-dark);
+            z-index: 3;
+            border-radius: 20px 20px 0 0;
+            transform: translateY(100%);
+            transition: transform 0.4s ease;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 -5px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .comments-modal.active {
+            transform: translateY(0);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px;
+            border-bottom: 1px solid var(--premium-glass-border);
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            color: var(--premium-text);
+            font-size: 20px;
+            cursor: pointer;
+        }
+
+        .comments-content {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px;
+        }
+
+        .comment {
+            display: flex;
+            margin-bottom: 20px;
+        }
+
+        .comment-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--premium-gold), #b8860b);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: bold;
+            margin-right: 15px;
+            flex-shrink: 0;
+        }
+
+        .comment-content {
+            flex: 1;
+            background: var(--premium-gray);
+            padding: 15px;
+            border-radius: 15px;
+        }
+
+        .comment-author {
+            font-weight: 600;
+            margin-bottom: 5px;
+            font-size: 15px;
+        }
+
+        .comment-text {
+            font-size: 14px;
+            color: var(--premium-text);
+            line-height: 1.5;
+        }
+
+        .comment-input {
             display: flex;
             align-items: center;
-            gap: 6px;
+            padding: 15px;
+            border-top: 1px solid var(--premium-glass-border);
+            gap: 10px;
         }
 
-        .btn-secondary:hover {
-            background-color: var(--divider-color);
+        .comment-input input {
+            flex: 1;
+            border: none;
+            background: var(--premium-gray);
+            padding: 12px 15px;
+            border-radius: 20px;
+            outline: none;
+            color: var(--premium-text);
+            font-size: 14px;
         }
 
-        /* Responsive Design */
-        @media (max-width: 900px) {
-            .modal-body {
-                flex-direction: column;
+        .comment-input button {
+            background: linear-gradient(135deg, var(--premium-gold), #b8860b);
+            color: var(--premium-dark);
+            border: none;
+            padding: 12px 20px;
+            border-radius: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .comment-input button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(212, 175, 55, 0.3);
+        }
+
+        .comments-btn {
+            position: absolute;
+            right: 20px;
+            bottom: 100px;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: var(--premium-glass);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--premium-glass-border);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            cursor: pointer;
+            color: var(--premium-text);
+            z-index: 2;
+            transition: all 0.3s ease;
+        }
+
+        .comments-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
+            transform: scale(1.1);
+        }
+
+        .media-counter {
+            position: absolute;
+            left: 20px;
+            bottom: 100px;
+            background: var(--premium-glass);
+            backdrop-filter: blur(20px);
+            color: var(--premium-text);
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            border: 1px solid var(--premium-glass-border);
+            z-index: 2;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .media-info {
+                max-width: 90%;
+                padding: 10px 20px;
             }
 
-            .form-section {
-                border-right: none;
-                border-bottom: 1px solid var(--divider-color);
+            .media-info h2 {
+                font-size: 16px;
             }
 
-            .status-preview {
-                width: 100%;
-                max-width: 280px;
-                height: 400px;
+            .media-info p {
+                font-size: 13px;
+            }
+
+            .play-btn {
+                width: 60px;
+                height: 60px;
+            }
+
+            .play-btn i {
+                font-size: 24px;
+            }
+
+            .volume-control {
+                display: none;
             }
         }
 
-        @media (max-width: 600px) {
-            .modal-overlay {
-                padding: 10px;
+        @media (max-width: 480px) {
+            .top-controls {
+                padding: 15px;
             }
 
-            .modal-header {
-                padding: 16px;
+            .close-btn,
+            .nav-btn {
+                width: 40px;
+                height: 40px;
             }
 
-            .form-section,
-            .preview-section {
-                padding: 16px;
+            .bottom-controls {
+                padding: 15px;
             }
 
-            .status-preview {
-                height: 350px;
-            }
-        }
-
-        /* Animation for modal appearance */
-        @keyframes modalAppear {
-            from {
-                opacity: 0;
-                transform: translateY(20px) scale(0.95);
+            .control-btn {
+                width: 32px;
+                height: 32px;
+                font-size: 14px;
             }
 
-            to {
-                opacity: 1;
-                transform: translateY(0) scale(1);
+            .time-display {
+                font-size: 12px;
             }
-        }
 
-        .modal {
-            animation: modalAppear 0.3s ease-out;
-        }
+            .comments-btn,
+            .media-counter {
+                bottom: 90px;
+            }
 
-        /* Scrollbar styling */
-        .form-section::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .form-section::-webkit-scrollbar-track {
-            background: var(--secondary-bg);
-        }
-
-        .form-section::-webkit-scrollbar-thumb {
-            background: var(--primary-color);
-            border-radius: 3px;
+            .comments-modal {
+                height: 75%;
+            }
         }
     </style>
 </head>
 
 <body>
-    <!-- Demo button to show modal -->
-    <button id="demo-button" style="position: fixed; top: 20px; left: 50%; transform: translateX(-50%); 
-            padding: 12px 24px; background: var(--accent-gradient); color: white; border: none; 
-            border-radius: 8px; cursor: pointer; font-weight: 600; z-index: 10;">
-        Show Status Modal
-    </button>
+    <div class="media-container">
+        <!-- Media Background -->
+        <div class="media-background">
+            <video id="mediaElement" loop>
+                <source
+                    src="https://player.vimeo.com/external/370331493.sd.mp4?s=ada720d9fba8c8c3e3a4eda072a3a5b9e5efc3f7&profile_id=139&oauth2_token_id=57447761"
+                    type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
 
-    <!-- Modal Component -->
-    <div class="modal-overlay" id="modal-overlay">
-        <div class="modal">
-            <div class="modal-header">
-                <h3 class="modal-title">Create New Status</h3>
-                <button class="modal-close" id="modal-close">
-                    <ion-icon name="close"></ion-icon>
+        <!-- Media Overlay with Controls -->
+        <div class="media-overlay">
+            <!-- Top Controls -->
+            <div class="top-controls">
+                <button class="close-btn">
+                    <i class="fas fa-times"></i>
                 </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-section">
-                    <div class="form-group">
-                        <label class="form-label">
-                            <ion-icon name="options"></ion-icon>
-                            Status Type
-                        </label>
-                        <select class="form-select" id="status-type">
-                            <option value="text">Text Status</option>
-                            <option value="image">Image Status</option>
-                            <option value="video">Video Status</option>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">
-                            <ion-icon name="create"></ion-icon>
-                            Content
-                        </label>
-                        <textarea class="form-textarea" placeholder="What's happening?" id="status-text"></textarea>
-                    </div>
-                    <div class="form-group" id="media-input-group">
-                        <label class="form-label">
-                            <ion-icon name="image"></ion-icon>
-                            Media URL
-                        </label>
-                        <input type="url" class="form-input" placeholder="Enter image or video URL" id="media-url" />
-                        <button type="button" class="btn-secondary" id="random-media-btn" style="margin-top: 8px">
-                            <ion-icon name="shuffle"></ion-icon>
-                            Use Random Media
-                        </button>
-                        <div class="media-preview" id="media-preview"></div>
-                    </div>
-                    <div class="form-group">
-                        <label class="form-label">
-                            <ion-icon name="color-palette"></ion-icon>
-                            Background Color
-                        </label>
-                        <div class="color-picker" id="color-picker">
-                            <!-- Color options will be added by JavaScript -->
-                        </div>
-                    </div>
-                    <button class="btn-primary" id="submit-btn">
-                        <ion-icon name="add-circle"></ion-icon>
-                        Add Status
+                <div class="nav-controls">
+                    <button class="nav-btn">
+                        <i class="fas fa-chevron-left"></i>
+                    </button>
+                    <button class="nav-btn">
+                        <i class="fas fa-chevron-right"></i>
                     </button>
                 </div>
-                <div class="preview-section">
-                    <h4 class="preview-title">
-                        <ion-icon name="eye"></ion-icon>
-                        Live Preview
-                    </h4>
-                    <div class="preview-container">
-                        <div class="status-preview" id="status-preview">
-                            <div class="status-header">
-                                <div class="status-avatar">Y</div>
-                                <div class="status-user-info">
-                                    <div class="status-username">You</div>
-                                    <div class="status-time">Just now</div>
-                                </div>
-                            </div>
-                            <div class="status-content">
-                                <div class="status-text" id="preview-text">Your status preview will appear here</div>
-                                <img src="" class="status-media" id="preview-image" style="display: none;">
-                                <video class="status-media" id="preview-video" style="display: none;" controls></video>
-                            </div>
+            </div>
+
+            <!-- Center Controls -->
+            <div class="center-controls">
+                <button class="play-btn" id="playPauseBtn">
+                    <i class="fas fa-play"></i>
+                </button>
+                <div class="media-info">
+                    <h2>Monaco Grand Prix 2023</h2>
+                    <p>Posted by Alexander Laurent • 2 hours ago</p>
+                </div>
+            </div>
+
+            <!-- Bottom Controls -->
+            <div class="bottom-controls">
+                <div class="progress-container">
+                    <div class="progress-bar">
+                        <div class="progress-handle"></div>
+                    </div>
+                </div>
+                <div class="control-buttons">
+                    <div class="left-controls">
+                        <button class="control-btn" id="playPauseSmBtn">
+                            <i class="fas fa-play"></i>
+                        </button>
+                        <span class="time-display">2:34 / 5:20</span>
+                    </div>
+                    <div class="right-controls">
+                        <div class="volume-control">
+                            <button class="control-btn">
+                                <i class="fas fa-volume-up"></i>
+                            </button>
+                            <input type="range" class="volume-slider" min="0" max="1" step="0.01" value="1">
+                        </div>
+                        <button class="control-btn">
+                            <i class="fas fa-expand"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Comments Button -->
+        <button class="comments-btn" id="commentsBtn">
+            <i class="fas fa-comment"></i>
+        </button>
+
+        <!-- Media Counter -->
+        <div class="media-counter">
+            <span>1/4</span>
+        </div>
+
+        <!-- Comments Modal -->
+        <div class="comments-modal" id="commentsModal">
+            <div class="modal-header">
+                <h3>Comments (3)</h3>
+                <button class="close-modal" id="closeModal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="comments-content">
+                <div class="comment">
+                    <div class="comment-avatar">S</div>
+                    <div class="comment-content">
+                        <div class="comment-author">Sophia Reynolds</div>
+                        <div class="comment-text">Incredible shot! What camera are you using? The quality is amazing.
                         </div>
                     </div>
                 </div>
+                <div class="comment">
+                    <div class="comment-avatar">J</div>
+                    <div class="comment-content">
+                        <div class="comment-author">James Thompson</div>
+                        <div class="comment-text">Wish I was there! The cars look absolutely stunning this year.</div>
+                    </div>
+                </div>
+                <div class="comment">
+                    <div class="comment-avatar">M</div>
+                    <div class="comment-content">
+                        <div class="comment-author">Michael Brooks</div>
+                        <div class="comment-text">The atmosphere seems electric! How was the experience live?</div>
+                    </div>
+                </div>
+            </div>
+            <div class="comment-input">
+                <input type="text" placeholder="Add a comment...">
+                <button>Post</button>
             </div>
         </div>
     </div>
 
     <script>
-        // Sample media for demonstration
-        const sampleImages = [
-            'https://images.unsplash.com/photo-1579546929662-711aa81148cf',
-            'https://images.unsplash.com/photo-1556740758-90de374c12ad',
-            'https://images.unsplash.com/photo-1518837695005-2083093ee35b'
-        ];
+        document.addEventListener('DOMContentLoaded', function () {
+            const mediaElement = document.getElementById('mediaElement');
+            const playPauseBtn = document.getElementById('playPauseBtn');
+            const playPauseSmBtn = document.getElementById('playPauseSmBtn');
+            const commentsBtn = document.getElementById('commentsBtn');
+            const commentsModal = document.getElementById('commentsModal');
+            const closeModal = document.getElementById('closeModal');
 
-        const sampleVideos = [
-            'https://assets.mixkit.co/videos/preview/mixkit-clouds-and-blue-sky-2411-large.mp4',
-            'https://assets.mixkit.co/videos/preview/mixkit-a-girl-blowing-a-bubble-gum-at-an-amusement-park-1226-large.mp4'
-        ];
-
-        // Colors for the color picker
-        const colors = ['#e53935', '#ff6f61', '#43a047', '#1976d2', '#7b1fa2', '#ff7043', '#00acc1', '#fdd835', '#5e35b1', '#d81b60'];
-
-        // DOM Elements
-        const modalOverlay = document.getElementById('modal-overlay');
-        const demoButton = document.getElementById('demo-button');
-        const modalClose = document.getElementById('modal-close');
-        const statusType = document.getElementById('status-type');
-        const statusText = document.getElementById('status-text');
-        const mediaUrl = document.getElementById('media-url');
-        const randomMediaBtn = document.getElementById('random-media-btn');
-        const mediaPreview = document.getElementById('media-preview');
-        const colorPicker = document.getElementById('color-picker');
-        const submitBtn = document.getElementById('submit-btn');
-        const statusPreview = document.getElementById('status-preview');
-        const previewText = document.getElementById('preview-text');
-        const previewImage = document.getElementById('preview-image');
-        const previewVideo = document.getElementById('preview-video');
-        const mediaInputGroup = document.getElementById('media-input-group');
-
-        // State
-        let selectedColor = colors[0];
-        let currentStatusType = 'text';
-
-        // Initialize the modal
-        function initModal() {
-            // Initially hide the modal
-            modalOverlay.style.display = 'none';
-
-            // Set up color picker
-            colors.forEach(color => {
-                const colorOption = document.createElement('button');
-                colorOption.className = 'color-option';
-                if (color === selectedColor) colorOption.classList.add('selected');
-                colorOption.style.backgroundColor = color;
-                colorOption.addEventListener('click', () => selectColor(color, colorOption));
-                colorPicker.appendChild(colorOption);
-            });
-
-            // Set initial preview background
-            statusPreview.style.setProperty('--preview-bg', selectedColor);
-
-            // Set up event listeners
-            setupEventListeners();
-        }
-
-        // Set up event listeners
-        function setupEventListeners() {
-            // Demo button to show modal
-            demoButton.addEventListener('click', () => {
-                modalOverlay.style.display = 'flex';
-            });
-
-            // Close modal
-            modalClose.addEventListener('click', () => {
-                modalOverlay.style.display = 'none';
-            });
-
-            // Close modal when clicking outside
-            modalOverlay.addEventListener('click', (e) => {
-                if (e.target === modalOverlay) {
-                    modalOverlay.style.display = 'none';
+            // Play/Pause functionality
+            function togglePlay() {
+                if (mediaElement.paused) {
+                    mediaElement.play();
+                    playPauseBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                    playPauseSmBtn.innerHTML = '<i class="fas fa-pause"></i>';
+                } else {
+                    mediaElement.pause();
+                    playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
+                    playPauseSmBtn.innerHTML = '<i class="fas fa-play"></i>';
                 }
+            }
+
+            playPauseBtn.addEventListener('click', togglePlay);
+            playPauseSmBtn.addEventListener('click', togglePlay);
+            mediaElement.addEventListener('click', togglePlay);
+
+            // Comments modal functionality
+            commentsBtn.addEventListener('click', function () {
+                commentsModal.classList.add('active');
             });
 
-            // Status type change
-            statusType.addEventListener('change', (e) => {
-                currentStatusType = e.target.value;
-                updateMediaInputVisibility();
-                updatePreview();
-
-                if (currentStatusType !== 'text') {
-                    setRandomMedia();
-                }
+            closeModal.addEventListener('click', function () {
+                commentsModal.classList.remove('active');
             });
 
-            // Status text input
-            statusText.addEventListener('input', updatePreview);
+            // Simulate media loading
+            mediaElement.play();
+            togglePlay(); // Set the correct icon
 
-            // Media URL input
-            mediaUrl.addEventListener('input', () => {
-                updateMediaPreview();
-                updatePreview();
+            // Close button functionality
+            document.querySelector('.close-btn').addEventListener('click', function () {
+                document.body.innerHTML = '<div style="display:flex; justify-content:center; align-items:center; height:100vh; color:white; font-family:Inter, sans-serif;">Media viewer closed</div>';
             });
-
-            // Random media button
-            randomMediaBtn.addEventListener('click', setRandomMedia);
-
-            // Submit button
-            submitBtn.addEventListener('click', handleSubmit);
-        }
-
-        // Select color
-        function selectColor(color, element) {
-            selectedColor = color;
-
-            // Update UI
-            document.querySelectorAll('.color-option').forEach(opt => {
-                opt.classList.remove('selected');
-            });
-            element.classList.add('selected');
-
-            // Update preview
-            statusPreview.style.setProperty('--preview-bg', selectedColor);
-        }
-
-        // Update media input visibility based on status type
-        function updateMediaInputVisibility() {
-            if (currentStatusType === 'text') {
-                mediaInputGroup.style.display = 'none';
-            } else {
-                mediaInputGroup.style.display = 'flex';
-                mediaInputGroup.style.flexDirection = 'column';
-            }
-        }
-
-        // Set random media
-        function setRandomMedia() {
-            let randomMedia;
-            if (currentStatusType === 'image') {
-                randomMedia = sampleImages[Math.floor(Math.random() * sampleImages.length)];
-            } else if (currentStatusType === 'video') {
-                randomMedia = sampleVideos[Math.floor(Math.random() * sampleVideos.length)];
-            }
-
-            if (randomMedia) {
-                mediaUrl.value = randomMedia;
-                updateMediaPreview();
-                updatePreview();
-            }
-        }
-
-        // Update media preview
-        function updateMediaPreview() {
-            mediaPreview.innerHTML = '';
-
-            if (mediaUrl.value) {
-                const mediaElement = currentStatusType === 'image'
-                    ? document.createElement('img')
-                    : document.createElement('video');
-
-                mediaElement.src = mediaUrl.value;
-                mediaElement.alt = 'Preview';
-
-                if (currentStatusType === 'video') {
-                    mediaElement.controls = true;
-                }
-
-                mediaElement.onerror = () => {
-                    mediaElement.style.display = 'none';
-                };
-
-                mediaPreview.appendChild(mediaElement);
-            }
-        }
-
-        // Update the status preview
-        function updatePreview() {
-            // Update text
-            previewText.textContent = statusText.value || 'Your status preview will appear here';
-
-            // Update media
-            if (currentStatusType === 'image') {
-                previewImage.style.display = mediaUrl.value ? 'block' : 'none';
-                previewVideo.style.display = 'none';
-                if (mediaUrl.value) {
-                    previewImage.src = mediaUrl.value;
-                }
-            } else if (currentStatusType === 'video') {
-                previewVideo.style.display = mediaUrl.value ? 'block' : 'none';
-                previewImage.style.display = 'none';
-                if (mediaUrl.value) {
-                    previewVideo.src = mediaUrl.value;
-                }
-            } else {
-                previewImage.style.display = 'none';
-                previewVideo.style.display = 'none';
-            }
-
-            // Update background
-            statusPreview.style.setProperty('--preview-bg', selectedColor);
-        }
-
-        // Handle form submission
-        function handleSubmit() {
-            if (statusText.value.trim()) {
-                // In a real app, you would pass this data to the parent component
-                console.log({
-                    type: currentStatusType,
-                    content: statusText.value,
-                    mediaUrl: currentStatusType !== 'text' ? mediaUrl.value : null,
-                    backgroundColor: selectedColor
-                });
-
-                // Reset form
-                statusText.value = '';
-                mediaUrl.value = '';
-                statusType.value = 'text';
-                currentStatusType = 'text';
-                updateMediaInputVisibility();
-                updatePreview();
-
-                // Close modal
-                modalOverlay.style.display = 'none';
-
-                // Show success message (in a real app)
-                alert('Status created successfully!');
-            } else {
-                alert('Please enter some text for your status');
-            }
-        }
-
-        // Initialize the modal when the page loads
-        document.addEventListener('DOMContentLoaded', initModal);
+        });
     </script>
 </body>
 

@@ -15,7 +15,7 @@
 }
 
 .card-padding {
-  padding: 16px;
+  padding: 8px;
 }
 
 /* ================================
@@ -94,7 +94,7 @@
   width: 100%;
   border-radius: 8px;
   object-fit: cover;
-  max-height: 450px;
+  max-height: 500px;
   display: block;
 }
 
@@ -112,6 +112,11 @@
 @media (max-width: 500px) {
   .post-reactions {
     flex-direction: row;
+  }
+
+  .post-video,
+  .post-image {
+    height: 300px !important;
   }
 }
 

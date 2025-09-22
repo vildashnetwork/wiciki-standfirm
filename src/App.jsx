@@ -19,6 +19,7 @@ import ProtectedRoute from './components/Auth/ProtectedRoute';
 import WICIKIOnboarding from './pages/Questionings/Questionings';
 import PostCreatePage from './pages/Gists/PostCreation/Add';
 import AddStatusModal from './pages/Gists/AddStatusModal/AddStatusModal';
+import FullScreenPost from './pages/Gists/Feed/fullscreen/FullScreenPost';
 
 function AppContent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -66,6 +67,35 @@ function AppContent() {
     // Here you can add logic to update state or send post to backend
     navigate(-1); // Go back after creating post
   };
+  // Your posts state and handlers
+  const [posts, setPosts] = useState([]);
+
+  const handleLike = (postId) => {
+    setPosts(prevPosts =>
+      prevPosts.map(post =>
+        post.id === postId
+          ? {
+            ...post,
+            liked: !post.liked,
+            likes: post.liked ? post.likes - 1 : post.likes + 1
+          }
+          : post
+      )
+    );
+  };
+
+  const handleComment = (postId, text) => {
+    setPosts(prevPosts =>
+      prevPosts.map(post =>
+        post.id === postId
+          ? {
+            ...post,
+            comments: [...post.comments, { text, timestamp: Date.now() }]
+          }
+          : post
+      )
+    );
+  };
 
   return (
     <div className="App">
@@ -92,7 +122,7 @@ function AppContent() {
               <Route path="/questions" element={<WICIKIOnboarding />} />
 
               {/* Protected Routes */}
-              <Route path="/" element={<ProtectedRoute><GistsPage /></ProtectedRoute>} />
+              <Route path="/" element={<ProtectedRoute><GistsPage onLike={handleLike} onComment={handleComment} /></ProtectedRoute>} />
               <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
               <Route path="/vibes" element={<ProtectedRoute><VibesPage /></ProtectedRoute>} />
               <Route path="/reachouts" element={<ProtectedRoute><ReachoutsPage /></ProtectedRoute>} />
@@ -115,6 +145,13 @@ function AppContent() {
                   <AddStatusModal />
                 </ProtectedRoute>
               } />
+              <Route path="/post/:id"
+
+                element={
+                  <ProtectedRoute>
+                    <FullScreenPost posts={posts} onLike={handleLike} onComment={handleComment} />
+                  </ProtectedRoute>
+                } />
 
             </Routes>
           </div>

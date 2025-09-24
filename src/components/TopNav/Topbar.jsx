@@ -38,7 +38,7 @@ const Topbar = ({ toggleMobileMenu, navigate }) => {
       <div className="topbar-right">
         <div className="search-box">
           <ion-icon name="search-outline"></ion-icon>
-          <input type="text" placeholder="Search..." />
+          <input type="text" className="witdth-search" placeholder="Search..." />
         </div>
         <button className="icon-btn">
           <ion-icon name="notifications-outline"></ion-icon>

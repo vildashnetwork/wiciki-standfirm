@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-// import './CallsPage.css';
+import './CallsPage.css';
 
 const CallsPage = () => {
     const [calls, setCalls] = useState([
@@ -8,60 +8,109 @@ const CallsPage = () => {
             name: 'Broskii',
             skill: 'MERN Expert',
             message: 'Wants to Catch and discuss a collaboration on the WICIKI backend.',
-            avatarUrl: 'https://images.unsplash.com/photo-1507003211169-0a56d9007f7c?q=80&w=150&h=150&auto=format&fit=crop'
+            avatarUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
+            mutualConnections: 12,
+            timestamp: '5 min ago'
+        },
+        {
+            id: 1,
+            name: 'Broskii',
+            skill: 'MERN Expert',
+            message: 'Wants to Catch and discuss a collaboration on the WICIKI backend.',
+            avatarUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
+            mutualConnections: 12,
+            timestamp: '5 min ago'
+        },
+        {
+            id: 1,
+            name: 'Broskii',
+            skill: 'MERN Expert',
+            message: 'Wants to Catch and discuss a collaboration on the WICIKI backend.',
+            avatarUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
+            mutualConnections: 12,
+            timestamp: '5 min ago'
+        },
+        {
+            id: 1,
+            name: 'Broskii',
+            skill: 'MERN Expert',
+            message: 'Wants to Catch and discuss a collaboration on the WICIKI backend.',
+            avatarUrl: 'https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=400&h=300&fit=crop',
+            mutualConnections: 12,
+            timestamp: '5 min ago'
         },
         {
             id: 2,
             name: 'Lewis',
             skill: 'UI/UX Designer',
             message: 'Looking to Catch you for a UI/UX project.',
-            avatarUrl: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=150&h=150&auto=format&fit=crop'
+            avatarUrl: 'https://images.unsplash.com/photo-1547425260-76bcadfb4f2c?q=80&w=150&h=150&auto=format&fit=crop',
+            mutualConnections: 8,
+            timestamp: '15 min ago'
         },
         {
             id: 3,
             name: 'Amanda',
             skill: 'Digital Marketer',
             message: 'Wants to Catch you to discuss marketing strategies.',
-            avatarUrl: 'https://images.unsplash.com/photo-1534528736603-ba140bdc8230?q=80&w=150&h=150&auto=format&fit=crop'
+            avatarUrl: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?q=80&w=150&h=150&auto=format&fit=crop',
+            mutualConnections: 24,
+            timestamp: '1 hour ago'
         },
     ]);
 
     const handleAccept = (callId) => {
-        console.log(`Accepted call from user with ID: ${callId}`);
         setCalls(calls.filter(call => call.id !== callId));
     };
 
     const handleDecline = (callId) => {
-        console.log(`Declined call from user with ID: ${callId}`);
         setCalls(calls.filter(call => call.id !== callId));
     };
 
     return (
-        <div className="calls-page-container">
-            <h1 className="page-title">Incoming Calls</h1>
-            <p className="section-description">Manage new professional connections who want to Catch you.</p>
+        <div className="elvis">
+            <div className="beatles">
+                <h1 className="frankSinatra">Incoming Calls</h1>
+                <p className="ellaFitzgerald">Manage new professional connections who want to Catch you.</p>
+            </div>
 
             {calls.length > 0 ? (
-                calls.map(call => (
-                    <div key={call.id} className="call-card">
-                        <div className="profile-info">
-                            <div className="profile-avatar-placeholder">
-                                <img src={call.avatarUrl} alt={`${call.name}'s profile picture`} />
+                <div className="queen">
+                    {calls.map(call => (
+                        <div key={call.id} className="michaelJackson">
+                            <div className="bobMarley">
+                                <div className="jimiHendrix">
+                                    <img src={call.avatarUrl} alt={call.name} className="madonna" />
+                                </div>
+                                <div className="davidBowie">
+                                    <div className="prince">
+                                        <span className="whitneyHouston">{call.name}</span>
+                                        <span className="stevieWonder">{call.skill}</span>
+                                    </div>
+                                    <div className="marvinGaye">
+                                        <span className="arethaFranklin">{call.mutualConnections} mutual connections</span>
+                                        <span className="rayCharles">{call.timestamp}</span>
+                                    </div>
+                                    <p className="freddieMercury">{call.message}</p>
+                                </div>
                             </div>
-                            <div className="user-details">
-                                <span className="user-name">{call.name}</span>
-                                <span className="user-skill">{call.skill}</span>
-                                <p className="user-message">{call.message}</p>
+                            <div className="ledZeppelin">
+                                <button className="theRollingStones" onClick={() => handleAccept(call.id)}>
+                                    Accept
+                                </button>
+                                <button className="pinkFloyd" onClick={() => handleDecline(call.id)}>
+                                    Decline
+                                </button>
                             </div>
                         </div>
-                        <div className="call-actions">
-                            <button className="action-button accept-button" onClick={() => handleAccept(call.id)}>Accept</button>
-                            <button className="action-button decline-button" onClick={() => handleDecline(call.id)}>Decline</button>
-                        </div>
-                    </div>
-                ))
+                    ))}
+                </div>
             ) : (
-                <p style={{ textAlign: 'center', color: '#999', marginTop: '50px' }}>No new calls to display.</p>
+                <div className="abba">
+                    <div className="beeGees">👥</div>
+                    <h3 className="tinaTurner">No new calls to display</h3>
+                    <p className="natKingCole">When you receive new connection requests, they'll appear here.</p>
+                </div>
             )}
         </div>
     );

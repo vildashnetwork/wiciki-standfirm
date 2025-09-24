@@ -2,7 +2,6 @@
 .app-container {
   display: flex;
   height: 100vh;
-  /* margin-bottom: 150px; */
   position: relative;
 }
 

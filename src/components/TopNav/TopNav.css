@@ -13,6 +13,10 @@
   z-index: 1000;
 }
 
+.witdth-search {
+  padding: 5px !important;
+}
+
 /* Left Section (Logo + Toggle) */
 .topbar-left {
   display: flex;
@@ -29,9 +33,11 @@
   font-size: 18px;
   color: var(--text-primary);
 }
+
 .logo-mark {
   font-size: 20px;
 }
+
 .logo-text {
   background: linear-gradient(90deg, var(--accent-red), var(--accent-red-light));
   -webkit-background-clip: text;
@@ -45,6 +51,7 @@
   flex: 1;
   justify-content: center;
 }
+
 .quick-btn {
   display: flex;
   align-items: center;
@@ -59,6 +66,7 @@
   font-size: 14px;
   transition: all 0.25s ease;
 }
+
 .quick-btn:hover {
   background: var(--hover-bg);
   border-color: var(--accent-red);
@@ -82,6 +90,7 @@
   padding: 6px 12px;
   gap: 8px;
 }
+
 .search-box input {
   border: none;
   outline: none;
@@ -89,6 +98,7 @@
   font-size: 14px;
   color: var(--text-primary);
 }
+
 .search-box ion-icon {
   font-size: 18px;
   color: var(--text-muted);
@@ -105,6 +115,7 @@
   border-radius: 8px;
   transition: background 0.3s ease;
 }
+
 .icon-btn:hover {
   background: var(--hover-bg);
   color: var(--accent-red);
@@ -125,6 +136,7 @@
   cursor: pointer;
   transition: all 0.3s ease;
 }
+
 .profile-avatar:hover {
   box-shadow: 0 0 12px var(--glow-color);
 }
@@ -139,6 +151,7 @@
   padding: 6px;
   color: var(--text-primary);
 }
+
 .mobile-menu-toggle:hover {
   color: var(--accent-red);
 }
@@ -147,9 +160,11 @@
   .mobile-menu-toggle {
     display: block;
   }
+
   .quick-actions {
     display: none;
   }
+
   .search-box {
     display: none;
   }

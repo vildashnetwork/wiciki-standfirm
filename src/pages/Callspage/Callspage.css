@@ -1,239 +1,325 @@
-/* Core WICIKI Styles - Adapted from your branding */
 :root {
-    --primary-red: #E50914;
-    --primary-black: #141414;
-    --secondary-white: #FFFFFF;
-    --medium-gray: #B0B0B0;
-    --light-gray-bg: #F0F2F5;
-    --card-border-color: #333333;
-    --text-color-light: #E0E0E0;
-    --text-color-dark: #FFFFFF;
-    --button-decline-bg: #333333;
-    --button-decline-text: #FFFFFF;
+    /* Backgrounds */
+    --primary-bg: #0d0d0d;
+    /* Almost black, easy on the eyes */
+    --secondary-bg: #1a1a1a;
+    /* Slightly lighter dark for sections */
+    --card-bg: #262626;
+    /* Dark grey for cards, subtle contrast */
+
+    /* Red accents */
+    --accent-red: #e53935;
+    /* Vibrant red, not too bright */
+    --accent-red-light: #ff6f61;
+    /* Soft, modern red for highlights */
+    --accent-red-dark: #ab000d;
+    /* Deep red for hover states */
+
+    /* Whites & Neutrals */
+    --accent-white: #ffffff;
+    /* Pure white for contrast */
+    --text-primary: #f5f5f5;
+    /* Soft white for text */
+    --text-secondary: #dcdcdc;
+    /* Light grey text */
+    --text-muted: #a6a6a6;
+    /* Muted grey for secondary text */
+
+    /* Borders & subtle effects */
+    --border-color: #333333;
+    /* Dark border for subtle separation */
+    --glow-color: rgba(229, 57, 53, 0.25);
+    /* Soft red glow for effects */
+
+    /* Status colors */
+    --success-color: #43a047;
+    /* Green for success */
+    --warning-color: #ff7043;
+    /* Orange-red warning */
 }
 
-body {
-    background-color: var(--light-gray-bg);
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-}
-
-/* Page Container - This will be the main dark box */
-.calls-page-container {
-    width: 95%;
-    max-width: 600px;
-    margin: 40px auto;
-    background-color: var(--primary-black);
-    border-radius: 12px;
-    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.4);
-    padding: 30px;
-    color: var(--text-color-light);
-}
-
-/* Header & Description */
-.page-title {
-    font-size: 2em;
-    font-weight: 700;
-    color: var(--secondary-white);
-    text-align: center;
-    border-bottom: 2px solid var(--primary-red);
-    padding-bottom: 15px;
-    margin-bottom: 30px;
-}
-
-.section-description {
-    font-size: 1em;
-    color: var(--medium-gray);
-    text-align: center;
-    margin-bottom: 30px;
-}
-
-/* Call Card */
-.call-card {
-    display: flex;
-    align-items: center;
-    padding: 20px;
-    border-bottom: 1px solid var(--card-border-color);
-    transition: background-color 0.2s ease-in-out;
-}
-
-.call-card:hover {
-    background-color: #2a2a2a;
-}
-
-.call-card:last-child {
-    border-bottom: none;
-}
-
-/* Profile Information */
-.profile-info {
-    display: flex;
-    align-items: center;
-    flex-grow: 1;
-}
-
-.profile-avatar-placeholder {
-    width: 68px;
-    height: 68px;
-    background-color: var(--medium-gray);
-    border-radius: 50%;
-    margin-right: 25px;
-    flex-shrink: 0;
-    overflow: hidden; /* This is key to cropping the image */
-    border: 2px solid var(--primary-red);
-}
-
-.profile-avatar-placeholder img {
+.elvis {
+    /* max-width: 800px; */
     width: 100%;
-    height: 100%;
-    object-fit: cover; /* This makes the image fill the container without stretching */
-    display: block;
+    margin: 40px auto;
+    margin-top: -10px;
+    /* padding: 0 20px; */
 }
 
-.user-details {
-    flex-grow: 1;
+.beatles {
+    text-align: center;
+    margin-bottom: 40px;
+    padding: 30px 20px;
+    background: linear-gradient(135deg, var(--accent-red-dark) 0%, var(--glow-color) 100%);
+    border-radius: 15px;
+    color: white;
+    max-width: 900px;
+    /* keeps it from stretching too wide */
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.frankSinatra {
+    font-size: 2.5rem;
+    font-weight: 600;
+    margin-bottom: 12px;
+    letter-spacing: 1.5px;
+    line-height: 1.2;
+}
+
+.ellaFitzgerald {
+    font-size: 1.1rem;
+    opacity: 0.9;
+    font-weight: 400;
+    max-width: 600px;
+    margin: 0 auto;
+}
+
+/* Medium screens */
+@media (max-width: 992px) {
+    .frankSinatra {
+        font-size: 2rem;
+    }
+
+    .ellaFitzgerald {
+        font-size: 1rem;
+    }
+}
+
+/* Small screens (phones) */
+@media (max-width: 576px) {
+    .beatles {
+        padding: 20px 15px;
+        border-radius: 10px;
+    }
+
+    .frankSinatra {
+        font-size: 1.6rem;
+        letter-spacing: 1px;
+    }
+
+    .ellaFitzgerald {
+        font-size: 0.95rem;
+    }
+}
+
+.queen {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+}
+
+@media (max-width: 500px) {
+    .queen {
+        grid-template-columns: 1fr;
+    }
+}
+
+.michaelJackson {
+    background: linear-gradient(135deg, var(--glow-color) 0%, var(--accent-red-dark) 100%);
+    border-radius: 12px;
+    padding: 15px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+    border: 1px solid var(--secondary-bg);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.michaelJackson:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+}
+
+.bobMarley {
     display: flex;
-    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    margin-bottom: 20px;
 }
 
-.user-name {
-    font-weight: 700;
-    font-size: 1.2em;
-    color: var(--secondary-white);
-    margin: 0 0 6px 0;
+.jimiHendrix {
+    position: relative;
+    flex-shrink: 0;
 }
 
-.user-skill {
-    display: inline-block;
-    background-color: var(--primary-red);
-    color: var(--secondary-white);
-    padding: 6px 14px;
+.madonna {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 3px solid var(--primary-bg);
+}
+
+.davidBowie {
+    flex: 1;
+}
+
+.prince {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    margin-bottom: 10px;
+    flex-wrap: wrap;
+}
+
+.whitneyHouston {
+    font-size: 1.4rem;
+    font-weight: 600;
+    color: var(--accent-white);
+}
+
+.stevieWonder {
+    background: var(--text-muted);
+    color: white;
+    padding: 4px 12px;
     border-radius: 20px;
-    font-size: 0.85em;
+    font-size: 0.9rem;
     font-weight: 500;
-    max-width: fit-content;
-    line-height: 1;
-    margin-bottom: 8px;
 }
 
-.user-message {
-    font-size: 0.95em;
-    color: var(--text-color-light);
-    margin-top: 0;
+.marvinGaye {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 10px;
+    font-size: 0.9rem;
+}
+
+.arethaFranklin {
+    color: var(--text-secondary);
+    font-weight: 500;
+}
+
+.rayCharles {
+    color: var(--accent-white);
+}
+
+.freddieMercury {
+    color: var(--accent-white);
     line-height: 1.5;
+    font-size: 1rem;
+    margin: 0;
+    padding: 15px;
+    background: hsla(0, 0%, 0%, 0.616);
+    border-radius: 8px;
+    border-left: 4px solid var(--primary-bg);
 }
 
-/* Action Buttons */
-.call-actions {
+.ledZeppelin {
     display: flex;
     gap: 12px;
-    flex-shrink: 0;
+    justify-content: flex-end;
 }
 
-.action-button {
-    padding: 12px 22px;
+.theRollingStones {
+    background: #28a745;
+    color: white;
     border: none;
-    border-radius: 28px;
+    padding: 12px 30px;
+    border-radius: 6px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.2s ease-in-out;
-    font-size: 0.95em;
-    min-width: 100px;
+    transition: background 0.3s ease;
+    min-width: 120px;
+}
+
+.theRollingStones:hover {
+    background: #218838;
+    transform: translateY(-1px);
+}
+
+.pinkFloyd {
+    background: #dc3545;
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 6px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.3s ease;
+    min-width: 120px;
+}
+
+.pinkFloyd:hover {
+    background: #c82333;
+    transform: translateY(-1px);
+}
+
+.abba {
     text-align: center;
+    padding: 60px 20px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
 }
 
-.accept-button {
-    background-color: var(--primary-red);
-    color: var(--secondary-white);
-    box-shadow: 0 4px 10px rgba(229, 9, 20, 0.4);
+.beeGees {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    opacity: 0.7;
 }
 
-.accept-button:hover {
-    background-color: #C40812;
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 6px 15px rgba(229, 9, 20, 0.5);
+.tinaTurner {
+    font-size: 1.5rem;
+    color: #333;
+    margin-bottom: 10px;
+    font-weight: 600;
 }
 
-.decline-button {
-    background-color: var(--button-decline-bg);
-    color: var(--button-decline-text);
-    border: 1px solid #555555;
-}
-
-.decline-button:hover {
-    background-color: #4A4A4A;
-    transform: translateY(-2px) scale(1.02);
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+.natKingCole {
+    color: #666;
+    font-size: 1.1rem;
 }
 
 /* Responsive Design */
 @media (max-width: 768px) {
-    .calls-page-container {
-        width: 100%;
-        margin: 0;
-        border-radius: 0;
-        padding: 20px;
-        box-shadow: none;
-    }
-    
-    .page-title {
-        font-size: 1.6em;
-        margin-bottom: 20px;
+    .elvis {
+        margin: 20px auto;
+        padding: 0 15px;
     }
 
-    .section-description {
-        font-size: 0.9em;
-        margin-bottom: 20px;
+    .frankSinatra {
+        font-size: 2.2rem;
     }
 
-    .call-card {
-        padding: 15px 0;
+    .bobMarley {
         flex-direction: column;
-        align-items: flex-start;
-        text-align: left;
-    }
-    
-    .profile-info {
-        width: 100%;
-        margin-bottom: 15px;
+        text-align: center;
+        gap: 15px;
     }
 
-    .profile-avatar-placeholder {
-        width: 60px;
-        height: 60px;
-        margin-right: 15px;
-    }
-    
-    .user-details {
-        align-items: flex-start;
+    .prince {
+        justify-content: center;
     }
 
-    .user-name {
-        font-size: 1.1em;
+    .marvinGaye {
+        justify-content: center;
+        flex-wrap: wrap;
     }
 
-    .user-skill {
-        padding: 5px 12px;
-        font-size: 0.75em;
-        margin-bottom: 6px;
+    .ledZeppelin {
+        justify-content: center;
     }
 
-    .user-message {
-        font-size: 0.85em;
-    }
-
-    .call-actions {
-        width: 100%;
-        justify-content: space-between;
-        gap: 8px;
-    }
-    
-    .action-button {
+    .theRollingStones,
+    .pinkFloyd {
         flex: 1;
-        font-size: 0.8em;
-        padding: 10px;
-        min-width: unset;
+        min-width: auto;
+    }
+}
+
+@media (max-width: 480px) {
+    .beatles {
+        padding: 20px;
+    }
+
+    .frankSinatra {
+        font-size: 1.8rem;
+    }
+
+    .michaelJackson {
+        padding: 20px;
+    }
+
+    .ledZeppelin {
+        flex-direction: column;
     }
 }

@@ -366,7 +366,7 @@ const FeedPost = ({ post, onLike, onComment }) => {
                     </div>
                     <div className="withy">
                         <button
-                            className="btn-primary"
+                            className="btn-primary1"
                             onClick={handleComment}
                             style={{ padding: '8px 12px' }}
                         >

@@ -14,7 +14,7 @@
 
 /* Load More button */
 .load-more-btn {
-  background: var(--primary-color, #1877f2);
+  background: var(--accent-red);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -26,7 +26,7 @@
 }
 
 .load-more-btn:hover {
-  background: #166fe0;
+  background: var(--accent-red-dark);
 }
 
 .load-more-btn:disabled {

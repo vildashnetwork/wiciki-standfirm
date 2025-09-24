@@ -212,3 +212,5 @@ git commit -am "Li Blissz"
 git push origin main
 $ git remote set-url origin  git@github.com:vildashnetwork/WICIKI-MEDIA-WEB.git
 git push --force origin main
+git remote remove origin
+git remote add origin git@github.com:vildashnetwork/wiciki-standfirm.git

@@ -1,9 +1,9 @@
-
 /* Fullscreen overlay */
 .status-modal-overlay {
   position: fixed;
   inset: 0;
-  background: var(--modal-bg);
+  background: hsla(0, 0%, 0%, 0.89);
+  /* var(--modal-bg); */
   display: flex;
   align-items: center;
   justify-content: center;
@@ -25,8 +25,15 @@
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.98); }
-  to { opacity: 1; transform: scale(1); }
+  from {
+    opacity: 0;
+    transform: scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
 }
 
 /* Close button */
@@ -68,8 +75,13 @@
 }
 
 @keyframes progressFill {
-  from { width: 0%; }
-  to { width: 100%; }
+  from {
+    width: 0%;
+  }
+
+  to {
+    width: 100%;
+  }
 }
 
 /* Media container */
@@ -111,7 +123,7 @@
   color: var(--text-light);
   font-size: 16px;
   font-weight: 500;
-  text-shadow: 0 2px 6px rgba(0,0,0,0.6);
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.6);
 }
 
 /* Name & timestamp */
@@ -141,9 +153,13 @@
   border: none;
   color: var(--text-light);
   font-size: 28px;
-  padding: 8px;
+  padding: 5px;
   border-radius: 50%;
   cursor: pointer;
+  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
   z-index: 10;
 }
 

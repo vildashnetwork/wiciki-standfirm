@@ -1,0 +1,112 @@
+/* ProfileCard.css */
+
+.reachout-card {
+  background-color: #1A1A1A;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(255, 0, 51, 0.3); /* Neon red glow */
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.reachout-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 0 20px rgba(0, 255, 255, 0.4); /* Neon cyan glow on hover */
+}
+
+.reachout-avatar {
+  background-color: #FF0033;
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 24px;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 8px rgba(255, 0, 51, 0.5);
+}
+
+h3 {
+  margin-bottom: 8px;
+  font-size: 20px;
+  color: #FFFFFF;
+}
+
+.expertise {
+  font-size: 14px;
+  font-weight: bold;
+  color: #00FFFF;
+  margin-bottom: 8px;
+}
+
+.description {
+  font-size: 14px;
+  color: #AAAAAA;
+  margin-bottom: 24px;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+  margin-bottom: 16px;
+}
+
+.skill-tag {
+  background-color: #00FFFF;
+  color: #0D0D0D;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+button {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+}
+
+button:hover {
+  transform: scale(1.05);
+}
+button.connect-btn {
+  background-color: #FF0033;
+  color: #FFFFFF;
+  margin-right: 8px;
+}
+
+.status-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  margin-right: 6px;
+  box-shadow: 0 0 6px rgba(0, 255, 255, 0.6);
+  animation: pulseDot 1.5s infinite ease-in-out;
+}
+
+.status-online {
+  background-color: #00FF99;
+}
+
+.status-busy {
+  background-color: #FF9900;
+}
+
+.status-offline {
+  background-color: #999999;
+  animation: none;
+}
+
+@keyframes pulseDot {
+  0% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.4); opacity: 0.6; }
+  100% { transform: scale(1); opacity: 1; }
+}

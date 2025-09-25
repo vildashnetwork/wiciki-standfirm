@@ -1,13 +1,245 @@
-/* Reachouts Grid */
-.reachouts-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
-.reachout-card { background: var(--card-bg); border-radius: 16px; padding: 24px; text-align: center; border: 1px solid var(--border-color); transition: all 0.3s ease; }
-.reachout-card:hover { transform: translateY(-4px); border-color: var(--accent-gold); box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3); }
-.reachout-avatar { width: 80px; height: 80px; border-radius: 50%; background: linear-gradient(135deg, var(--accent-green), var(--accent-purple)); margin: 0 auto 16px; display: flex; align-items: center; justify-content: center; font-size: 32px; font-weight: 600; }
+/* ReachoutsPage.css */
 
-/* Buttons state for connections */
-.quick-btn.connected { background: linear-gradient(135deg, #2ecc71, #27ae60); }
-.quick-btn.declined { background: linear-gradient(135deg, #e74c3c, #c0392b); }
+.page1 {
+  padding: 12px;
+  background-color: #0D0D0D;
+  /* Rich black */
+  /* min-height: 100vh; */
+  height: auto;
+  color: #FFFFFF;
+}
+
+.reachouts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  padding-bottom: 48px;
+}
+
+.reachout-card {
+  background-color: #1A1A1A;
+  border-radius: 12px;
+  padding: 24px;
+  text-align: center;
+  box-shadow: 0 0 12px rgba(255, 0, 51, 0.3);
+  transition: transform 0.3s ease;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+
+.reachout-card:hover {
+  transform: translateY(-4px);
+}
+
+.reachout-avatar {
+  background-color: #FF0033;
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 24px;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto 16px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.skill-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.skill-tag {
+  background-color: #FF0033;
+  color: #FFFF;
+  padding: 9px 12px;
+  border-radius: 10px;
+  font-size: 12px;
+  font-weight: bold;
+  box-shadow: 0 0 8px rgba(255, 0, 51, 0.3);
+  transition: background 0.3s ease;
+  gap: 24px;
+}
+
+.quick-btn,
+.action-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+.quick-btn {
+  padding: 10px 20px;
+  border: none;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.2s ease;
+  background-color: #FF0033;
+  /* default: connect */
+  color: #FFFFFF;
+}
+
+.quick-btn.connected {
+  background-color: #00FFFF;
+  color: #0D0D0D;
+}
+
+.quick-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.action-btn {
+  background-color: transparent;
+  border: 2px solid #FF0033;
+  color: #FF0033;
+}
+
+.action-btn:hover {
+  background-color: #FF0033;
+  color: #FFFFFF;
+}
+
 
 /* Responsive */
-@media (max-width: 1200px) { .reachouts-grid { grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); } }
-@media (max-width: 768px) { .reachouts-grid { grid-template-columns: 1fr; gap: 16px; } .reachout-card { padding: 20px; } }
+@media (max-width: 1200px) {
+  .reachouts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 768px) {
+  .reachouts-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .reachout-card {
+    padding: 20px;
+  }
+}
+
+@media (max-width: 600px) {
+  .reachout-card {
+    padding: 16px;
+    font-size: 14px;
+  }
+
+  .reachout-avatar {
+    width: 48px;
+    height: 48px;
+    font-size: 18px;
+  }
+
+  .quick-btn,
+  .action-btn {
+    padding: 8px 16px;
+    font-size: 12px;
+  }
+}
+
+
+.quick-btn.connected {
+  background-color: #00FFFF;
+  color: #0D0D0D;
+  animation: pulse 1.2s ease-in-out 2;
+  box-shadow: 0 0 12px rgba(0, 255, 255, 0.6);
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.6);
+  }
+
+  50% {
+    transform: scale(1.08);
+    box-shadow: 0 0 20px rgba(0, 255, 255, 0.8);
+  }
+
+  100% {
+    transform: scale(1);
+    box-shadow: 0 0 12px rgba(0, 255, 255, 0.6);
+  }
+}
+
+.reachout-avatar {
+  background-color: #FF0033;
+  color: #FFFFFF;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+/* Glowing animated background */
+.page1 {
+  position: relative;
+  background: linear-gradient(135deg, #0D0D0D, #1A1A1A);
+  overflow: hidden;
+}
+
+.page1::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle, rgba(0, 255, 255, 0.2) 0%, transparent 70%);
+  animation: pulseGlow 6s infinite ease-in-out;
+  z-index: 0;
+}
+
+@keyframes pulseGlow {
+  0% {
+    transform: rotate(0deg);
+    opacity: 0.4;
+  }
+
+  50% {
+    transform: rotate(180deg);
+    opacity: 0.6;
+  }
+
+  100% {
+    transform: rotate(360deg);
+    opacity: 0.4;
+  }
+}
+
+/* Floating sparkles */
+.sparkle {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: #00FFFF;
+  border-radius: 50%;
+  animation: floatSparkle 10s infinite linear;
+  opacity: 0.6;
+}
+
+@keyframes floatSparkle {
+  0% {
+    transform: translateY(0) scale(1);
+    opacity: 0.6;
+  }
+
+  50% {
+    transform: translateY(-200px) scale(1.2);
+    opacity: 0.2;
+  }
+
+  100% {
+    transform: translateY(-400px) scale(1);
+    opacity: 0.6;
+  }
+}

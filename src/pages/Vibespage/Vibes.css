@@ -232,8 +232,9 @@
   padding: 16px;
   background: var(--card-bg);
   border-bottom: 1px solid var(--border-color);
-  gap: 16px;
+  gap: 5px;
 }
+
 
 /* Fixed Header in Full Screen */
 .chat-header.fixed-header {
@@ -258,7 +259,7 @@
 .chat-user-info {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 8px;
   flex: 1;
 }
 
@@ -270,9 +271,9 @@
 .icon-btn {
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 19px;
   cursor: pointer;
-  padding: 8px;
+  padding: 5px;
   border-radius: 50%;
   transition: background 0.3s ease;
 }
@@ -282,13 +283,16 @@
 }
 
 .exit-fullscreen-btn {
-  background: rgba(255, 0, 0, 0.1) !important;
+  /* background: rgba(255, 0, 0, 0.1) !important;*/
   color: #ff4444 !important;
+  padding: 5px !important;
+  font-size: 1.4rem !important;
 }
 
+/* 
 .exit-fullscreen-btn:hover {
   background: rgba(255, 0, 0, 0.2) !important;
-}
+} */
 
 .chat-messages {
   flex: 1;
@@ -357,9 +361,10 @@
 .chat-input-container {
   display: flex;
   align-items: center;
-  padding: 16px;
+  padding: 10px 12px;
   background: var(--card-bg);
-  gap: 12px;
+  gap: 8px;
+  border-top: 1px solid var(--border-color);
 }
 
 /* Fixed Input in Full Screen */
@@ -373,33 +378,60 @@
   border-top: 1px solid var(--border-color);
 }
 
+/* Left side action buttons (upload, attachments, etc.) */
 .input-actions {
+  height: 100% !important;
   display: flex;
-  gap: 4px;
+  font-size: 1.4rem !important;
+  align-items: center;
+  gap: 8px;
 }
 
+.uploading {
+  font-size: 1.5rem;
+  height: 100%;
+  padding: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #fff;
+}
+
+/* Message input box */
 .message-input {
   flex: 1;
-  padding: 12px 16px;
+  min-height: 40px;
+  max-height: 120px;
+  padding: 10px 14px;
   border-radius: 20px;
   border: none;
+  resize: none;
+  overflow-y: auto;
   background: var(--secondary-bg);
   color: var(--text-primary);
-  font-size: 14px;
+  font-size: 15px;
+  line-height: 1.4;
 }
 
 .message-input:focus {
   outline: none;
+  background: var(--secondary-bg-focus, var(--secondary-bg));
 }
 
+/* Send button */
 .send-button {
   background: none;
   border: none;
-  font-size: 18px;
+  font-size: 1.5rem !important;
   cursor: pointer;
   padding: 8px;
   border-radius: 50%;
-  transition: background 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.25s ease;
+  color: #fff !important;
+  font-weight: 900;
 }
 
 .send-button:hover:not(:disabled) {
@@ -407,8 +439,31 @@
 }
 
 .send-button:disabled {
-  opacity: 0.5;
+  opacity: 0.4;
   cursor: not-allowed;
+}
+
+/* Make sure layout works well on smaller screens */
+@media (max-width: 480px) {
+  .chat-input-container {
+    padding: 8px 10px;
+    gap: 6px;
+  }
+
+  .message-input {
+    font-size: 14px;
+    padding: 8px 12px;
+  }
+
+  .send-button {
+    font-size: 18px;
+    padding: 6px;
+  }
+}
+
+.send-outline,
+.mic-outline {
+  color: #fff !important;
 }
 
 .no-chat-selected {

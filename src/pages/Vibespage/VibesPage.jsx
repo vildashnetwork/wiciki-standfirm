@@ -525,7 +525,7 @@ const VibesPage = () => {
             </div>
             <div className="header-actions">
               <button className="icon-btn" onClick={() => setShowSettings(true)}>
-                <span>⚙️</span>
+                <span><ion-icon name="settings-outline"></ion-icon></span>
               </button>
             </div>
           </div>
@@ -578,18 +578,18 @@ const VibesPage = () => {
                     <div className="avatar">{selectedChat.avatar}</div>
                     {selectedChat.online && <div className="online-indicator"></div>}
                   </div>
-                  <div>
-                    <h3>{selectedChat.name}</h3>
+                  <div className='spaces1'>
+                    <h3>{selectedChat.name.slice(0, 3) + "..."}</h3>
                     <span className="status">Online</span>
                   </div>
                 </div>
                 <div className="chat-actions">
-                  <button className="icon-btn">📹</button>
-                  <button className="icon-btn">📞</button>
+                  <button className="icon-btn"><ion-icon name="videocam-outline"></ion-icon></button>
+                  <button className="icon-btn"><ion-icon name="call-outline"></ion-icon></button>
                   <button className="icon-btn" onClick={() => setShowSettings(true)}>⋯</button>
                   {isFullScreen && (
                     <button className="icon-btn exit-fullscreen-btn" onClick={exitFullScreen}>
-                      ✕
+                      <ion-icon name="close-circle-outline"></ion-icon>
                     </button>
                   )}
                 </div>
@@ -613,10 +613,10 @@ const VibesPage = () => {
               {/* Fixed Input Container in Full Screen Mode */}
               <div className={`chat-input-container ${isFullScreen ? 'fixed-input' : ''}`}>
                 <div className="input-actions">
-                  <button className="icon-btn">➕</button>
-                  <button className="icon-btn">📎</button>
+                  <button className="icon-btn uploading"><ion-icon name="cloud-upload-outline"></ion-icon></button>
+                  {/* <button className="icon-btn">📎</button> */}
                 </div>
-                <input
+                <textarea
                   type="text"
                   placeholder="Type a message"
                   value={message}
@@ -629,7 +629,7 @@ const VibesPage = () => {
                   onClick={sendMessage}
                   disabled={!message.trim()}
                 >
-                  {message.trim() ? '➤' : '🎤'}
+                  {message.trim() ? <ion-icon name="send-outline"></ion-icon> : <ion-icon name="mic-outline"></ion-icon>}
                 </button>
               </div>
             </>

@@ -32,10 +32,11 @@ const Sidebar = ({ isMobileMenuOpen }) => {
         {menuItems.map(item => {
           const isActive = location.pathname === `/${item.id}`;
           return (
+            // oprnsettings
             <button
               key={item.id}
               className={`nav-item ${isActive ? 'active' : ''}`}
-              onClick={() => handleItemClick(item.id)}
+              onClick={() => { handleItemClick(item.id) }}
             >
               <span className="nav-icon">
                 <ion-icon name={item.icon}></ion-icon>

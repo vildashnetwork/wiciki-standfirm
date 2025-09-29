@@ -1,5 +1,5 @@
 // src/App.js
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
 import Sidebar from './components/Sidebar/Sidebar';
 import Topbar from './components/TopNav/Topbar';
@@ -96,7 +96,20 @@ function AppContent() {
       )
     );
   };
+  const [showSettings, setShowSettings] = useState(false);
 
+  useEffect(() => {
+    function checkPath() {
+      // Check if the current path is "/settings"
+      if (window.location.pathname === "/settings") {
+        setShowSettings(true);
+      } else {
+        setShowSettings(false);
+      }
+    }
+
+    checkPath();
+  }, []);
   return (
     <div className="App">
       {!hideLayout && <div className={`sidebar-overlay ${isMobileMenuOpen ? 'active' : ''}`} />}
@@ -128,7 +141,9 @@ function AppContent() {
               <Route path="/reachouts" element={<ProtectedRoute><ReachoutsPage /></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />
               <Route path="/search" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
-              <Route path="/settings" element={<ProtectedRoute><SettingsPage /></ProtectedRoute>} />
+              <Route path="/settings" element={<ProtectedRoute><SettingsPage
+                isOpen={showSettings}
+                onClose={() => setShowSettings(false)} /></ProtectedRoute>} />
               <Route path="/reels" element={<ProtectedRoute>
                 <ReelsPage reels={reels} setReels={setReels} openFullscreenReels={(i) => { setCurrentReelIndex(i); setIsFullscreenMode(true); }} />
               </ProtectedRoute>} />

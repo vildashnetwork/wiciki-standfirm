@@ -1,18 +1,852 @@
-/* Settings */
-.settings-tabs { display: flex; gap: 24px; margin-bottom: 32px; border-bottom: 1px solid var(--border-color); }
-.settings-tab { padding: 16px 0; cursor: pointer; border-bottom: 2px solid transparent; transition: all 0.3s ease; color: var(--text-secondary); }
-.settings-tab.active, .settings-tab:hover { color: var(--accent-gold); border-bottom-color: var(--accent-gold); }
+:root {
+  /* Backgrounds */
+  --primary-bg: #0d0d0d;
+  --secondary-bg: #1a1a1a;
+  --card-bg: #262626;
 
-.settings-section { background: var(--card-bg); border-radius: 16px; padding: 32px; }
-.setting-item { display: flex; justify-content: space-between; align-items: center; padding: 16px 0; border-bottom: 1px solid var(--border-color); }
-.setting-item:last-child { border-bottom: none; }
+  /* Red accents */
+  --accent-red: #e53935;
+  --accent-red-light: #ff6f61;
+  --accent-red-dark: #ab000d;
 
-.toggle-switch { width: 50px; height: 24px; background: var(--border-color); border-radius: 12px; position: relative; cursor: pointer; transition: all 0.3s ease; }
-.toggle-switch.active { background: var(--accent-gold); }
-.toggle-switch::after { content: ''; width: 20px; height: 20px; background: white; border-radius: 50%; position: absolute; top: 2px; left: 2px; transition: all 0.3s ease; }
-.toggle-switch.active::after { left: 28px; }
+  /* Whites & Neutrals */
+  --accent-white: #ffffff;
+  --text-primary: #f5f5f5;
+  --text-secondary: #dcdcdc;
+  --text-muted: #a6a6a6;
 
+  /* Borders & subtle effects */
+  --border-color: #333333;
+  --glow-color: rgba(229, 57, 53, 0.25);
+
+  /* Status colors */
+  --success-color: #43a047;
+  --warning-color: #ff7043;
+}
+
+/* Overlay for full-screen mobile experience */
+.aviary-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--primary-bg);
+  z-index: 10000;
+  overflow: hidden;
+}
+
+.aviary {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: var(--primary-bg);
+  display: flex;
+  flex-direction: column;
+  animation: sparrowFlyIn 0.3s ease;
+  overflow: hidden;
+}
+
+/* Header */
+.aviary-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 16px;
+  background: var(--secondary-bg);
+  border-bottom: 1px solid var(--border-color);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 100;
+}
+
+.aviary-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.feather-logo {
+  width: 36px;
+  height: 36px;
+  background: var(--accent-red);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--accent-white);
+  font-size: 20px;
+  font-weight: bold;
+  font-family: Arial, sans-serif;
+}
+
+.aviary-name {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent-white);
+  margin: 0;
+}
+
+.aviary-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.mobile-menu-toggle {
+  display: none;
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: var(--card-bg);
+  border-radius: 8px;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.robin-search {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 20px;
+  color: var(--text-muted);
+  font-size: 14px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.robin-search:hover {
+  background: var(--border-color);
+  border-color: var(--accent-red);
+}
+
+.falcon-exit {
+  width: 40px;
+  height: 40px;
+  border: none;
+  background: var(--card-bg);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.falcon-exit:hover {
+  background: var(--accent-red);
+  transform: scale(1.05);
+}
+
+/* Main Content */
+.aviary-content {
+  flex: 1;
+  display: flex;
+  overflow: hidden;
+  width: 100%;
+}
+
+/* Navigation */
+.aviary-nest {
+  width: 280px;
+  background: var(--secondary-bg);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  padding: 16px 0;
+}
+
+.flock-section {
+  margin-bottom: 24px;
+}
+
+.flock-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-muted);
+  margin: 0 0 12px 16px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.bird-perch {
+  display: flex;
+  align-items: center;
+  padding: 14px 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.bird-perch:hover {
+  background: var(--card-bg);
+}
+
+.bird-perch.active {
+  background: var(--card-bg);
+  border-left-color: var(--accent-red);
+}
+
+.bird-feather {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  color: var(--accent-red);
+  transition: all 0.2s;
+}
+
+.bird-perch.active .bird-feather {
+  background: var(--accent-red);
+  color: var(--accent-white);
+}
+
+.bird-call {
+  flex: 1;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+.bird-wing {
+  color: var(--text-muted);
+  transition: transform 0.2s;
+}
+
+.bird-perch.active .bird-wing {
+  transform: translateX(2px);
+  color: var(--accent-red);
+}
+
+/* Main Settings Area */
+.aviary-main {
+  flex: 1;
+  background: var(--secondary-bg);
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+}
+
+.aviary-main-header {
+  padding: 24px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--card-bg);
+}
+
+.aviary-main-title {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin: 0 0 8px 0;
+}
+
+.aviary-main-description {
+  color: var(--text-muted);
+  margin: 0;
+  font-size: 14px;
+}
+
+.aviary-main-content {
+  flex: 1;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.bird-grid {
+  display: grid;
+  gap: 16px;
+}
+
+.bird-nest {
+  background: var(--card-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 12px;
+  transition: all 0.2s;
+  overflow: hidden;
+}
+
+.bird-nest:hover {
+  border-color: var(--accent-red);
+  box-shadow: 0 4px 12px var(--glow-color);
+  transform: translateY(-2px);
+}
+
+.nest-content {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px;
+}
+
+.bird-info {
+  flex: 1;
+}
+
+.bird-name {
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin: 0 0 6px 0;
+}
+
+.bird-name.danger {
+  color: var(--accent-red-light);
+}
+
+.bird-whisper {
+  font-size: 14px;
+  color: var(--text-muted);
+  margin: 0;
+  line-height: 1.4;
+}
+
+/* Eagle Toggle */
+.eagle-toggle {
+  position: relative;
+  width: 52px;
+  height: 28px;
+  cursor: pointer;
+}
+
+.eagle-track {
+  width: 100%;
+  height: 100%;
+  background: var(--border-color);
+  border-radius: 14px;
+  transition: all 0.2s;
+  position: relative;
+}
+
+.eagle-toggle.active .eagle-track {
+  background: var(--accent-red);
+}
+
+.eagle-thumb {
+  position: absolute;
+  top: 2px;
+  left: 2px;
+  width: 24px;
+  height: 24px;
+  background: var(--accent-white);
+  border-radius: 50%;
+  transition: all 0.2s;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+}
+
+.eagle-toggle.active .eagle-thumb {
+  transform: translateX(24px);
+}
+
+/* Hawk Select */
+.hawk-select {
+  background: var(--secondary-bg);
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  padding: 10px 12px;
+  color: var(--text-primary);
+  font-size: 14px;
+  min-width: 140px;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.hawk-select:hover {
+  border-color: var(--accent-red);
+}
+
+.hawk-select:focus {
+  outline: none;
+  border-color: var(--accent-red);
+  box-shadow: 0 0 0 2px var(--glow-color);
+}
+
+/* Owl Action Button */
+.owl-action {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: var(--border-color);
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--text-primary);
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.owl-action:hover {
+  background: var(--accent-red);
+  transform: scale(1.05);
+}
+
+.owl-action.danger {
+  background: rgba(229, 57, 53, 0.2);
+  color: var(--accent-red-light);
+}
+
+.owl-action.danger:hover {
+  background: var(--accent-red);
+  color: var(--accent-white);
+}
+
+/* Footer */
+.aviary-footer {
+  background: var(--secondary-bg);
+  border-top: 1px solid var(--border-color);
+  padding: 16px 24px;
+}
+
+.footer-nest {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.bird-links {
+  display: flex;
+  gap: 20px;
+}
+
+.bird-link {
+  color: var(--text-muted);
+  text-decoration: none;
+  font-size: 13px;
+  transition: color 0.2s;
+}
+
+.bird-link:hover {
+  color: var(--accent-red-light);
+  text-decoration: underline;
+}
+
+.bird-song {
+  color: var(--text-muted);
+  font-size: 13px;
+}
+
+/* Mobile Navigation Overlay */
+.mobile-nav-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.8);
+  z-index: 1000;
+  display: none;
+}
+
+.mobile-nav-content {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 280px;
+  background: var(--secondary-bg);
+  border-right: 1px solid var(--border-color);
+  overflow-y: auto;
+  animation: slideInLeft 0.3s ease;
+}
+
+.mobile-nav-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px;
+  border-bottom: 1px solid var(--border-color);
+  background: var(--card-bg);
+}
+
+.mobile-nav-header h3 {
+  color: var(--text-primary);
+  margin: 0;
+  font-size: 18px;
+}
+
+.mobile-nav-header button {
+  background: none;
+  border: none;
+  color: var(--text-primary);
+  cursor: pointer;
+  padding: 4px;
+  border-radius: 4px;
+}
+
+.mobile-nav-header button:hover {
+  background: var(--border-color);
+}
+
+.mobile-nav-sections {
+  padding: 16px 0;
+}
+
+.mobile-nav-item {
+  display: flex;
+  align-items: center;
+  padding: 16px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 3px solid transparent;
+}
+
+.mobile-nav-item:hover {
+  background: var(--card-bg);
+}
+
+.mobile-nav-item.active {
+  background: var(--card-bg);
+  border-left-color: var(--accent-red);
+}
+
+.mobile-nav-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: var(--card-bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 12px;
+  color: var(--accent-red);
+}
+
+.mobile-nav-item.active .mobile-nav-icon {
+  background: var(--accent-red);
+  color: var(--accent-white);
+}
+
+.mobile-nav-text {
+  flex: 1;
+  color: var(--text-primary);
+  font-weight: 500;
+  font-size: 15px;
+}
+
+/* Animations */
+@keyframes sparrowFlyIn {
+  from {
+    opacity: 0;
+    transform: translateY(-20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideInLeft {
+  from {
+    transform: translateX(-100%);
+  }
+
+  to {
+    transform: translateX(0);
+  }
+}
+
+@keyframes hummingbirdHover {
+  0% {
+    transform: translateY(0);
+  }
+
+  50% {
+    transform: translateY(-3px);
+  }
+
+  100% {
+    transform: translateY(0);
+  }
+}
+
+.bird-nest:hover {
+  animation: hummingbirdHover 0.5s ease-in-out;
+}
+
+/* Enhanced Scrollbar */
+.aviary-nest::-webkit-scrollbar,
+.aviary-main-content::-webkit-scrollbar,
+.mobile-nav-content::-webkit-scrollbar {
+  width: 6px;
+}
+
+.aviary-nest::-webkit-scrollbar-track,
+.aviary-main-content::-webkit-scrollbar-track,
+.mobile-nav-content::-webkit-scrollbar-track {
+  background: var(--border-color);
+  border-radius: 3px;
+}
+
+.aviary-nest::-webkit-scrollbar-thumb,
+.aviary-main-content::-webkit-scrollbar-thumb,
+.mobile-nav-content::-webkit-scrollbar-thumb {
+  background: var(--accent-red);
+  border-radius: 3px;
+}
+
+.aviary-nest::-webkit-scrollbar-thumb:hover,
+.aviary-main-content::-webkit-scrollbar-thumb:hover,
+.mobile-nav-content::-webkit-scrollbar-thumb:hover {
+  background: var(--accent-red-light);
+}
+
+/* Responsive Design - Mobile First Approach */
 @media (max-width: 768px) {
-  .settings-tabs { flex-wrap: wrap; gap: 16px; }
-  .settings-section { padding: 20px; }
+  .aviary-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: var(--primary-bg);
+    z-index: 10000;
+  }
+
+  .aviary {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+  }
+
+  .aviary-header {
+    padding: 12px 16px;
+  }
+
+  .aviary-brand {
+    gap: 8px;
+  }
+
+  .feather-logo {
+    width: 32px;
+    height: 32px;
+    font-size: 18px;
+  }
+
+  .aviary-name {
+    font-size: 18px;
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+  }
+
+  .search-text {
+    display: none;
+  }
+
+  .robin-search {
+    padding: 10px;
+  }
+
+  .aviary-nest {
+    display: none;
+  }
+
+  .mobile-nav-overlay {
+    display: block;
+  }
+
+  .aviary-content {
+    flex-direction: column;
+  }
+
+  .aviary-main-header {
+    padding: 20px 16px;
+  }
+
+  .aviary-main-title {
+    font-size: 20px;
+  }
+
+  .aviary-main-content {
+    padding: 16px;
+  }
+
+  .nest-content {
+    padding: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 16px;
+  }
+
+  .bird-control {
+    align-self: stretch;
+    display: flex;
+    justify-content: flex-end;
+  }
+
+  .hawk-select {
+    min-width: 100%;
+  }
+
+  .footer-nest {
+    flex-direction: column;
+    gap: 12px;
+    text-align: center;
+  }
+
+  .bird-links {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 12px;
+  }
+}
+
+@media (max-width: 480px) {
+  .aviary-header {
+    padding: 10px 12px;
+  }
+
+  .aviary-actions {
+    gap: 8px;
+  }
+
+  .robin-search {
+    padding: 8px;
+  }
+
+  .falcon-exit,
+  .mobile-menu-toggle {
+    width: 36px;
+    height: 36px;
+  }
+
+  .aviary-main-header {
+    padding: 16px 12px;
+  }
+
+  .aviary-main-title {
+    font-size: 18px;
+    gap: 8px;
+  }
+
+  .aviary-main-content {
+    padding: 12px;
+  }
+
+  .bird-grid {
+    gap: 12px;
+  }
+
+  .nest-content {
+    padding: 12px;
+  }
+
+  .bird-name {
+    font-size: 15px;
+  }
+
+  .bird-whisper {
+    font-size: 13px;
+  }
+
+  .aviary-footer {
+    padding: 12px 16px;
+  }
+
+  .bird-links {
+    gap: 8px;
+  }
+
+  .bird-link {
+    font-size: 12px;
+  }
+
+  .bird-song {
+    font-size: 12px;
+  }
+}
+
+/* Micro-interactions for larger screens */
+@media (min-width: 769px) {
+  .bird-perch {
+    animation: birdPerchIn 0.4s ease forwards;
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+
+  .bird-perch:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .bird-perch:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .bird-perch:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+
+  .bird-perch:nth-child(4) {
+    animation-delay: 0.25s;
+  }
+
+  @keyframes birdPerchIn {
+    to {
+      opacity: 1;
+      transform: translateX(0);
+    }
+  }
+
+  .bird-nest {
+    animation: nestBuild 0.5s ease forwards;
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  .bird-nest:nth-child(1) {
+    animation-delay: 0.1s;
+  }
+
+  .bird-nest:nth-child(2) {
+    animation-delay: 0.15s;
+  }
+
+  .bird-nest:nth-child(3) {
+    animation-delay: 0.2s;
+  }
+
+  @keyframes nestBuild {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Tablet responsive adjustments */
+@media (min-width: 769px) and (max-width: 1024px) {
+  .aviary-nest {
+    width: 240px;
+  }
+
+  .aviary-main-header {
+    padding: 20px;
+  }
+
+  .aviary-main-content {
+    padding: 20px;
+  }
+
+  .nest-content {
+    padding: 16px;
+  }
 }

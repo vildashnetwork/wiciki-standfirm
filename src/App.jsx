@@ -100,16 +100,39 @@ function AppContent() {
 
   useEffect(() => {
     function checkPath() {
-      // Check if the current path is "/settings"
-      if (window.location.pathname === "/settings") {
-        setShowSettings(true);
-      } else {
-        setShowSettings(false);
-      }
+      setShowSettings(window.location.pathname === '/settings');
     }
 
+    // Check initially
     checkPath();
+
+    // Listen for navigation events
+    const originalPushState = history.pushState;
+    const originalReplaceState = history.replaceState;
+
+    // Override pushState
+    history.pushState = function (...args) {
+      originalPushState.apply(this, args);
+      checkPath();
+    };
+
+    // Override replaceState
+    history.replaceState = function (...args) {
+      originalReplaceState.apply(this, args);
+      checkPath();
+    };
+
+    // Listen for popstate (back/forward buttons)
+    window.addEventListener('popstate', checkPath);
+
+    // Cleanup
+    return () => {
+      history.pushState = originalPushState;
+      history.replaceState = originalReplaceState;
+      window.removeEventListener('popstate', checkPath);
+    };
   }, []);
+
   return (
     <div className="App">
       {!hideLayout && <div className={`sidebar-overlay ${isMobileMenuOpen ? 'active' : ''}`} />}
@@ -143,7 +166,10 @@ function AppContent() {
               <Route path="/search" element={<ProtectedRoute><SearchPage /></ProtectedRoute>} />
               <Route path="/settings" element={<ProtectedRoute><SettingsPage
                 isOpen={showSettings}
-                onClose={() => setShowSettings(false)} /></ProtectedRoute>} />
+                onClose={() => {
+                  navigate("/")
+                  setShowSettings(false)
+                }} /></ProtectedRoute>} />
               <Route path="/reels" element={<ProtectedRoute>
                 <ReelsPage reels={reels} setReels={setReels} openFullscreenReels={(i) => { setCurrentReelIndex(i); setIsFullscreenMode(true); }} />
               </ProtectedRoute>} />

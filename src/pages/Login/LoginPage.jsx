@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import "./login.css"; // move all your <style> CSS here
+import { PhoneCallIcon } from "lucide-react";
 
 const LoginPage = () => {
   const [isFlipped, setIsFlipped] = useState(false);
@@ -97,7 +98,7 @@ const LoginPage = () => {
                     placeholder=" "
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
-                    
+
                   />
                   <label className="form-label">Email address</label>
                   {loginEmail && !validateEmail(loginEmail) && (
@@ -121,7 +122,7 @@ const LoginPage = () => {
                     placeholder=" "
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
-                    
+
                   />
                   <label className="form-label">Password</label>
                   {loginPassword && !validatePassword(loginPassword) && (
@@ -155,7 +156,8 @@ const LoginPage = () => {
               </button>
 
               <div className="guest-link">
-                <a href="#">Continue as guest</a>
+                <PhoneCallIcon size={"20"} />
+                <a href="#">login with number</a>
               </div>
 
               <div className="auth-switch">
@@ -181,7 +183,7 @@ const LoginPage = () => {
                     placeholder=" "
                     value={signupName}
                     onChange={(e) => setSignupName(e.target.value)}
-                    
+
                   />
                   <label className="form-label">Full name</label>
                   {signupName && !validateName(signupName) && (
@@ -205,7 +207,7 @@ const LoginPage = () => {
                     placeholder=" "
                     value={signupEmail}
                     onChange={(e) => setSignupEmail(e.target.value)}
-                    
+
                   />
                   <label className="form-label">Email address</label>
                   {signupEmail && !validateEmail(signupEmail) && (
@@ -229,7 +231,7 @@ const LoginPage = () => {
                     placeholder=" "
                     value={signupPassword}
                     onChange={(e) => setSignupPassword(e.target.value)}
-                    
+
                   />
                   <label className="form-label">Password</label>
                   {signupPassword && !validatePassword(signupPassword) && (
@@ -262,6 +264,10 @@ const LoginPage = () => {
                 Sign up with Google
               </button>
 
+              <div className="guest-link">
+                <PhoneCallIcon size={"20"} />
+                <a href="#">login with number</a>
+              </div>
               <div className="auth-switch">
                 Already have an account?{" "}
                 <button type="button" onClick={() => setIsFlipped(false)}>

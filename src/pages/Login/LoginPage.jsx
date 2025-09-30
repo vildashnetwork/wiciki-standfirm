@@ -54,7 +54,7 @@ const LoginPage = () => {
             most
           </p>
 
-          <ul className="benefits">
+          <ul className="benefits1">
             <li className="benefit-item">
               <div className="benefit-icon">
                 <ion-icon name="shield-checkmark-outline"></ion-icon>

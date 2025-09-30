@@ -27,7 +27,7 @@
     flex: 1;
     background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
 
-    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.4)),
+    background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
         url("./WhatsApp Image 2025-09-17 at 15.00.34_35422ef3.jpg");
     background-size: cover;
     /* better than 100% 100% for responsiveness */
@@ -108,16 +108,19 @@
     line-height: 1.6;
 }
 
-.benefits {
+.benefits1 {
     list-style: none;
     text-align: left;
+    display: block !important;
+    background: hsla(0, 0%, 0%, 0.507);
+    padding: 12px;
 }
 
 .benefit-item {
     display: flex;
     align-items: center;
     margin-bottom: 1.5rem;
-    opacity: 0;
+    /* opacity: 0; */
     animation: slideInLeft 0.6s ease-out forwards;
 }
 
@@ -425,7 +428,7 @@
     margin-top: 2rem;
     color: var(--text-secondary);
     font-size: 0.875rem;
-    padding-bottom: 4rem;
+    padding-bottom: 7rem;
 }
 
 .auth-switch button {
@@ -512,7 +515,7 @@
         padding: 2rem;
     }
 
-    .benefits {
+    .benefits1 {
         display: none;
     }
 }

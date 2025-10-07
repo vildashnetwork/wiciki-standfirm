@@ -15,15 +15,17 @@ const WICIKIOnboarding = () => {
       allowMessages: true,
       showBirthday: false,
       allowTagging: true,
+      ShowAllMentors: true,
+      ShowUnknownGists: true,
     },
   });
 
   const totalSteps = 8;
 
   const interestsList = [
-    "Photography","Travel","Music","Sports","Reading","Cooking","Gaming",
-    "Art","Technology","Fitness","Movies","Fashion","Nature","Dancing",
-    "Writing","Science"
+    "Photography", "Travel", "Music", "Sports", "Reading", "Cooking", "Gaming",
+    "Art", "Technology", "Fitness", "Movies", "Fashion", "Nature", "Dancing",
+    "Writing", "Science"
   ];
 
   const updateFormData = (field, value) =>
@@ -123,18 +125,19 @@ const WICIKIOnboarding = () => {
       case 2:
         return (
           <div className="step-content">
-            <h2 className="step-title">What's Your Name?</h2>
+            <h2 className="step-title">What's You Nick Name?</h2>
             <p className="step-description">
-              Enter your full name as you'd like it to appear on your profile.
+              Enter your Nick Name as you'd like it to appear on your profile.
             </p>
             <div className="form-group">
-              <label className="form-label">Full Name</label>
+              {/* <label className="form-label">Full Name</label> */}
               <input
                 type="text"
                 className="form-input"
+                // cols={5}
                 value={formData.fullName || ""}
                 onChange={(e) => updateFormData("fullName", e.target.value)}
-                placeholder="Enter your full name"
+                placeholder="Enter your Nick Name"
               />
             </div>
           </div>
@@ -148,7 +151,7 @@ const WICIKIOnboarding = () => {
               This helps us personalize your experience and connect you with relevant content.
             </p>
             <div className="gender-options">
-              {["Male", "Female", "Non-binary", "Prefer not to say"].map((gender) => (
+              {["Male", "Female", "others"].map((gender) => (
                 <div
                   key={gender}
                   className={`gender-option ${formData.gender === gender ? "selected" : ""}`}
@@ -167,7 +170,7 @@ const WICIKIOnboarding = () => {
             <h2 className="step-title">When's Your Birthday?</h2>
             <p className="step-description">We'll use this to celebrate with you and show age-appropriate content.</p>
             <div className="form-group">
-              <label className="form-label">Birthday</label>
+              {/* <label className="form-label">Birthday</label> */}
               <div className="date-inputs">
                 <select
                   className="form-input"
@@ -178,8 +181,8 @@ const WICIKIOnboarding = () => {
                 >
                   <option value="">Month</option>
                   {[
-                    "January","February","March","April","May","June",
-                    "July","August","September","October","November","December"
+                    "January", "February", "March", "April", "May", "June",
+                    "July", "August", "September", "October", "November", "December"
                   ].map((month, i) => (
                     <option key={i} value={i + 1}>{month}</option>
                   ))}
@@ -224,7 +227,7 @@ const WICIKIOnboarding = () => {
               Write a short bio to help others get to know you better.
             </p>
             <div className="form-group">
-              <label className="form-label">Bio</label>
+              {/* <label className="form-label">Bio</label> */}
               <textarea
                 className="form-input form-textarea"
                 value={formData.bio || ""}

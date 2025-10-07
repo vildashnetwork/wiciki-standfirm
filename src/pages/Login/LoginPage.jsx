@@ -1,9 +1,14 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import "./login.css"; // move all your <style> CSS here
-import { PhoneCallIcon } from "lucide-react";
+import axios from "axios";
+import { PhoneCallIcon, Eye, EyeOff } from "lucide-react"; // 👈 added Eye/EyeOff
+import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
+axios.defaults.withCredentials = true; // enable cookies globally
 const LoginPage = () => {
   const [isFlipped, setIsFlipped] = useState(false);
+  const navigate = useNavigate();
 
   // form states
   const [loginEmail, setLoginEmail] = useState("");
@@ -12,46 +17,159 @@ const LoginPage = () => {
   const [signupEmail, setSignupEmail] = useState("");
   const [signupPassword, setSignupPassword] = useState("");
 
+  // toggle states
+  const [showLoginPassword, setShowLoginPassword] = useState(false);
+  const [showSignupPassword, setShowSignupPassword] = useState(false);
+
   // loading states
   const [loading, setLoading] = useState({ login: false, signup: false });
 
   // validation helpers
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
-  const validatePassword = (password) => password.length >= 8;
+  const validatePassword = (password) => {
+    const specialChars = ["@", "#", "$", "&", "^", "!", "(", ")", "-", "+", "=", "{", "}", "[", "]", "|"];
+    return (
+      password.length >= 8 &&
+      specialChars.some(char => password.includes(char))
+    );
+  };
+
   const validateName = (name) => name.trim().length >= 2;
 
-  const handleLogin = (e) => {
+  // helper to set cookie
+  function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+      const date = new Date();
+      date.setTime(date.getTime() + (days * 24 * 60 * 60 * 1000));
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = `${name}=${value || ""}${expires}; path=/; SameSite=Lax`;
+  }
+  const handleLogin = async (e) => {
     e.preventDefault();
-    // setLoading({ ...loading, login: true });
-    // setTimeout(() => {
-    //   setLoading({ ...loading, login: false });
-    //   alert("Demo: Login successful! This is a UI mockup.");
-    // }, 2000);
-    localStorage.setItem("token", "sample")
-    window.location.href = "/questions"
+    setLoading((prev) => ({ ...prev, login: true }));
+
+    try {
+      const response = await axios.post(
+        "https://wicikibackend.onrender.com/auth-user/login",
+        {
+          email: loginEmail,
+          password: loginPassword,
+        },
+        {
+          withCredentials: true,
+        }
+      );
+
+      // ✅ Handle success
+      if (response.status === 200) {
+        toast.success(response.data.message || "Login successful!");
+
+        // ✅ Store token if backend returns it
+        if (response.data.usert) {
+          setCookie("token", response.data.usert, 7);
+        }
+
+        console.log("Login success:", response.data);
+
+        // Redirect to questions page
+        navigate("/");
+      } else {
+        toast.error(response.data.message || "Login failed. Try again.");
+      }
+    } catch (error) {
+      console.error("Login failed:", error);
+
+      // Check if the backend sent a message
+      const errorMsg =
+        error.response?.data?.message || "Login failed. Please check credentials.";
+      toast.error(errorMsg);
+    } finally {
+      setLoading((prev) => ({ ...prev, login: false }));
+    }
   };
 
-  const handleSignup = (e) => {
+
+
+
+  const handleSignup = async (e) => {
     e.preventDefault();
-    setLoading({ ...loading, signup: true });
-    setTimeout(() => {
+
+    if (!validateName(signupName) || !validateEmail(signupEmail) || !validatePassword(signupPassword)) {
+      toast.error("Please fill the form correctly", { id: "signup", duration: 3000 });
+      return;
+    }
+
+    try {
+      setLoading({ ...loading, signup: true });
+      toast.loading("Creating your account...", { id: "signup", duration: 3000 });
+
+      const res = await axios.post(
+        "https://wicikibackend.onrender.com/auth-user/register",
+        {
+          name: signupName,
+          email: signupEmail,
+          password: signupPassword,
+        },
+        { withCredentials: true }
+      );
+      setCookie("token", res.data.usertoken, 7);
+      console.log("Signup response:", res.data);
+
+      toast.success("Account created successfully!", { id: "signup", duration: 3000 });
+      navigate("/questions");
+    } catch (error) {
+      console.error("Signup error:", error);
+      toast.error(error.response?.data?.message || "Signup failed, try again.", {
+        id: "signup",
+        duration: 3000,
+      });
+    } finally {
       setLoading({ ...loading, signup: false });
-      alert("Demo: Account created successfully! This is a UI mockup.");
-    }, 2000);
+    }
   };
+
+  const [loadinggoogle, setloadinggoogle] = useState(false)
+
+  const GoogleLogin = () => {
+    setloadinggoogle(true);
+    // Redirect user to your backend Google auth route
+    window.location.href = "https://wicikibackend.onrender.com/auth/google";
+  };
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await axios.get(
+          "https://wicikibackend.onrender.com/auth-user/me",
+          { withCredentials: true }
+        );
+        console.log("✅ Logged in user:", res.data);
+        // toast.success("Welcome back!");
+        // navigate("/questions");
+      } catch (err) {
+        console.error("❌ Failed to fetch user:", err);
+        // toast.error("Session expired. Please log in again.");
+        // navigate("/login-failed");
+      }
+    };
+
+    // Wait a short delay to let cookies set
+    const timer = setTimeout(fetchUser, 800);
+    return () => clearTimeout(timer);
+  }, [navigate]);
+
 
   return (
     <div className="container-login">
       {/* Left Brand Panel */}
       <div className="brand-panel">
         <div className="brand-content">
-          <div className="logo" >
-            {/* <ion-icon name="rocket-outline"></ion-icon> */}
-          </div>
+          <div className="logo"></div>
           <h1 className="brand-title">WICIKI MEDIA</h1>
           <p className="brand-tagline">
-            Connect, share, and discover amazing content with people who matter
-            most
+            Connect, share, and discover amazing content with people who matter most
           </p>
 
           <ul className="benefits">
@@ -85,9 +203,7 @@ const LoginPage = () => {
             <div className="auth-form login-form">
               <div className="auth-header">
                 <h2 className="auth-title">Welcome back</h2>
-                <p className="auth-subtitle">
-                  Sign in to your account to continue
-                </p>
+                <p className="auth-subtitle">Sign in to your account to continue</p>
               </div>
 
               <form onSubmit={handleLogin}>
@@ -98,7 +214,6 @@ const LoginPage = () => {
                     placeholder=" "
                     value={loginEmail}
                     onChange={(e) => setLoginEmail(e.target.value)}
-
                   />
                   <label className="form-label">Email address</label>
                   {loginEmail && !validateEmail(loginEmail) && (
@@ -115,20 +230,22 @@ const LoginPage = () => {
                   )}
                 </div>
 
-                <div className="form-group">
+                <div className="form-group password-wrapper">
                   <input
-                    type="password"
+                    type={showLoginPassword ? "text" : "password"}
                     className="form-input"
                     placeholder=" "
                     value={loginPassword}
                     onChange={(e) => setLoginPassword(e.target.value)}
-
                   />
                   <label className="form-label">Password</label>
+
+
+
                   {loginPassword && !validatePassword(loginPassword) && (
                     <div className="form-error show">
                       <ion-icon name="alert-circle-outline"></ion-icon>
-                      Password must be at least 8 characters
+                      Password must be at least 8  characters and should mix with special symbols
                     </div>
                   )}
                   {validatePassword(loginPassword) && (
@@ -137,8 +254,24 @@ const LoginPage = () => {
                       Password strength: Good
                     </div>
                   )}
-                </div>
 
+                </div>
+                <button
+                  type="button"
+                  style={{
+                    float: "right",
+                    width: "70%",
+                    marginBottom: "10px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "10px"
+                  }}
+                  className="toggle-password"
+                  onClick={() => setShowLoginPassword(!showLoginPassword)}
+                >
+                  {showLoginPassword ? <> {"hide password"}  <EyeOff size={18} /> </> : <>{"show password"} <Eye size={18} /></>}
+                </button>
                 <button type="submit" className="btn-primary" disabled={loading.login}>
                   <span className="btn-text">
                     {loading.login ? <div className="loading"></div> : "Sign In"}
@@ -150,9 +283,9 @@ const LoginPage = () => {
                 <span>or</span>
               </div>
 
-              <button className="btn-google">
+              <button className="btn-google" onClick={GoogleLogin}>
                 <div className="google-icon"></div>
-                Continue with Google
+                {loadinggoogle ? "loading.." : "Continue with Google"}
               </button>
 
               <div className="guest-link">
@@ -183,7 +316,6 @@ const LoginPage = () => {
                     placeholder=" "
                     value={signupName}
                     onChange={(e) => setSignupName(e.target.value)}
-
                   />
                   <label className="form-label">Full name</label>
                   {signupName && !validateName(signupName) && (
@@ -207,7 +339,6 @@ const LoginPage = () => {
                     placeholder=" "
                     value={signupEmail}
                     onChange={(e) => setSignupEmail(e.target.value)}
-
                   />
                   <label className="form-label">Email address</label>
                   {signupEmail && !validateEmail(signupEmail) && (
@@ -224,20 +355,22 @@ const LoginPage = () => {
                   )}
                 </div>
 
-                <div className="form-group">
+                <div className="form-group password-wrapper">
                   <input
-                    type="password"
+                    type={showSignupPassword ? "text" : "password"}
                     className="form-input"
                     placeholder=" "
                     value={signupPassword}
                     onChange={(e) => setSignupPassword(e.target.value)}
-
                   />
                   <label className="form-label">Password</label>
+
+
+
                   {signupPassword && !validatePassword(signupPassword) && (
                     <div className="form-error show">
                       <ion-icon name="alert-circle-outline"></ion-icon>
-                      Password must be at least 8 characters
+                      Password must be at least 8 characters and should mix with special symbols
                     </div>
                   )}
                   {validatePassword(signupPassword) && (
@@ -247,7 +380,22 @@ const LoginPage = () => {
                     </div>
                   )}
                 </div>
-
+                <button
+                  type="button"
+                  style={{
+                    float: "right",
+                    width: "70%",
+                    marginBottom: "10px",
+                    display: "flex",
+                    justifyContent: "center",
+                    alignItems: "center",
+                    gap: "10px"
+                  }}
+                  className="toggle-password"
+                  onClick={() => setShowSignupPassword(!showSignupPassword)}
+                >
+                  {showSignupPassword ? <> {"hide password"}  <EyeOff size={18} /> </> : <>{"show password"} <Eye size={18} /></>}
+                </button>
                 <button type="submit" className="btn-primary" disabled={loading.signup}>
                   <span className="btn-text">
                     {loading.signup ? <div className="loading"></div> : "Create Account"}
@@ -259,9 +407,9 @@ const LoginPage = () => {
                 <span>or</span>
               </div>
 
-              <button className="btn-google">
+              <button className="btn-google" onClick={GoogleLogin}>
                 <div className="google-icon"></div>
-                Sign up with Google
+                {loadinggoogle ? "loading.." : "Continue with Google"}
               </button>
 
               <div className="guest-link">
@@ -277,8 +425,8 @@ const LoginPage = () => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
+      </div >
+    </div >
   );
 };
 

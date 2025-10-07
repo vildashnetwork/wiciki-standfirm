@@ -20,6 +20,7 @@ import WICIKIOnboarding from './pages/Questionings/Questionings';
 import PostCreatePage from './pages/Gists/PostCreation/Add';
 import AddStatusModal from './pages/Gists/AddStatusModal/AddStatusModal';
 import FullScreenPost from './pages/Gists/Feed/fullscreen/FullScreenPost';
+import { Toaster } from 'react-hot-toast';
 
 function AppContent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -135,6 +136,7 @@ function AppContent() {
 
   return (
     <div className="App">
+      <Toaster position="top-right" reverseOrder={false} />
       {!hideLayout && <div className={`sidebar-overlay ${isMobileMenuOpen ? 'active' : ''}`} />}
 
       <div className="app-container">

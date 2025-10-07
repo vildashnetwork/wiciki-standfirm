@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { X, ChevronRight, Bell, Shield, Palette, User, Globe, HelpCircle, Menu, SearchCheckIcon, EyeIcon } from 'lucide-react';
-
+import Cookies from "js-cookie";
 const SettingsPage = ({ isOpen, onClose }) => {
   const [activeSection, setActiveSection] = useState('general');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -341,7 +341,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
               <a href="#" className="bird-link">Terms</a>
               <a href="#" className="bird-link">Advertising</a>
               <a href="#" className="bird-link">Cookies</a>
-              <a href="#" className="bird-link">More</a>
+              <a onClick={() => Cookies.remove("token")} className="bird-link">More</a>
             </div>
             <div className="bird-song">
               Vildash Network © {new Date().getFullYear()}

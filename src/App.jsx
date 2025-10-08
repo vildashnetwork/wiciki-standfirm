@@ -21,6 +21,7 @@ import PostCreatePage from './pages/Gists/PostCreation/Add';
 import AddStatusModal from './pages/Gists/AddStatusModal/AddStatusModal';
 import FullScreenPost from './pages/Gists/Feed/fullscreen/FullScreenPost';
 import { Toaster } from 'react-hot-toast';
+import ResetPassword from './pages/ResetPassword/Resetpassword';
 
 function AppContent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
@@ -65,7 +66,7 @@ function AppContent() {
   const location = useLocation();
   const navigate = useNavigate();
   const currentPage = location.pathname === '/' ? 'gists' : location.pathname.substring(1);
-  const hideLayout = location.pathname === "/login" || location.pathname === "/questions";
+  const hideLayout = location.pathname === "/login" || location.pathname === "/questions" || location.pathname.includes("/reset");
 
   const handleCreatePost = (post) => {
     console.log('New post created:', post);
@@ -199,6 +200,7 @@ function AppContent() {
               {/* Public Routes */}
               <Route path="/login" element={<LoginPage />} />
               <Route path="/questions" element={<WICIKIOnboarding />} />
+              <Route path='/reset' element={<ResetPassword />} />
 
               {/* Protected Routes */}
               <Route path="/" element={<ProtectedRoute><GistsPage onLike={handleLike} onComment={handleComment} /></ProtectedRoute>} />

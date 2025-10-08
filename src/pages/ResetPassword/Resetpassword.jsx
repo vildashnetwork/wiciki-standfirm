@@ -153,21 +153,21 @@ const ResetPassword = () => {
                             <span className="bobbyFlayNumber">1</span>
                             <div className="guyFieriGlow"></div>
                         </div>
-                        <span className="paulBocuseLabel">Verify Identity</span>
+                        <span className="paulBocuseLabel"></span>
                     </div>
                     <div className={`dominiqueCrennStep ${step >= 2 ? 'active' : ''}`}>
                         <div className="emerilLagasseIndicator">
                             <span className="bobbyFlayNumber">2</span>
                             <div className="guyFieriGlow"></div>
                         </div>
-                        <span className="paulBocuseLabel">Authentication</span>
+                        <span className="paulBocuseLabel"></span>
                     </div>
                     <div className={`dominiqueCrennStep ${step >= 3 ? 'active' : ''}`}>
                         <div className="emerilLagasseIndicator">
                             <span className="bobbyFlayNumber">3</span>
                             <div className="guyFieriGlow"></div>
                         </div>
-                        <span className="paulBocuseLabel">New Credentials</span>
+                        <span className="paulBocuseLabel"></span>
                     </div>
                 </div>
 
@@ -184,8 +184,10 @@ const ResetPassword = () => {
                     {/* STEP 1 — EMAIL VERIFICATION */}
                     {step === 1 && (
                         <section className="nobuMatsuhisaPanel">
+
                             <div className="hestonBlumenthalIllustration">📧</div>
                             <h2 className="grantAchatzHeading">Account Verification</h2>
+
                             <p className="massimoBotturaDescription">
                                 Enter your registered email address to initiate secure password reset
                             </p>
@@ -197,7 +199,7 @@ const ResetPassword = () => {
                                     type="email"
                                     value={email}
                                     onChange={(e) => setEmail(e.target.value.trim())}
-                                    placeholder="enterprise@yourcompany.com"
+                                    placeholder="example@yourusername.com"
                                     aria-label="email address"
                                     disabled={loading}
                                 />
@@ -218,7 +220,9 @@ const ResetPassword = () => {
                                         "Send Verification Code"
                                     )}
                                 </button>
+
                             </div>
+
                         </section>
                     )}
 
@@ -271,7 +275,7 @@ const ResetPassword = () => {
                                             Verifying...
                                         </>
                                     ) : (
-                                        "Verify Identity"
+                                        ""
                                     )}
                                 </button>
                             </div>

@@ -1,6 +1,6 @@
 // src/App.js
 import React, { useEffect, useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, useLocation, useNavigate, useParams } from 'react-router-dom';
 import Sidebar from './components/Sidebar/Sidebar';
 import Topbar from './components/TopNav/Topbar';
 import BottomNav from './components/BottomNav/BottomNav';
@@ -26,6 +26,10 @@ function AppContent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isFullscreenMode, setIsFullscreenMode] = useState(false);
   const [currentReelIndex, setCurrentReelIndex] = useState(0);
+
+
+
+
 
   const [reels, setReels] = useState([
     {
@@ -133,6 +137,43 @@ function AppContent() {
       window.removeEventListener('popstate', checkPath);
     };
   }, []);
+
+
+
+
+
+  function setCookie(name, value, days) {
+    let expires = "";
+    if (days) {
+      const date = new Date();
+      date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+      expires = "; expires=" + date.toUTCString();
+    }
+    document.cookie = `${name}=${value || ""}${expires}; path=/; SameSite=Lax`;
+  }
+
+  useEffect(() => {
+    const query = new URLSearchParams(location.search);
+    const token = query.keys().next().value;
+
+    if (token) {
+      try {
+        setCookie("token", token, 7);
+        console.log("✅ Token saved as cookie:", token);
+
+
+        navigate("/");
+      } catch (error) {
+        console.error("❌ Error setting cookie:", error);
+      }
+    } else {
+      console.warn("⚠️ No token found in URL.");
+    }
+  }, [location, navigate]);
+
+
+
+
 
   return (
     <div className="App">

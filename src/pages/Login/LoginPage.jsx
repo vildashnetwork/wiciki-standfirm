@@ -25,7 +25,10 @@ const LoginPage = () => {
   const [loading, setLoading] = useState({ login: false, signup: false });
 
   // validation helpers
+
   const validateEmail = (email) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+
   const validatePassword = (password) => {
     const specialChars = ["@", "#", "$", "&", "^", "!", "(", ")", "-", "+", "=", "{", "}", "[", "]", "|"];
     return (
@@ -62,11 +65,10 @@ const LoginPage = () => {
         }
       );
 
-      // ✅ Handle success
+
       if (response.status === 200) {
         toast.success(response.data.message || "Login successful!");
 
-        // ✅ Store token if backend returns it
         if (response.data.usert) {
           setCookie("token", response.data.usert, 7);
         }
@@ -92,6 +94,60 @@ const LoginPage = () => {
 
 
 
+  // EMAIL VALIDATION SECTION -------------------------
+  const [result, setResult] = useState("");
+  const [emailCorrect, setEmailCorrect] = useState(false);
+  const [loadingcheck, setloadingcheck] = useState(false)
+  // validate email from API
+  const checkEmail = async (email) => {
+    setloadingcheck(true)
+    if (!email || !validateEmail(email)) {
+      setResult("");
+      setEmailCorrect(false);
+      return;
+    }
+
+    setResult("Checking email validity...");
+
+    toast.loading("Checking email validity, please wait...", { id: "signup", duration: 4000 });
+
+
+    try {
+      const res = await axios.post(
+        `https://wicikibackend.onrender.com/verify/check-email`, {
+        email
+      }
+      );
+
+      const data = res.data;
+
+      if (data.email_deliverability.status == "deliverable") {
+        setResult(` ${email} is a valid and deliverable email.`);
+        setEmailCorrect(true);
+      } else {
+        setResult(`❌ ${email} is invalid or undeliverable.`);
+        setEmailCorrect(false);
+      }
+
+      console.log("Email validation API:", data);
+    } catch (err) {
+      console.error("Email check error:", err.response?.data || err.message);
+      setEmailCorrect(false);
+    } finally {
+      setloadingcheck(false)
+    }
+  };
+
+
+  useEffect(() => {
+    if (!signupEmail) return;
+    const delay = setTimeout(() => {
+      if (validateEmail(signupEmail)) checkEmail(signupEmail);
+    }, 800);
+
+    return () => clearTimeout(delay);
+  }, [signupEmail]);
+
 
   const handleSignup = async (e) => {
     e.preventDefault();
@@ -101,6 +157,10 @@ const LoginPage = () => {
       return;
     }
 
+    if (!emailCorrect) {
+      toast.error("Please Enter and existing email", { id: "signup", duration: 3000 })
+      return;
+    }
     try {
       setLoading({ ...loading, signup: true });
       toast.loading("Creating your account...", { id: "signup", duration: 3000 });
@@ -130,6 +190,10 @@ const LoginPage = () => {
     }
   };
 
+
+
+
+
   const [loadinggoogle, setloadinggoogle] = useState(false)
 
   const GoogleLogin = () => {
@@ -138,27 +202,9 @@ const LoginPage = () => {
     window.location.href = "https://wicikibackend.onrender.com/auth/google";
   };
 
-  useEffect(() => {
-    const fetchUser = async () => {
-      try {
-        const res = await axios.get(
-          "https://wicikibackend.onrender.com/auth-user/me",
-          { withCredentials: true }
-        );
-        console.log("✅ Logged in user:", res.data);
-        // toast.success("Welcome back!");
-        // navigate("/questions");
-      } catch (err) {
-        console.error("❌ Failed to fetch user:", err);
-        // toast.error("Session expired. Please log in again.");
-        // navigate("/login-failed");
-      }
-    };
 
-    // Wait a short delay to let cookies set
-    const timer = setTimeout(fetchUser, 800);
-    return () => clearTimeout(timer);
-  }, [navigate]);
+
+
 
 
   return (
@@ -272,7 +318,8 @@ const LoginPage = () => {
                 >
                   {showLoginPassword ? <> {"hide password"}  <EyeOff size={18} /> </> : <>{"show password"} <Eye size={18} /></>}
                 </button>
-                <button type="submit" className="btn-primary" disabled={loading.login}>
+                <button type="submit" className="btn-primary" disabled={loading.login}
+                  style={{ backgournd: loading.login && "grey", opacity: loading.login && 0.5, cursor: loading.login && "no-drop" }}>
                   <span className="btn-text">
                     {loading.login ? <div className="loading"></div> : "Sign In"}
                   </span>
@@ -316,6 +363,7 @@ const LoginPage = () => {
                     placeholder=" "
                     value={signupName}
                     onChange={(e) => setSignupName(e.target.value)}
+                    disabled={loadingcheck}
                   />
                   <label className="form-label">Full name</label>
                   {signupName && !validateName(signupName) && (
@@ -350,7 +398,8 @@ const LoginPage = () => {
                   {validateEmail(signupEmail) && (
                     <div className="form-success show">
                       <ion-icon name="checkmark-circle-outline"></ion-icon>
-                      Email is available!
+                      {/* Email is available! */}
+                      {result}
                     </div>
                   )}
                 </div>
@@ -362,6 +411,7 @@ const LoginPage = () => {
                     placeholder=" "
                     value={signupPassword}
                     onChange={(e) => setSignupPassword(e.target.value)}
+                    disabled={loadingcheck}
                   />
                   <label className="form-label">Password</label>
 
@@ -396,7 +446,8 @@ const LoginPage = () => {
                 >
                   {showSignupPassword ? <> {"hide password"}  <EyeOff size={18} /> </> : <>{"show password"} <Eye size={18} /></>}
                 </button>
-                <button type="submit" className="btn-primary" disabled={loading.signup}>
+                <button type="submit" className="btn-primary" disabled={loading.signup}
+                  style={{ backgournd: loading.signup && "grey", opacity: loading.signup && 0.5, cursor: loading.signup && "no-drop" }}>
                   <span className="btn-text">
                     {loading.signup ? <div className="loading"></div> : "Create Account"}
                   </span>
@@ -407,7 +458,7 @@ const LoginPage = () => {
                 <span>or</span>
               </div>
 
-              <button className="btn-google" onClick={GoogleLogin}>
+              <button className="btn-google" onClick={GoogleLogin} >
                 <div className="google-icon"></div>
                 {loadinggoogle ? "loading.." : "Continue with Google"}
               </button>

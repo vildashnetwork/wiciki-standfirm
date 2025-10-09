@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import "./login.css"; // move all your <style> CSS here
 import axios from "axios";
 import { PhoneCallIcon, Eye, EyeOff } from "lucide-react"; // 👈 added Eye/EyeOff
@@ -302,6 +303,26 @@ const LoginPage = () => {
                   )}
 
                 </div>
+
+                <Link
+                  style={
+                    {
+                      float: "right",
+                      width: "70%",
+                      marginBottom: "10px",
+                      display: "flex",
+                      justifyContent: "end",
+                      alignItems: "center",
+                      color: "#e53935"
+
+                    }
+                  }
+                  to="/reset"
+                  // className="resetPasswordLink"
+                  aria-label="Reset password"
+                >
+                  reset password
+                </Link>
                 <button
                   type="button"
                   style={{
@@ -316,6 +337,7 @@ const LoginPage = () => {
                   className="toggle-password"
                   onClick={() => setShowLoginPassword(!showLoginPassword)}
                 >
+
                   {showLoginPassword ? <> {"hide password"}  <EyeOff size={18} /> </> : <>{"show password"} <Eye size={18} /></>}
                 </button>
                 <button type="submit" className="btn-primary" disabled={loading.login}

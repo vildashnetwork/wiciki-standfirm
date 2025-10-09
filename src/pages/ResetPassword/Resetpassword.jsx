@@ -1,5 +1,8 @@
 import React, { useState, useRef, useEffect } from "react";
 import "./ResetPassword.css";
+import { Eye, EyeOff } from "lucide-react";
+
+const API_BASE = "https://wicikibackend.onrender.com/otp";
 
 const ResetPassword = () => {
     const [step, setStep] = useState(1);
@@ -10,16 +13,33 @@ const ResetPassword = () => {
     const [loading, setLoading] = useState(false);
     const [message, setMessage] = useState({ text: "", type: "" });
     const [resendCooldown, setResendCooldown] = useState(0);
+    const [showSignupPassword, setShowSignupPassword] = useState(false);
+    // keep refs stable across renders
+    const otpRefs = useRef([]);
 
-    const otpRefs = Array.from({ length: 6 }, () => useRef(null));
-
-    // Cooldown timer for resend OTP
+    // cooldown timer for resend
     useEffect(() => {
-        if (resendCooldown > 0) {
-            const timer = setTimeout(() => setResendCooldown(resendCooldown - 1), 1000);
-            return () => clearTimeout(timer);
-        }
+        if (resendCooldown <= 0) return;
+        const t = setInterval(() => {
+            setResendCooldown((prev) => {
+                if (prev <= 1) {
+                    clearInterval(t);
+                    return 0;
+                }
+                return prev - 1;
+            });
+        }, 1000);
+        return () => clearInterval(t);
     }, [resendCooldown]);
+
+    // clear transient error messages after a short while
+    useEffect(() => {
+        if (!message.text) return;
+        const tid = setTimeout(() => {
+            if (message.type === "error" || message.type === "info") setMessage({ text: "", type: "" });
+        }, 6000);
+        return () => clearTimeout(tid);
+    }, [message]);
 
     const resetAll = () => {
         setStep(1);
@@ -28,32 +48,56 @@ const ResetPassword = () => {
         setNewPassword("");
         setConfirmPassword("");
         setMessage({ text: "", type: "" });
+        setResendCooldown(0);
+    };
+
+    // helper to send fetch requests
+    const apiPost = async (url, body) => {
+        const res = await fetch(url, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(body),
+        });
+        const json = await res.json().catch(() => ({}));
+        return { ok: res.ok, status: res.status, data: json };
     };
 
     const handleSendOtp = async () => {
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        const trimmed = email.trim().toLowerCase();
+        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
             setMessage({ text: "Please enter a valid email address.", type: "error" });
             return;
         }
 
-        setMessage({ text: "Sending secure verification code...", type: "info" });
         setLoading(true);
+        setMessage({ text: "Requesting verification code...", type: "info" });
 
-        await new Promise((r) => setTimeout(r, 1200));
-        setLoading(false);
-        setStep(2);
-        setResendCooldown(30);
-        setMessage({
-            text: `Verification code sent to ${email}. Use 123456 for demonstration purposes.`,
-            type: "success"
-        });
+        try {
+            const { ok, data } = await apiPost(`${API_BASE}/send`, { email: trimmed });
 
-        setTimeout(() => otpRefs[0].current?.focus(), 100);
+            if (!ok) {
+                const errMsg = data?.message || "Failed to send OTP. Please try again.";
+                setMessage({ text: errMsg, type: "error" });
+                setLoading(false);
+                return;
+            }
+
+            setMessage({ text: `Verification code sent to ${trimmed}. Check your email.`, type: "success" });
+            setStep(2);
+            setResendCooldown(30);
+            // focus first OTP input shortly after render
+            setTimeout(() => otpRefs.current[0]?.focus?.(), 120);
+        } catch (err) {
+            console.error("send otp error", err);
+            setMessage({ text: "Network error while sending OTP. Try again.", type: "error" });
+        } finally {
+            setLoading(false);
+        }
     };
 
-    const handleResendOtp = () => {
+    const handleResendOtp = async () => {
         if (resendCooldown > 0) return;
-        handleSendOtp();
+        await handleSendOtp();
     };
 
     const handleOtpChange = (index, value) => {
@@ -61,81 +105,131 @@ const ResetPassword = () => {
         const next = [...otp];
         next[index] = value;
         setOtp(next);
-        if (value && index < otpRefs.length - 1) {
-            otpRefs[index + 1].current?.focus();
+
+        if (value && index < otpRefs.current.length - 1) {
+            otpRefs.current[index + 1]?.focus?.();
         }
     };
 
     const handleOtpKeyDown = (index, ev) => {
-        if (ev.key === "Backspace" && !otp[index] && index > 0) {
-            otpRefs[index - 1].current?.focus();
-        }
-        if (ev.key === "ArrowLeft" && index > 0) {
-            otpRefs[index - 1].current?.focus();
-        }
-        if (ev.key === "ArrowRight" && index < otpRefs.length - 1) {
-            otpRefs[index + 1].current?.focus();
+        if (ev.key === "Backspace") {
+            if (otp[index]) {
+                // clear current
+                const next = [...otp];
+                next[index] = "";
+                setOtp(next);
+            } else if (index > 0) {
+                otpRefs.current[index - 1]?.focus?.();
+                const next = [...otp];
+                next[index - 1] = "";
+                setOtp(next);
+            }
+        } else if (ev.key === "ArrowLeft" && index > 0) {
+            otpRefs.current[index - 1]?.focus?.();
+        } else if (ev.key === "ArrowRight" && index < otpRefs.current.length - 1) {
+            otpRefs.current[index + 1]?.focus?.();
         }
     };
 
-    const verifyOtp = () => {
+    // allow pasting full OTP (6 digits)
+    const handleOtpPaste = (ev) => {
+        const paste = (ev.clipboardData || window.clipboardData).getData("text");
+        const digits = paste.replace(/\D/g, "").slice(0, 6).split("");
+        if (digits.length === 0) return;
+        ev.preventDefault();
+        const next = ["", "", "", "", "", ""];
+        digits.forEach((d, i) => (next[i] = d));
+        setOtp(next);
+        // focus next empty or last
+        const firstEmpty = next.findIndex((c) => c === "");
+        const focusIndex = firstEmpty === -1 ? next.length - 1 : firstEmpty;
+        setTimeout(() => otpRefs.current[focusIndex]?.focus?.(), 50);
+    };
+
+    const verifyOtp = async () => {
         const code = otp.join("");
         if (code.length < 6) {
             setMessage({ text: "Please enter the complete 6-digit verification code.", type: "error" });
             return;
         }
-        if (code !== "123456") {
-            setMessage({ text: "Invalid verification code. Try 123456 for demonstration.", type: "error" });
-            return;
+
+        setLoading(true);
+        setMessage({ text: "Verifying code...", type: "info" });
+
+        try {
+            const { ok, data } = await apiPost(`${API_BASE}/validate`, {
+                email: email.trim().toLowerCase(),
+                otp: code,
+            });
+
+            if (!ok) {
+                const errMsg = data?.message || "Invalid or expired OTP.";
+                setMessage({ text: errMsg, type: "error" });
+                setLoading(false);
+                return;
+            }
+
+            setMessage({ text: "OTP verified. Please create a new password.", type: "success" });
+            setStep(3);
+            setTimeout(() => {
+                // focus new password
+                document.querySelector('input[aria-label="new password"]')?.focus?.();
+            }, 120);
+        } catch (err) {
+            console.error("verify otp error", err);
+            setMessage({ text: "Network error while validating OTP.", type: "error" });
+        } finally {
+            setLoading(false);
         }
-        setMessage({ text: "Identity verified successfully. Please set your new password.", type: "success" });
-        setStep(3);
     };
 
-    const handleResetPassword = () => {
+    const handleResetPassword = async () => {
         if (newPassword.length < 8) {
-            setMessage({ text: "Password must be at least 8 characters for security.", type: "error" });
+            setMessage({ text: "Password must be at least 8 characters.", type: "error" });
             return;
         }
         if (newPassword !== confirmPassword) {
-            setMessage({ text: "Passwords do not match. Please verify your entries.", type: "error" });
+            setMessage({ text: "Passwords do not match. Please verify.", type: "error" });
             return;
         }
 
         setLoading(true);
-        setMessage({ text: "Securely updating your credentials...", type: "info" });
+        setMessage({ text: "Updating password...", type: "info" });
 
-        setTimeout(() => {
-            setLoading(false);
-            setMessage({
-                text: "Password successfully reset. Redirecting to secure login...",
-                type: "success"
+        try {
+            const { ok, data } = await apiPost(`${API_BASE}/reset`, {
+                email: email.trim().toLowerCase(),
+                newPassword,
             });
+
+            if (!ok) {
+                const errMsg = data?.message || "Failed to reset password.";
+                setMessage({ text: errMsg, type: "error" });
+                setLoading(false);
+                return;
+            }
+
+            setMessage({ text: "Password reset successfully. Redirecting to login...", type: "success" });
+            // small delay so user sees message
             setTimeout(() => {
                 resetAll();
                 window.location.href = "/login";
-            }, 1500);
-        }, 1200);
+            }, 1400);
+        } catch (err) {
+            console.error("reset password error", err);
+            setMessage({ text: "Network error while resetting password.", type: "error" });
+        } finally {
+            setLoading(false);
+        }
     };
-
-    useEffect(() => {
-        const tid = setTimeout(() => {
-            if (message.type === "error") {
-                setMessage({ text: "", type: "" });
-            }
-        }, 5000);
-        return () => clearTimeout(tid);
-    }, [message]);
 
     return (
         <div className="gordonRamsayContainer">
-            {/* Premium Background Elements */}
             <div className="thomasKellerBackground"></div>
             <div className="alainDucasseParticles"></div>
             <div className="joelRobuchonGrid"></div>
 
             <div className="massimoBotturaCard">
-                {/* Luxury Header */}
                 <header className="reneRedzepiHeader">
                     <div className="ferranAdriaCrown">
                         <div className="wolfgangPuckGem"></div>
@@ -146,23 +240,22 @@ const ResetPassword = () => {
                     <p className="yannickAllenoSubtitle">Enterprise-Grade Security Protocol</p>
                 </header>
 
-                {/* Progress Indicator */}
                 <div className="alainPassardProgress">
-                    <div className={`dominiqueCrennStep ${step >= 1 ? 'active' : ''}`}>
+                    <div className={`dominiqueCrennStep ${step >= 1 ? "active" : ""}`}>
                         <div className="emerilLagasseIndicator">
                             <span className="bobbyFlayNumber">1</span>
                             <div className="guyFieriGlow"></div>
                         </div>
                         <span className="paulBocuseLabel"></span>
                     </div>
-                    <div className={`dominiqueCrennStep ${step >= 2 ? 'active' : ''}`}>
+                    <div className={`dominiqueCrennStep ${step >= 2 ? "active" : ""}`}>
                         <div className="emerilLagasseIndicator">
                             <span className="bobbyFlayNumber">2</span>
                             <div className="guyFieriGlow"></div>
                         </div>
                         <span className="paulBocuseLabel"></span>
                     </div>
-                    <div className={`dominiqueCrennStep ${step >= 3 ? 'active' : ''}`}>
+                    <div className={`dominiqueCrennStep ${step >= 3 ? "active" : ""}`}>
                         <div className="emerilLagasseIndicator">
                             <span className="bobbyFlayNumber">3</span>
                             <div className="guyFieriGlow"></div>
@@ -173,7 +266,9 @@ const ResetPassword = () => {
 
                 <main className="danielBouludContent">
                     {message.text && (
-                        <div className={`jacquesPepinMessage ${message.type === "error" ? "error" : message.type === "success" ? "success" : "info"}`}>
+                        <div
+                            className={`jacquesPepinMessage ${message.type === "error" ? "error" : message.type === "success" ? "success" : "info"}`}
+                        >
                             <div className="davidChangIcon">
                                 {message.type === "error" ? "⚠️" : message.type === "success" ? "✅" : "ℹ️"}
                             </div>
@@ -184,8 +279,7 @@ const ResetPassword = () => {
                     {/* STEP 1 — EMAIL VERIFICATION */}
                     {step === 1 && (
                         <section className="nobuMatsuhisaPanel">
-
-                            <div className="hestonBlumenthalIllustration">📧</div>
+                            <div className="hestonBlumenthalIllustration"></div>
                             <h2 className="grantAchatzHeading">Account Verification</h2>
 
                             <p className="massimoBotturaDescription">
@@ -198,7 +292,7 @@ const ResetPassword = () => {
                                     className="wolfgangPuckInput"
                                     type="email"
                                     value={email}
-                                    onChange={(e) => setEmail(e.target.value.trim())}
+                                    onChange={(e) => setEmail(e.target.value)}
                                     placeholder="example@yourusername.com"
                                     aria-label="email address"
                                     disabled={loading}
@@ -206,11 +300,7 @@ const ResetPassword = () => {
                             </div>
 
                             <div className="marcoPierreWhiteActions">
-                                <button
-                                    className="guyFieriButton primary"
-                                    onClick={handleSendOtp}
-                                    disabled={loading}
-                                >
+                                <button className="guyFieriButton primary" onClick={handleSendOtp} disabled={loading}>
                                     {loading ? (
                                         <>
                                             <div className="thomasKellerSpinner"></div>
@@ -220,9 +310,7 @@ const ResetPassword = () => {
                                         "Send Verification Code"
                                     )}
                                 </button>
-
                             </div>
-
                         </section>
                     )}
 
@@ -237,11 +325,11 @@ const ResetPassword = () => {
 
                             <div className="emerilLagasseField">
                                 <label className="anthonyBourdainLabel">Verification Code</label>
-                                <div className="joelRobuchonOtpGrid">
+                                <div className="joelRobuchonOtpGrid" onPaste={handleOtpPaste}>
                                     {otp.map((digit, i) => (
                                         <input
                                             key={i}
-                                            ref={otpRefs[i]}
+                                            ref={(el) => (otpRefs.current[i] = el)}
                                             maxLength={1}
                                             inputMode="numeric"
                                             pattern="[0-9]*"
@@ -257,43 +345,30 @@ const ResetPassword = () => {
                             </div>
 
                             <div className="marcoPierreWhiteActions">
-                                <button
-                                    className="guyFieriButton secondary"
-                                    onClick={() => setStep(1)}
-                                    disabled={loading}
-                                >
+                                <button className="guyFieriButton secondary" onClick={() => setStep(1)} disabled={loading}>
                                     ← Back
                                 </button>
-                                <button
-                                    className="guyFieriButton primary"
-                                    onClick={verifyOtp}
-                                    disabled={loading}
-                                >
+                                <button className="guyFieriButton primary" onClick={verifyOtp} disabled={loading}>
                                     {loading ? (
                                         <>
                                             <div className="thomasKellerSpinner"></div>
                                             Verifying...
                                         </>
                                     ) : (
-                                        ""
+                                        "Verify Code"
                                     )}
                                 </button>
                             </div>
 
                             <div className="jacquesPepinFooter">
                                 <button
-                                    className={`alainDucasseResend ${resendCooldown > 0 ? 'cooldown' : ''}`}
+                                    className={`alainDucasseResend ${resendCooldown > 0 ? "cooldown" : ""}`}
                                     onClick={handleResendOtp}
                                     disabled={resendCooldown > 0 || loading}
                                 >
-                                    {resendCooldown > 0
-                                        ? `Resend available in ${resendCooldown}s`
-                                        : 'Resend Verification Code'
-                                    }
+                                    {resendCooldown > 0 ? `Resend available in ${resendCooldown}s` : "Resend Verification Code"}
                                 </button>
-                                <span className="paulBocuseHint">
-                                    Can't find the code? Check your spam folder.
-                                </span>
+                                <span className="paulBocuseHint">Can't find the code? Check your spam folder.</span>
                             </div>
                         </section>
                     )}
@@ -301,17 +376,17 @@ const ResetPassword = () => {
                     {/* STEP 3 — PASSWORD RESET */}
                     {step === 3 && (
                         <section className="nobuMatsuhisaPanel">
-                            <div className="hestonBlumenthalIllustration">🔄</div>
+                            <div className="hestonBlumenthalIllustration"></div>
                             <h2 className="grantAchatzHeading">Create New Password</h2>
-                            <p className="massimoBotturaDescription">
-                                Create a strong, unique password to secure your account
-                            </p>
+                            <p className="massimoBotturaDescription">Create a strong, unique password to secure your account</p>
+
+
 
                             <div className="emerilLagasseField">
                                 <label className="anthonyBourdainLabel">New Password</label>
                                 <input
                                     className="wolfgangPuckInput"
-                                    type="password"
+                                    type={showSignupPassword ? "text" : "password"}
                                     value={newPassword}
                                     onChange={(e) => setNewPassword(e.target.value)}
                                     placeholder="Minimum 8 characters with complexity"
@@ -320,43 +395,49 @@ const ResetPassword = () => {
                                 />
                                 <div className="bobbyFlayStrength">
                                     <div
-                                        className={`strengthBar ${newPassword.length >= 8 ? 'active' : ''} ${newPassword.length >= 12 ? 'strong' : ''}`}
+                                        className={`strengthBar ${newPassword.length >= 8 ? "active" : ""} ${newPassword.length >= 12 ? "strong" : ""}`}
                                     ></div>
-                                    <span className="strengthLabel">
-                                        {newPassword.length >= 12 ? 'Strong' : newPassword.length >= 8 ? 'Good' : 'Weak'}
-                                    </span>
+                                    <span className="strengthLabel">{newPassword.length >= 12 ? "Strong" : newPassword.length >= 8 ? "Good" : "Weak"}</span>
                                 </div>
                             </div>
-
+                            <button
+                                type="button"
+                                style={{
+                                    float: "right",
+                                    width: "70%",
+                                    marginBottom: "10px",
+                                    display: "flex",
+                                    justifyContent: "center",
+                                    alignItems: "center",
+                                    gap: "10px"
+                                }}
+                                className="toggle-password"
+                                onClick={() => setShowSignupPassword(!showSignupPassword)}
+                            >
+                                {showSignupPassword ? <> {"hide password"}  <EyeOff size={18} /> </> : <>{"show password"} <Eye size={18} /></>}
+                            </button>
+                            <br />
+                            <br />
+                            <br />
                             <div className="emerilLagasseField">
                                 <label className="anthonyBourdainLabel">Confirm Password</label>
                                 <input
                                     className="wolfgangPuckInput"
-                                    type="password"
+                                    type={showSignupPassword ? "text" : "password"}
                                     value={confirmPassword}
                                     onChange={(e) => setConfirmPassword(e.target.value)}
                                     placeholder="Re-enter your new password"
                                     aria-label="confirm password"
                                     disabled={loading}
                                 />
-                                {confirmPassword && newPassword !== confirmPassword && (
-                                    <div className="anthonyBourdainError">Passwords do not match</div>
-                                )}
+                                {confirmPassword && newPassword !== confirmPassword && <div className="anthonyBourdainError">Passwords do not match</div>}
                             </div>
 
                             <div className="marcoPierreWhiteActions">
-                                <button
-                                    className="guyFieriButton secondary"
-                                    onClick={() => setStep(2)}
-                                    disabled={loading}
-                                >
+                                <button className="guyFieriButton secondary" onClick={() => setStep(2)} disabled={loading}>
                                     ← Back
                                 </button>
-                                <button
-                                    className="guyFieriButton primary"
-                                    onClick={handleResetPassword}
-                                    disabled={loading || newPassword !== confirmPassword}
-                                >
+                                <button className="guyFieriButton primary" onClick={handleResetPassword} disabled={loading || newPassword !== confirmPassword}>
                                     {loading ? (
                                         <>
                                             <div className="thomasKellerSpinner"></div>
@@ -377,7 +458,6 @@ const ResetPassword = () => {
                     )}
                 </main>
 
-                {/* Luxury Security Footer */}
                 <footer className="thomasKellerFooter">
                     <div className="ferranAdriaSecurity">
                         <span className="wolfgangPuckBadge">🛡️</span>

@@ -30,6 +30,9 @@
   background: var(--primary-bg);
   color: var(--text-primary);
   overflow-x: hidden;
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
 }
 
@@ -123,7 +126,7 @@
     align-items: center;
     justify-content: center;
     margin-bottom: 0 !important;
-    margin-top: 20px !important;
+    /* margin-top: -20px !important; */
   }
 
   .metaRow {

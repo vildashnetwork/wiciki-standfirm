@@ -42,7 +42,8 @@ const ProfilePage = () => {
         rgba(13, 13, 13, 0.0) 80%
       ),
       url('/image.png') center/100% 100% no-repeat
-    `
+    `,
+
         }}
       >
         <div className={styles.coverOverlay} />

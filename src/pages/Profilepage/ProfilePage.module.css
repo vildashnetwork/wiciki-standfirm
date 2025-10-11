@@ -24,6 +24,8 @@
   --warning-color: #ff7043;
 }
 
+
+
 /* Page container */
 .page {
   min-height: 100vh;
@@ -119,6 +121,10 @@
 }
 
 @media (max-width: 500px) {
+  .bodyWrap {
+    padding: 0 !important;
+  }
+
   .cover {
     height: 200px !important;
     background-size: 100% 100%;
@@ -289,11 +295,11 @@
 
 /* Body layout */
 .bodyWrap {
-  max-width: 1160px;
-  margin: 16px auto;
-  padding: 0 16px;
+  max-width: 1000px;
+  /* margin: 16px auto; */
+  padding: 50px;
   display: grid;
-  grid-template-columns: 360px 1fr;
+  grid-template-columns: 1fr;
   gap: 16px;
 }
 

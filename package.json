@@ -20,6 +20,7 @@
     "react-hot-toast": "^2.6.0",
     "react-ion-icon": "^4.0.0",
     "react-router-dom": "^7.9.1",
+    "react-toastify": "^11.0.5",
     "tslib": "^2.8.1"
   },
   "devDependencies": {

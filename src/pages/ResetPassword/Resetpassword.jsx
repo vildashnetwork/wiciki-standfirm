@@ -395,10 +395,36 @@ const ResetPassword = () => {
                                 />
                                 <div className="bobbyFlayStrength">
                                     <div
-                                        className={`strengthBar ${newPassword.length >= 8 ? "active" : ""} ${newPassword.length >= 12 ? "strong" : ""}`}
+                                        className={`strengthBar ${newPassword.length >= 8 &&
+                                                ["@", "#", "$", "&", "^", "!", "(", ")", "-", "+", "=", "{", "}", "[", "]", "|"].some(
+                                                    (char) => newPassword.includes(char)
+                                                )
+                                                ? "active"
+                                                : ""
+                                            } ${newPassword.length >= 12 &&
+                                                ["@", "#", "$", "&", "^", "!", "(", ")", "-", "+", "=", "{", "}", "[", "]", "|"].some(
+                                                    (char) => newPassword.includes(char)
+                                                )
+                                                ? "strong"
+                                                : ""
+                                            }`}
                                     ></div>
-                                    <span className="strengthLabel">{newPassword.length >= 12 ? "Strong" : newPassword.length >= 8 ? "Good" : "Weak"}</span>
+
+                                    <span className="strengthLabel">
+                                        {newPassword.length >= 12 &&
+                                            ["@", "#", "$", "&", "^", "!", "(", ")", "-", "+", "=", "{", "}", "[", "]", "|"].some(
+                                                (char) => newPassword.includes(char)
+                                            )
+                                            ? "Strong"
+                                            : newPassword.length >= 8 &&
+                                                ["@", "#", "$", "&", "^", "!", "(", ")", "-", "+", "=", "{", "}", "[", "]", "|"].some(
+                                                    (char) => newPassword.includes(char)
+                                                )
+                                                ? "Good"
+                                                : "Weak"}
+                                    </span>
                                 </div>
+
                             </div>
                             <button
                                 type="button"

@@ -11,7 +11,7 @@ import './components/ReelsOverlay/ReelsOverlay.css';
 
 // Page styles
 import './pages/Gists/Gists.css';
-import './pages/Profilepage/Profile.css';
+// import './pages/Profilepage/Profile.css';
 import './pages/Reelspage/ReelsPage.css';
 import './pages/Reachoutpage/Reachout.css';
 import './pages/Notification/Notification.css';

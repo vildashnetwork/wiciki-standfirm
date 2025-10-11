@@ -31,13 +31,18 @@
   gap: 6px;
   cursor: pointer;
   font-weight: 700;
-  font-size: 18px;
+  font-size: 20px;
   color: var(--text-primary);
   border-bottom: none !important;
 }
 
-.logo-mark {
-  font-size: 20px;
+.logo-mark,
+.globe-outline {
+  font-size: 10px !important;
+}
+
+.globe-outline {
+  font-size: 9px !important;
 }
 
 .logo-text {
@@ -146,8 +151,8 @@
 /* Mobile */
 .mobile-menu-toggle {
   display: none;
-  background: none;
-  border: none;
+  background: none !important;
+  border: none !important;
   font-size: 26px;
   cursor: pointer;
   padding: 6px;

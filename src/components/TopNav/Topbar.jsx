@@ -10,7 +10,7 @@ const Topbar = ({ toggleMobileMenu, navigate }) => {
           <ion-icon name="menu-outline"></ion-icon>
         </button>
         <div className="logo" onClick={() => navigate("/")}>
-          <span className="logo-mark">🌐</span>
+          <span className="logo-mark"><ion-icon name="globe-outline" ></ion-icon></span>
           <span className="logo-text">WICIKI</span>
         </div>
       </div>

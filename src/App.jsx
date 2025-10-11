@@ -163,7 +163,7 @@ function AppContent() {
         console.log("✅ Token saved as cookie:", token);
 
 
-        navigate("/");
+        navigate("/questions");
       } catch (error) {
         console.error("❌ Error setting cookie:", error);
       }

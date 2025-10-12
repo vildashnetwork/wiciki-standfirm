@@ -369,12 +369,10 @@
     padding: 0 !important;
   }
 
-  .aboutCard {
-    padding-bottom: 20px !important;
-  }
+
 
   .page {
-    padding-bottom: 40px !important;
+    padding-bottom: 0 !important;
   }
 
   .cover {

@@ -15,7 +15,8 @@ import {
   Terminal,
   Link as LinkIcon
 } from "lucide-react";
-import { Maximize2, ImageUp, X } from "lucide-react";
+import { Play, Pause, Volume2, VolumeX, Maximize2 } from "lucide-react";
+import { ImageUp, X } from "lucide-react";
 
 const Tab = ({ label, active, onClick }) => (
   <button
@@ -272,7 +273,7 @@ const ProfilePage = () => {
     { icon: <Database size={18} />, name: "MongoDB" },
     { icon: <Server size={18} />, name: "Express" },
     { icon: <Terminal size={18} />, name: "TypeScript" },
-    { icon: <MonitorSmartphone size={18} />, name: "Responsive Design" },
+    { icon: <MonitorSmartphone size={18} />, name: "Responsive" },
   ];
 
   const languages = ["English", "French", "Twi"];
@@ -304,6 +305,71 @@ const ProfilePage = () => {
       setShowModal(false);
     }
   };
+
+  const VideoCard = ({ src, title }) => {
+    const videoRef = useRef(null);
+    const [playing, setPlaying] = useState(false);
+    const [muted, setMuted] = useState(true);
+
+    const togglePlay = () => {
+      const video = videoRef.current;
+      if (!video) return;
+
+      if (playing) {
+        video.pause();
+      } else {
+        video.play();
+      }
+      setPlaying(!playing);
+    };
+
+    const toggleMute = () => {
+      const video = videoRef.current;
+      if (!video) return;
+      video.muted = !muted;
+      setMuted(!muted);
+    };
+
+    const goFullscreen = () => {
+      const video = videoRef.current;
+      if (video.requestFullscreen) video.requestFullscreen();
+    };
+
+    return (
+      <div className={styles.videoCard}>
+        <div className={styles.videoWrapper}>
+          <video
+            ref={videoRef}
+            className={styles.video}
+            src={src}
+            loop
+            playsInline
+            muted={muted}
+            onClick={togglePlay}
+          />
+          <div className={styles.overlay}>
+            <div className={styles.title}>{title}</div>
+
+            {/* Controls */}
+            <div className={styles.controls}>
+              <button onClick={togglePlay} className={styles.controlBtn}>
+                {playing ? <Pause size={20} /> : <Play size={20} />}
+              </button>
+              <button onClick={toggleMute} className={styles.controlBtn}>
+                {muted ? <VolumeX size={20} /> : <Volume2 size={20} />}
+              </button>
+              <button onClick={goFullscreen} className={styles.controlBtn}>
+                <Maximize2 size={20} />
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  };
+
+
+
 
 
   const renderTabContent = () => {
@@ -726,16 +792,16 @@ const ProfilePage = () => {
         );
 
       case "Videos":
+
         return (
-          <div className={styles.card}>
-            <div className={styles.cardHeader}>Videos</div>
-            <div className={styles.cardBody}>
+          <div className={styles.vcard}>
+            <div className={styles.vcardHeader}>Videos</div>
+            <div className={styles.vcardBody}>
               <div className={styles.videosGrid}>
-                {Array.from({ length: 3 }).map((_, i) => (
-                  <video
+                {["Dev Showcase", "UI Animation", "Project Preview"].map((title, i) => (
+                  <VideoCard
                     key={i}
-                    className={styles.video}
-                    controls
+                    title={title}
                     src={`https://samplelib.com/lib/preview/mp4/sample-5s.mp4`}
                   />
                 ))}

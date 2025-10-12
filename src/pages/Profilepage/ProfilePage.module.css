@@ -367,7 +367,8 @@
 @media (max-width: 500px) {
   .bodyWrap {
     padding: 0 !important;
-    padding-bottom: 10px !important;
+    padding-bottom: 0 !important;
+    margin-bottom: 0 !important;
   }
 
 
@@ -548,8 +549,8 @@
 /* Body layout */
 .bodyWrap {
   max-width: 1000px;
-  margin: 18px auto;
-
+  margin: 0 !important;
+  margin-top: 12px !important;
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
@@ -797,6 +798,7 @@
   transition: all 0.3s ease-in-out;
   overflow: hidden;
   position: relative;
+
 }
 
 .aboutCard:hover {
@@ -1025,4 +1027,149 @@
   height: 100vh;
   object-fit: contain;
   border-radius: 0;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.vcard {
+  background: var(--card-bg);
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  transition: all 0.3s ease;
+}
+
+.vcardHeader {
+  padding: 16px;
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--accent-red-light);
+  border-bottom: 1px solid var(--border-color);
+}
+
+.vcardBody {
+  padding: 16px;
+}
+
+.videosGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 18px;
+}
+
+/* VIDEO CARD */
+.videoCard {
+  position: relative;
+  background: #000;
+  border-radius: 16px;
+  overflow: hidden;
+  height: 300px !important;
+  transition: all 0.3s ease;
+}
+
+.videoCard:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 15px 40px rgba(0, 0, 0, 0.5);
+}
+
+.videoWrapper {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: inherit;
+  cursor: pointer;
+}
+
+/* Overlay controls */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 16px;
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.6) 10%, transparent 80%);
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.videoCard:hover .overlay {
+  opacity: 1;
+}
+
+.title {
+  font-weight: 600;
+  font-size: 1rem;
+  color: #fff;
+  text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
+}
+
+.controls {
+  display: flex;
+  justify-content: center;
+  gap: 16px;
+}
+
+.controlBtn {
+  background: rgba(255, 255, 255, 0.15);
+  border: none;
+  border-radius: 50%;
+  width: 46px;
+  height: 46px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.25s ease;
+  backdrop-filter: blur(8px);
+}
+
+.controlBtn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+/* Responsive Adjustments */
+@media (max-width: 768px) {
+  .videosGrid {
+    grid-template-columns: 1fr;
+  }
+
+  .controlBtn {
+    width: 42px;
+    height: 42px;
+  }
+
+  .title {
+    font-size: 0.9rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .overlay {
+    padding: 10px;
+  }
+
+  .controlBtn {
+    width: 38px;
+    height: 38px;
+  }
 }

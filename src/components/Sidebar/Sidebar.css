@@ -19,13 +19,13 @@
   background: linear-gradient(90deg, var(--accent-red), var(--accent-red-light), var(--accent-white));
 }
 
-.logo {
+.logo123 {
   padding: 24px;
   text-align: center;
   border-bottom: 1px solid var(--border-color);
 }
 
-.logo h1 {
+.logo123 h1 {
   font-family: 'Orbitron', monospace;
   font-size: 28px;
   font-weight: 700;

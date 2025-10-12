@@ -25,7 +25,7 @@ const Sidebar = ({ isMobileMenuOpen }) => {
 
   return (
     <div className={`sidebar ${isMobileMenuOpen ? 'mobile-open' : ''}`}>
-      <div className="logo">
+      <div className="logo123">
         <h1>WICIKI</h1>
       </div>
       <nav className="nav-menu">

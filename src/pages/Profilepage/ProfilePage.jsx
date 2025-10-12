@@ -13,7 +13,9 @@ import {
   MonitorSmartphone,
   Server,
   Terminal,
+  Link as LinkIcon
 } from "lucide-react";
+import { Maximize2, ImageUp, X } from "lucide-react";
 
 const Tab = ({ label, active, onClick }) => (
   <button
@@ -274,6 +276,35 @@ const ProfilePage = () => {
   ];
 
   const languages = ["English", "French", "Twi"];
+
+  const [banner, setBanner] = useState("/image.png");
+  const [avatar, setAvatar] = useState("/image.png");
+  const [modalImage, setModalImage] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [fullscreen, setFullscreen] = useState(false);
+  const fileInputRef = useRef(null);
+
+  const openModal = (imgSrc) => {
+    setModalImage(imgSrc);
+    setShowModal(true);
+  };
+
+  const triggerFileSelect = (type) => {
+    fileInputRef.current.setAttribute("data-type", type);
+    fileInputRef.current.click();
+  };
+
+  const handleFileInput = (e) => {
+    const file = e.target.files[0];
+    const type = fileInputRef.current.getAttribute("data-type");
+    if (file) {
+      const imageUrl = URL.createObjectURL(file);
+      if (type === "banner") setBanner(imageUrl);
+      if (type === "avatar") setAvatar(imageUrl);
+      setShowModal(false);
+    }
+  };
+
 
   const renderTabContent = () => {
     switch (activeTab) {
@@ -718,11 +749,96 @@ const ProfilePage = () => {
     }
   };
 
+  // return (
+  //   <div id="profile" className={styles.page}>
+  //     {/* Cover */}
+  //     <section
+  //       className={styles.cover}
+  //       style={{
+  //         background: `
+  //           linear-gradient(
+  //             to top,
+  //             rgba(197, 27, 24, 0.8) 0%,
+  //             rgba(197, 27, 24, 0) 40%,
+  //             rgba(13, 13, 13, 0.0) 80%
+  //           ),
+  //           url('/image.png') center/100% 100% no-repeat
+  //         `,
+  //       }}
+  //     />
+
+  //     {/* Avatar + Name */}
+  //     <div className={styles.avatarRow}>
+  //       <div className={styles.avatarWrap}>
+  //         <div className={styles.avatar}>AK</div>
+  //         <div className={styles.statusDot} />
+  //       </div>
+
+  //       <div className={styles.nameArea}>
+  //         <div className={styles.personName}>Akosua Kwarteng</div>
+  //         <div className={styles.metaRow}>
+  //           <span className={styles.metaChip}>Full-Stack Developer</span>
+  //           <span className={styles.metaChip}>React</span>
+  //           <span className={styles.metaChip}>Node.js</span>
+  //           <span className={styles.metaChip}>AI/ML</span>
+  //           <span className={styles.metaChip}>2.4K reachers</span>
+  //         </div>
+  //         <span style={{ marginTop: 16 }} className={styles.metaChip}>
+  //           Website: <ion-icon name="link-outline"></ion-icon>{" "}
+  //           <a
+  //             href="https://mywebsite.onwiciki.com"
+  //             target="_blank"
+  //             rel="noopener noreferrer"
+  //             style={{ textDecoration: "none", color: "#eba0a7ff" }}
+  //           >
+  //             https://mywebsite.onwiciki.com
+  //           </a>
+  //         </span>
+  //       </div>
+
+  //       <div className={styles.headerActions}>
+  //         <button className={styles.iconBtn} title="More">⋯</button>
+  //       </div>
+  //     </div>
+
+  //     {/* Tabs */}
+  //     <nav className={styles.tabsBar}>
+  //       <div className={styles.tabsInner}>
+  //         {["Posts", "About", "Friends", "Photos", "Videos"].map(tab => (
+  //           <Tab
+  //             key={tab}
+  //             label={tab}
+  //             active={activeTab === tab}
+  //             onClick={() => setActiveTab(tab)}
+  //           />
+  //         ))}
+  //       </div>
+  //     </nav>
+
+  //     {/* Body */}
+  //     <main className={styles.bodyWrap}>
+  //       <section className={styles.rightCol}>{renderTabContent()}</section>
+  //     </main>
+  //   </div>
+  // );
+
+
+
   return (
     <div id="profile" className={styles.page}>
-      {/* Cover */}
+      {/* File Upload (hidden) */}
+      <input
+        ref={fileInputRef}
+        type="file"
+        accept="image/*"
+        style={{ display: "none" }}
+        onChange={handleFileInput}
+      />
+
+      {/* Banner */}
       <section
         className={styles.cover}
+        onClick={() => openModal(banner)}
         style={{
           background: `
             linear-gradient(
@@ -731,16 +847,18 @@ const ProfilePage = () => {
               rgba(197, 27, 24, 0) 40%,
               rgba(13, 13, 13, 0.0) 80%
             ),
-            url('/image.png') center/100% 100% no-repeat
+            url(${banner}) center/100% 100% no-repeat
           `,
         }}
-      />
+      >
+        <div className={styles.coverOverlay}></div>
+      </section>
 
-      {/* Avatar + Name */}
+      {/* Avatar + Details */}
       <div className={styles.avatarRow}>
-        <div className={styles.avatarWrap}>
-          <div className={styles.avatar}>AK</div>
-          <div className={styles.statusDot} />
+        <div className={styles.avatarWrap} onClick={() => openModal(avatar)}>
+          <img src={avatar} alt="Profile" className={styles.avatarImg} />
+          <div className={styles.statusDot}></div>
         </div>
 
         <div className={styles.nameArea}>
@@ -752,13 +870,14 @@ const ProfilePage = () => {
             <span className={styles.metaChip}>AI/ML</span>
             <span className={styles.metaChip}>2.4K reachers</span>
           </div>
-          <span style={{ marginTop: 16 }} className={styles.metaChip}>
-            Website: <ion-icon name="link-outline"></ion-icon>{" "}
+          <span className={styles.metaChip}>
+            Website
+            <LinkIcon size={14} />
             <a
               href="https://mywebsite.onwiciki.com"
               target="_blank"
               rel="noopener noreferrer"
-              style={{ textDecoration: "none", color: "#eba0a7ff" }}
+              style={{ color: "#eba0a7ff", textDecoration: "none" }}
             >
               https://mywebsite.onwiciki.com
             </a>
@@ -766,30 +885,81 @@ const ProfilePage = () => {
         </div>
 
         <div className={styles.headerActions}>
-          <button className={styles.iconBtn} title="More">⋯</button>
+          <button className={styles.iconBtn}>⋯</button>
         </div>
       </div>
 
       {/* Tabs */}
       <nav className={styles.tabsBar}>
         <div className={styles.tabsInner}>
-          {["Posts", "About", "Friends", "Photos", "Videos"].map(tab => (
-            <Tab
+          {["Posts", "About", "Friends", "Photos", "Videos"].map((tab) => (
+            <button
               key={tab}
-              label={tab}
-              active={activeTab === tab}
+              className={`${styles.tab} ${activeTab === tab ? styles.tabActive : ""
+                }`}
               onClick={() => setActiveTab(tab)}
-            />
+            >
+              {tab}
+            </button>
           ))}
         </div>
       </nav>
 
-      {/* Body */}
+      {/* Main Body */}
       <main className={styles.bodyWrap}>
         <section className={styles.rightCol}>{renderTabContent()}</section>
       </main>
+
+      {/* Modal */}
+      {showModal && (
+        <div
+          className={`${styles.modalOverlay} ${fullscreen ? styles.fullscreen : ""
+            }`}
+
+        >
+          <div className={styles.modalContent}>
+            <button
+              className={styles.closeBtn}
+              onClick={() => setShowModal(false)}
+            >
+              <X size={22} />
+            </button>
+
+            <div className={styles.modalImageWrapper}>
+              <img
+                src={modalImage}
+                alt="Preview"
+                className={`${styles.modalImage} ${fullscreen ? styles.modalFull : ""
+                  }`}
+              />
+            </div>
+
+            <button
+              className={`${styles.navBtn} ${styles.leftBtn}`}
+              onClick={() => setFullscreen(!fullscreen)}
+            >
+              <Maximize2 className={styles.navIcon} />
+            </button>
+            <button
+              className={styles.closeBtn}
+              onClick={() => setShowModal(false)}
+            >
+              <X size={22} />
+            </button>
+            <button
+              className={`${styles.navBtn} ${styles.rightBtn}`}
+              onClick={() =>
+                triggerFileSelect(modalImage === banner ? "banner" : "avatar")
+              }
+            >
+              <ImageUp className={styles.navIcon} />
+            </button>
+          </div>
+        </div>
+      )}
     </div>
   );
+
 };
 
 export default ProfilePage;

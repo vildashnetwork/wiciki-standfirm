@@ -24,7 +24,40 @@
   --warning-color: #ff7043;
 }
 
+.plceMent {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
 
+.leftSidebar {
+  flex: 0 0 350px;
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  position: relative;
+}
+
+@media screen and (max-width: 768px) {
+  .leftSidebar {
+    display: none;
+  }
+
+  .plceMent {
+    grid-template-columns: 1fr;
+    gap: 1px;
+  }
+}
+
+.stickyActive {
+  position: fixed !important;
+  top: 100px !important;
+  /* same as triggerPoint */
+  width: 350px !important;
+  /* match sidebar width */
+  transition: all 0.2s ease-in-out !important;
+  z-index: 10 !important;
+}
 
 /* Page container */
 .page {
@@ -296,17 +329,20 @@
 /* Body layout */
 .bodyWrap {
   max-width: 1000px;
-  /* margin: 16px auto; */
-  padding: 50px;
+  margin: 18px auto;
+
   display: grid;
   grid-template-columns: 1fr;
   gap: 16px;
 }
 
 .card {
-  background: var(--card-bg);
-  border: 1px solid var(--border-color);
+  background: var(--card-bg, #fff);
   border-radius: 12px;
+  border: 1px solid var(--border-color, #ddd);
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.05);
+  margin-bottom: 20px;
+  transition: box-shadow 0.2s ease;
 }
 
 .cardHeader {
@@ -447,10 +483,11 @@
 }
 
 .postActions {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 8px;
-  margin-top: 10px;
+  display: flex;
+  justify-content: space-around;
+  margin-top: 8px;
+  border-top: 1px solid var(--border-color, #ddd);
+  padding: 8px 0;
 }
 
 .postActionBtn {

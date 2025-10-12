@@ -1,9 +1,9 @@
 import { useState, useEffect, useRef } from "react";
-import "./FeedPost.css"
+
 import { Link } from "react-router-dom";
 
 
-const FeedPost = ({ post, onLike, onComment }) => {
+const FeedPostme = ({ post, onLike, onComment }) => {
     const [showComments, setShowComments] = useState(false);
     const [commentText, setCommentText] = useState('');
     const [showOptions, setShowOptions] = useState(false);
@@ -190,4 +190,4 @@ const FeedPost = ({ post, onLike, onComment }) => {
     );
 };
 
-export default FeedPost;
+export default FeedPostme;

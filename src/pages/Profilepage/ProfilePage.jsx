@@ -232,6 +232,25 @@ const ProfilePage = () => {
   }, [isSticky]);
 
 
+  const [selectedIndex, setSelectedIndex] = useState(null);
+  const photos = Array.from({ length: 15 }).map(
+    (_, i) => `https://picsum.photos/seed/p${i}/1600/1000`
+  );
+
+  // Keyboard navigation
+  useEffect(() => {
+    const handleKey = (e) => {
+      if (selectedIndex === null) return;
+      if (e.key === "Escape") setSelectedIndex(null);
+      if (e.key === "ArrowRight")
+        setSelectedIndex((i) => (i + 1) % photos.length);
+      if (e.key === "ArrowLeft")
+        setSelectedIndex((i) => (i - 1 + photos.length) % photos.length);
+    };
+    window.addEventListener("keydown", handleKey);
+    return () => window.removeEventListener("keydown", handleKey);
+  }, [selectedIndex]);
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "Posts":
@@ -250,7 +269,7 @@ const ProfilePage = () => {
               </div>
 
               {/* Photos Card */}
-              <div
+              {/* <div
                 ref={photosCardRef}
                 className={`${styles.card} ${isSticky ? styles.stickyActive : ""}`}
                 style={isSticky ? { top: `${topOffset}px` } : {}}
@@ -258,7 +277,7 @@ const ProfilePage = () => {
                 <div className={styles.cardHeader}>Photos</div>
                 <div className={styles.cardBody}>
                   <div className={styles.photosGrid}>
-                    {Array.from({ length: 12 }).map((_, i) => (
+                    {Array.from({ length: 15 }).map((_, i) => (
                       <img
                         key={i}
                         className={styles.photo}
@@ -268,7 +287,104 @@ const ProfilePage = () => {
                     ))}
                   </div>
                 </div>
-              </div>
+              </div> */}
+              <>
+                {/* Photos Grid Card */}
+                <div
+                  ref={photosCardRef}
+                  className={`${styles.card} ${isSticky ? styles.stickyActive : ""}`}
+                  style={isSticky ? { top: `${topOffset}px` } : {}}
+                >
+                  <div className={styles.cardHeader}>Photos</div>
+                  <div className={styles.cardBody}>
+                    <div className={styles.photosGrid}>
+                      {photos.map((src, i) => (
+                        <img
+                          key={i}
+                          src={src}
+                          alt={`Photo ${i + 1}`}
+                          className={styles.photo}
+                          onClick={() => setSelectedIndex(i)}
+                        />
+                      ))}
+                    </div>
+                  </div>
+                </div>
+
+                {/* Modal */}
+                {selectedIndex !== null && (
+                  <div
+                    className={styles.modalOverlay}
+                    onClick={() => setSelectedIndex(null)}
+                  >
+                    <div
+                      className={styles.modalContent}
+                      onClick={(e) => e.stopPropagation()}
+                    >
+                      {/* Left Button */}
+                      <button
+                        className={`${styles.navBtn} ${styles.leftBtn}`}
+                        onClick={() =>
+                          setSelectedIndex(
+                            (prev) => (prev - 1 + photos.length) % photos.length
+                          )
+                        }
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className={styles.navIcon}
+                        >
+                          <path d="M15 18l-6-6 6-6" />
+                        </svg>
+                      </button>
+
+                      {/* Image */}
+                      <div className={styles.modalImageWrapper}>
+                        <img
+                          src={photos[selectedIndex]}
+                          alt={`Large view ${selectedIndex + 1}`}
+                          className={styles.modalImage}
+                        />
+                      </div>
+
+                      {/* Right Button */}
+                      <button
+                        className={`${styles.navBtn} ${styles.rightBtn}`}
+                        onClick={() =>
+                          setSelectedIndex((prev) => (prev + 1) % photos.length)
+                        }
+                      >
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="2.5"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className={styles.navIcon}
+                        >
+                          <path d="M9 18l6-6-6-6" />
+                        </svg>
+                      </button>
+
+                      {/* Close Button */}
+                      <button
+                        className={styles.closeBtn}
+                        onClick={() => setSelectedIndex(null)}
+                      >
+                        ✕
+                      </button>
+                    </div>
+                  </div>
+                )}
+              </>
             </div>
 
 
@@ -320,21 +436,103 @@ const ProfilePage = () => {
 
       case "Photos":
         return (
-          <div className={styles.card}>
-            <div className={styles.cardHeader}>Photos</div>
-            <div className={styles.cardBody}>
-              <div className={styles.photosGrid}>
-                {Array.from({ length: 12 }).map((_, i) => (
-                  <img
-                    key={i}
-                    className={styles.photo}
-                    src={`https://picsum.photos/seed/p${i}/300/300`}
-                    alt="Photo"
-                  />
-                ))}
+          <>
+            {/* Photos Grid Card */}
+            <div
+              ref={photosCardRef}
+              className={`${styles.card} ${isSticky ? styles.stickyActive : ""}`}
+              style={isSticky ? { top: `${topOffset}px` } : {}}
+            >
+              <div className={styles.cardHeader}>Photos</div>
+              <div className={styles.cardBody}>
+                <div className={styles.photosGrid}>
+                  {photos.map((src, i) => (
+                    <img
+                      key={i}
+                      src={src}
+                      alt={`Photo ${i + 1}`}
+                      className={styles.photo}
+                      onClick={() => setSelectedIndex(i)}
+                    />
+                  ))}
+                </div>
               </div>
             </div>
-          </div>
+
+            {/* Modal */}
+            {selectedIndex !== null && (
+              <div
+                className={styles.modalOverlay}
+                onClick={() => setSelectedIndex(null)}
+              >
+                <div
+                  className={styles.modalContent}
+                  onClick={(e) => e.stopPropagation()}
+                >
+                  {/* Left Button */}
+                  <button
+                    className={`${styles.navBtn} ${styles.leftBtn}`}
+                    onClick={() =>
+                      setSelectedIndex(
+                        (prev) => (prev - 1 + photos.length) % photos.length
+                      )
+                    }
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={styles.navIcon}
+                    >
+                      <path d="M15 18l-6-6 6-6" />
+                    </svg>
+                  </button>
+
+                  {/* Image */}
+                  <div className={styles.modalImageWrapper}>
+                    <img
+                      src={photos[selectedIndex]}
+                      alt={`Large view ${selectedIndex + 1}`}
+                      className={styles.modalImage}
+                    />
+                  </div>
+
+                  {/* Right Button */}
+                  <button
+                    className={`${styles.navBtn} ${styles.rightBtn}`}
+                    onClick={() =>
+                      setSelectedIndex((prev) => (prev + 1) % photos.length)
+                    }
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2.5"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className={styles.navIcon}
+                    >
+                      <path d="M9 18l6-6-6-6" />
+                    </svg>
+                  </button>
+
+                  {/* Close Button */}
+                  <button
+                    className={styles.closeBtn}
+                    onClick={() => setSelectedIndex(null)}
+                  >
+                    ✕
+                  </button>
+                </div>
+              </div>
+            )}
+          </>
         );
 
       case "Videos":
@@ -416,7 +614,7 @@ const ProfilePage = () => {
       {/* Tabs */}
       <nav className={styles.tabsBar}>
         <div className={styles.tabsInner}>
-          {["Posts", "About", "Friends", "Photos", "Videos", "Check-ins", "More"].map(tab => (
+          {["Posts", "About", "Friends", "Photos", "Videos"].map(tab => (
             <Tab
               key={tab}
               label={tab}

@@ -120,7 +120,7 @@
   position: absolute;
   top: 20px;
   right: 25px;
-  background: transparent !important;
+  background: rgba(212, 210, 210, 0.37) !important;
   border: none;
   color: rgb(110, 0, 0);
   font-size: 1.6rem;
@@ -759,5 +759,223 @@
   .friendsGrid,
   .photosGrid {
     grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+.aboutCard {
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.05));
+  backdrop-filter: blur(16px) saturate(1.6);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  border-radius: 24px;
+  padding: 28px;
+  color: #fff;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35);
+  transition: all 0.3s ease-in-out;
+  overflow: hidden;
+  position: relative;
+}
+
+.aboutCard:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.55);
+}
+
+.headerSection {
+  text-align: center;
+  margin-bottom: 24px;
+}
+
+.title {
+  font-size: 1.9rem;
+  font-weight: 700;
+  background: linear-gradient(90deg, #ff7b72, var(--accent-red), #ff8c94);
+  -webkit-background-clip: text;
+  color: transparent;
+}
+
+.subtitle {
+  font-size: 1rem;
+  color: rgba(255, 255, 255, 0.7);
+  margin-top: 4px;
+}
+
+.bioSection {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 24px;
+}
+
+.rowItem {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.95rem;
+}
+
+.icon {
+  color: var(--accent-red);
+  flex-shrink: 0;
+}
+
+.bioSection a {
+  color: #ffafcc;
+  text-decoration: none;
+  font-weight: 500;
+}
+
+.skillsSection {
+  margin-top: 16px;
+}
+
+.skillsSection h3 {
+  color: var(--warning-color);
+  font-size: 1.2rem;
+  margin-bottom: 12px;
+}
+
+.skillGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: 12px;
+}
+
+.skillBadge {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 0.9rem;
+  transition: all 0.25s ease;
+}
+
+.skillBadge:hover {
+  background: rgba(255, 255, 255, 0.2);
+  transform: scale(1.05);
+}
+
+.statsSection {
+  display: flex;
+  justify-content: space-around;
+  margin: 32px 0;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.statBox {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 16px 18px;
+  border-radius: 16px;
+  text-align: center;
+  flex: 1;
+  min-width: 100px;
+  transition: all 0.3s ease;
+}
+
+.statBox:hover {
+  transform: translateY(-4px);
+  background: rgba(255, 255, 255, 0.2);
+}
+
+.statBox h4 {
+  font-size: 1.6rem;
+  color: #ffa8a8;
+  margin-bottom: 4px;
+}
+
+.statBox p {
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.75);
+}
+
+.languagesSection {
+  text-align: center;
+}
+
+.languagesSection h3 {
+  margin-bottom: 10px;
+  color: var(--accent-red-light);
+}
+
+.languageList {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.languageTag {
+  background: rgba(255, 255, 255, 0.1);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #fff;
+  transition: all 0.25s ease;
+}
+
+.languageTag:hover {
+  background: rgba(255, 255, 255, 0.25);
+  transform: scale(1.08);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .aboutCard {
+    padding: 22px;
+  }
+
+  .title {
+    font-size: 1.6rem;
+  }
+
+  .skillGrid {
+    grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  }
+
+  .statBox h4 {
+    font-size: 1.4rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .aboutCard {
+    padding: 18px;
+    border-radius: 16px;
+  }
+
+  .title {
+    font-size: 1.4rem;
+  }
+
+  .skillBadge {
+    padding: 8px 10px;
+    font-size: 0.85rem;
+  }
+
+  .statBox h4 {
+    font-size: 1.3rem;
+  }
+
+  .languageTag {
+    font-size: 0.8rem;
+    padding: 5px 10px;
   }
 }

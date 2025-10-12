@@ -2,6 +2,18 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './ProfilePage.module.css';
 import PostCreation from '../Gists/PostCreation/PostCreation';
 import MyFeed from './Post/Myfeed';
+import {
+  Briefcase,
+  MapPin,
+  GraduationCap,
+  Globe,
+  Code2,
+  Cpu,
+  Database,
+  MonitorSmartphone,
+  Server,
+  Terminal,
+} from "lucide-react";
 
 const Tab = ({ label, active, onClick }) => (
   <button
@@ -251,6 +263,18 @@ const ProfilePage = () => {
     return () => window.removeEventListener("keydown", handleKey);
   }, [selectedIndex]);
 
+
+  const skills = [
+    { icon: <Code2 size={18} />, name: "React" },
+    { icon: <Cpu size={18} />, name: "Node.js" },
+    { icon: <Database size={18} />, name: "MongoDB" },
+    { icon: <Server size={18} />, name: "Express" },
+    { icon: <Terminal size={18} />, name: "TypeScript" },
+    { icon: <MonitorSmartphone size={18} />, name: "Responsive Design" },
+  ];
+
+  const languages = ["English", "French", "Twi"];
+
   const renderTabContent = () => {
     switch (activeTab) {
       case "Posts":
@@ -258,16 +282,83 @@ const ProfilePage = () => {
           <div className={styles.plceMent}>
 
             <div className={styles.leftSidebar} ref={sidebarRef}>
-              <div className={styles.card}>
-                <div className={styles.cardHeader}>About</div>
-                <div className={styles.cardBody}>
-                  <p><strong>Full Name:</strong> Akosua Kwarteng</p>
-                  <p><strong>Profession:</strong> Full-Stack Developer</p>
-                  <p><strong>Location:</strong> Accra, Ghana</p>
-                  <p><strong>Education:</strong> University of Ghana</p>
+              <div className={styles.aboutCard}>
+                {/* Header */}
+                <div className={styles.headerSection}>
+                  <h2 className={styles.title}>About Me</h2>
+                  <p className={styles.subtitle}>Building experiences that blend creativity and logic</p>
+                </div>
+
+                {/* Bio */}
+                <div className={styles.bioSection}>
+                  <div className={styles.rowItem}>
+                    <Briefcase className={styles.icon} />
+                    <span><strong>Profession:</strong> Full-Stack Developer</span>
+                  </div>
+                  <div className={styles.rowItem}>
+                    <MapPin className={styles.icon} />
+                    <span><strong>Location:</strong> Accra, Ghana</span>
+                  </div>
+                  <div className={styles.rowItem}>
+                    <GraduationCap className={styles.icon} />
+                    <span><strong>Education:</strong> University of Ghana</span>
+                  </div>
+                  <div className={styles.rowItem}>
+                    <Globe className={styles.icon} />
+                    <span>
+                      <strong>Website:</strong>{" "}
+                      <a
+                        href="https://mywebsite.onwiciki.com"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                      >
+                        mywebsite.onwiciki.com
+                      </a>
+                    </span>
+                  </div>
+                </div>
+
+                {/* Skills */}
+                <div className={styles.skillsSection}>
+                  <h3>Technical Skills</h3>
+                  <div className={styles.skillGrid}>
+                    {skills.map((skill, i) => (
+                      <div key={i} className={styles.skillBadge}>
+                        {skill.icon}
+                        <span>{skill.name}</span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Stats */}
+                <div className={styles.statsSection}>
+                  <div className={styles.statBox}>
+                    <h4>6+</h4>
+                    <p>Years of Experience</p>
+                  </div>
+                  <div className={styles.statBox}>
+                    <h4>50+</h4>
+                    <p>Projects Completed</p>
+                  </div>
+                  <div className={styles.statBox}>
+                    <h4>10+</h4>
+                    <p>Programming Languages</p>
+                  </div>
+                </div>
+
+                {/* Languages */}
+                <div className={styles.languagesSection}>
+                  <h3>Languages</h3>
+                  <div className={styles.languageList}>
+                    {languages.map((lang, i) => (
+                      <span key={i} className={styles.languageTag}>
+                        {lang}
+                      </span>
+                    ))}
+                  </div>
                 </div>
               </div>
-
               {/* Photos Card */}
               {/* <div
                 ref={photosCardRef}
@@ -402,13 +493,81 @@ const ProfilePage = () => {
 
       case "About":
         return (
-          <div className={styles.card}>
-            <div className={styles.cardHeader}>About</div>
-            <div className={styles.cardBody}>
-              <p><strong>Full Name:</strong> Akosua Kwarteng</p>
-              <p><strong>Profession:</strong> Full-Stack Developer</p>
-              <p><strong>Location:</strong> Accra, Ghana</p>
-              <p><strong>Education:</strong> University of Ghana</p>
+          <div className={styles.aboutCard}>
+            {/* Header */}
+            <div className={styles.headerSection}>
+              <h2 className={styles.title}>About Me</h2>
+              <p className={styles.subtitle}>Building experiences that blend creativity and logic</p>
+            </div>
+
+            {/* Bio */}
+            <div className={styles.bioSection}>
+              <div className={styles.rowItem}>
+                <Briefcase className={styles.icon} />
+                <span><strong>Profession:</strong> Full-Stack Developer</span>
+              </div>
+              <div className={styles.rowItem}>
+                <MapPin className={styles.icon} />
+                <span><strong>Location:</strong> Accra, Ghana</span>
+              </div>
+              <div className={styles.rowItem}>
+                <GraduationCap className={styles.icon} />
+                <span><strong>Education:</strong> University of Ghana</span>
+              </div>
+              <div className={styles.rowItem}>
+                <Globe className={styles.icon} />
+                <span>
+                  <strong>Website:</strong>{" "}
+                  <a
+                    href="https://mywebsite.onwiciki.com"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    mywebsite.onwiciki.com
+                  </a>
+                </span>
+              </div>
+            </div>
+
+            {/* Skills */}
+            <div className={styles.skillsSection}>
+              <h3>Technical Skills</h3>
+              <div className={styles.skillGrid}>
+                {skills.map((skill, i) => (
+                  <div key={i} className={styles.skillBadge}>
+                    {skill.icon}
+                    <span>{skill.name}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Stats */}
+            <div className={styles.statsSection}>
+              <div className={styles.statBox}>
+                <h4>6+</h4>
+                <p>Years of Experience</p>
+              </div>
+              <div className={styles.statBox}>
+                <h4>50+</h4>
+                <p>Projects Completed</p>
+              </div>
+              <div className={styles.statBox}>
+                <h4>10+</h4>
+                <p>Programming Languages</p>
+              </div>
+            </div>
+
+            {/* Languages */}
+            <div className={styles.languagesSection}>
+              <h3>Languages</h3>
+              <div className={styles.languageList}>
+                {languages.map((lang, i) => (
+                  <span key={i} className={styles.languageTag}>
+                    {lang}
+                  </span>
+                ))}
+              </div>
             </div>
           </div>
         );

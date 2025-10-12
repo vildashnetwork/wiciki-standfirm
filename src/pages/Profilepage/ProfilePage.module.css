@@ -367,6 +367,7 @@
 @media (max-width: 500px) {
   .bodyWrap {
     padding: 0 !important;
+    padding-bottom: 10px !important;
   }
 
 

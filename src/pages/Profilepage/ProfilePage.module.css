@@ -276,6 +276,7 @@
   color: var(--text-primary);
   overflow-x: hidden;
   padding: 0;
+
   margin: 0;
   box-sizing: border-box;
   font-family: Inter, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
@@ -366,6 +367,10 @@
 @media (max-width: 500px) {
   .bodyWrap {
     padding: 0 !important;
+  }
+
+  .page {
+    padding-bottom: 120px !important;
   }
 
   .cover {

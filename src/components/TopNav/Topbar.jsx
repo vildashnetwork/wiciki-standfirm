@@ -1,7 +1,42 @@
 // components/Topbar.js
-import React from "react";
-
+import React, { useEffect, useState } from "react";
+import Cookies from 'js-cookie';
+import axios from "axios"
+import toast from "react-hot-toast"
+import { useNavigate } from "react-router-dom";
 const Topbar = ({ toggleMobileMenu, navigate }) => {
+  const token = Cookies.get('token');
+  const [user, setuser] = useState([])
+  const [loading, setloading] = useState(false)
+  const navigat = useNavigate()
+  useEffect(() => {
+    const getuser = async () => {
+      try {
+        setloading(true)
+        const res = await axios.get("https://wicikibackend.onrender.com/decode/me", { token })
+        if (res.status == 200) {
+          setuser(res.data.user)
+          // console.log(res.data.user)
+        } else {
+          // toast.error(res.data.message)
+          // navigat("/login")
+          return
+        }
+
+      } catch (error) {
+        console.log(error);
+
+      } finally {
+        setloading(false)
+      }
+    }
+    getuser()
+  }, [token])
+
+
+
+
+
   return (
     <header className="topbar">
       {/* Left: Logo + Mobile Toggle */}
@@ -44,11 +79,12 @@ const Topbar = ({ toggleMobileMenu, navigate }) => {
           <ion-icon name="notifications-outline"></ion-icon>
         </button>
         <div
-          className="profile-avatar"
-          onClick={() => navigate("/profile")}
+          className={loading ? "shimmer" : "profile-avatar"}
+          onClick={() => !user?.name ? "" : navigate(`/profile/${encodeURIComponent(user?.name)}`)}
           title="View Profile"
+          aria-disabled={loading || !user?.name}
         >
-          AK
+          <img src={user?.picture} style={{ display: loading ? "none" : "block" }} />
         </div>
       </div>
     </header>

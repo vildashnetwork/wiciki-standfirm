@@ -35,8 +35,10 @@ const LoginPage = () => {
     return (
       password.length >= 8 &&
       specialChars.some(char => password.includes(char))
-    );
+
+    )
   };
+
 
   const validateName = (name) => name.trim().length >= 2;
 
@@ -52,6 +54,10 @@ const LoginPage = () => {
   }
   const handleLogin = async (e) => {
     e.preventDefault();
+    if (loginEmail.length == 0 && loginPassword.length == 0) {
+      setLoading((prev) => ({ ...prev, login: false }));
+      return;
+    }
     setLoading((prev) => ({ ...prev, login: true }));
 
     try {
@@ -99,18 +105,21 @@ const LoginPage = () => {
   const [result, setResult] = useState("");
   const [emailCorrect, setEmailCorrect] = useState(false);
   const [loadingcheck, setloadingcheck] = useState(false)
+  const [signupshimmer, setsignupshimmer] = useState(false)
   // validate email from API
   const checkEmail = async (email) => {
     setloadingcheck(true)
+
     if (!email || !validateEmail(email)) {
       setResult("");
       setEmailCorrect(false);
+
       return;
     }
 
     setResult("Checking email validity...");
 
-    toast.loading("Checking email validity, please wait...", { id: "signup", duration: 4000 });
+    // toast.loading("Checking email validity, please wait...", { id: "signup", duration: 4000 });
 
 
     try {
@@ -134,8 +143,10 @@ const LoginPage = () => {
     } catch (err) {
       console.error("Email check error:", err.response?.data || err.message);
       setEmailCorrect(false);
+      setsignupshimmer(false)
     } finally {
       setloadingcheck(false)
+      setsignupshimmer(false)
     }
   };
 
@@ -153,18 +164,22 @@ const LoginPage = () => {
   const handleSignup = async (e) => {
     e.preventDefault();
 
-    if (!validateName(signupName) || !validateEmail(signupEmail) || !validatePassword(signupPassword)) {
+    if (!validateName(signupName) && !validateEmail(signupEmail) && !validatePassword(signupPassword)) {
       toast.error("Please fill the form correctly", { id: "signup", duration: 3000 });
       return;
     }
 
-    if (!emailCorrect) {
-      toast.error("Please Enter and existing email", { id: "signup", duration: 3000 })
-      return;
-    }
+
     try {
+      setsignupshimmer(true)
       setLoading({ ...loading, signup: true });
       toast.loading("Creating your account...", { id: "signup", duration: 3000 });
+      if (!loadingcheck) {
+        if (!emailCorrect) {
+          toast.error("Please Enter and existing email", { id: "signup", duration: 3000 })
+          return;
+        }
+      }
 
       const res = await axios.post(
         "https://wicikibackend.onrender.com/auth-user/register",
@@ -175,6 +190,7 @@ const LoginPage = () => {
         },
         { withCredentials: true }
       );
+
       setCookie("token", res.data.usertoken, 7);
       console.log("Signup response:", res.data);
 
@@ -205,7 +221,30 @@ const LoginPage = () => {
 
 
 
+  const [okay, setokay] = useState(false)
 
+  useEffect(() => {
+    const checkpass = () => {
+      const specialChars = ["@", "#", "$", "&", "^", "!", "(", ")", "-", "+", "=", "{", "}", "[", "]", "|"];
+      if (
+
+        loginPassword.length >= 8 &&
+        specialChars.some(char => loginPassword.includes(char))
+      ) {
+        setokay(true)
+
+      } else {
+        setokay(false)
+
+
+
+      }
+
+    }
+    checkpass()
+
+
+  }, [loginPassword])
 
 
   return (
@@ -340,12 +379,27 @@ const LoginPage = () => {
 
                   {showLoginPassword ? <> {"hide password"}  <EyeOff size={18} /> </> : <>{"show password"} <Eye size={18} /></>}
                 </button>
-                <button type="submit" className="btn-primary" disabled={loading.login}
-                  style={{ backgournd: loading.login && "grey", opacity: loading.login && 0.5, cursor: loading.login && "no-drop" }}>
+                <button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={loading.login || loginEmail.length < 8 || loginPassword.length < 8 || !okay || !validateEmail(loginEmail)}
+                  style={{
+                    background: (loading.login || loginEmail.length < 8 || loginPassword.length < 8 || !okay || !validateEmail(loginEmail))
+                      && "grey",
+
+                    opacity: (loading.login || loginEmail.length < 8 || loginPassword.length < 8 || !okay || !validateEmail(loginEmail))
+                      ? 0.5
+                      : 1,
+                    cursor: (loading.login || loginEmail.length < 8 || loginPassword.length < 8 || !okay || !validateEmail(loginEmail))
+                      ? "not-allowed"
+                      : "pointer",
+                  }}
+                >
                   <span className="btn-text">
                     {loading.login ? <div className="loading"></div> : "Sign In"}
                   </span>
                 </button>
+
               </form>
 
               <div className="divider">
@@ -357,10 +411,10 @@ const LoginPage = () => {
                 {loadinggoogle ? "loading.." : "Continue with Google"}
               </button>
 
-              {/* <div className="guest-link">
+              <div className="guest-link">
                 <PhoneCallIcon size={"20"} />
                 <a href="#">login with number</a>
-              </div> */}
+              </div>
 
               <div className="auth-switch">
                 Don't have an account?{" "}
@@ -385,7 +439,7 @@ const LoginPage = () => {
                     placeholder=" "
                     value={signupName}
                     onChange={(e) => setSignupName(e.target.value)}
-                    disabled={loadingcheck}
+                  // disabled={loadingcheck}
                   />
                   <label className="form-label">Full name</label>
                   {signupName && !validateName(signupName) && (
@@ -433,7 +487,7 @@ const LoginPage = () => {
                     placeholder=" "
                     value={signupPassword}
                     onChange={(e) => setSignupPassword(e.target.value)}
-                    disabled={loadingcheck}
+                  // disabled={loadingcheck}
                   />
                   <label className="form-label">Password</label>
 
@@ -471,7 +525,7 @@ const LoginPage = () => {
                 <button type="submit" className="btn-primary" disabled={loading.signup}
                   style={{ backgournd: loading.signup && "grey", opacity: loading.signup && 0.5, cursor: loading.signup && "no-drop" }}>
                   <span className="btn-text">
-                    {loading.signup ? <div className="loading"></div> : "Create Account"}
+                    {loading.signup || signupshimmer ? <div className="loading"></div> : "Create Account"}
                   </span>
                 </button>
               </form>
@@ -484,11 +538,11 @@ const LoginPage = () => {
                 <div className="google-icon"></div>
                 {loadinggoogle ? "loading.." : "Continue with Google"}
               </button>
-              {/* 
+
               <div className="guest-link">
                 <PhoneCallIcon size={"20"} />
                 <a href="#">login with number</a>
-              </div> */}
+              </div>
               <div className="auth-switch">
                 Already have an account?{" "}
                 <button type="button" onClick={() => setIsFlipped(false)}>

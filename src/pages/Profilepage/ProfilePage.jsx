@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import styles from './ProfilePage.module.css';
 import PostCreation from '../Gists/PostCreation/PostCreation';
 import MyFeed from './Post/Myfeed';
+import axios from 'axios';
 import {
   Briefcase,
   MapPin,
@@ -17,7 +18,8 @@ import {
 } from "lucide-react";
 import { Play, Pause, Volume2, VolumeX, Maximize2 } from "lucide-react";
 import { ImageUp, X } from "lucide-react";
-
+import { useNavigate, useParams } from 'react-router-dom';
+import Cookies from 'js-cookie';
 const Tab = ({ label, active, onClick }) => (
   <button
     className={`${styles.tab} ${active ? styles.tabActive : ''}`}
@@ -28,6 +30,64 @@ const Tab = ({ label, active, onClick }) => (
 );
 
 const ProfilePage = () => {
+  const { name } = useParams();
+  const decodedName = decodeURIComponent(name);
+  const token = Cookies.get('token');
+  const [user, setuser] = useState([])
+  const [loading, setloading] = useState(false)
+  const navigat = useNavigate()
+
+  const [usera, setusera] = useState([])
+  useEffect(() => {
+
+
+    const getProfileUser = async () => {
+      try {
+        setloading(true);
+        const res = await axios.get(`https://wicikibackend.onrender.com/decode/me/${decodedName}`);
+        if (res.status === 200) {
+          setusera(res.data.me);
+        } else {
+          // toast.error(res.data.message);
+          // navigat("/login");
+          return
+        }
+      } catch (error) {
+        console.error("Error fetching profile:", error);
+      } finally {
+        setloading(false);
+      }
+    };
+
+    const getUserByToken = async () => {
+      try {
+        setloading(true);
+        const res = await axios.get("https://wicikibackend.onrender.com/decode/me", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
+        if (res.status === 200) {
+          setuser(res.data.user);
+        } else {
+          toast.error(res.data.message);
+          navigat("/login");
+        }
+      } catch (error) {
+        console.error("Error fetching current user:", error);
+      } finally {
+        setloading(false);
+      }
+    };
+
+    if (token) {
+      getProfileUser();
+      getUserByToken();
+    }
+  }, [token, name]);
+
+
+
+
+
   // LocalStorage utilities
   const storage = {
     get: (key) => {
@@ -278,12 +338,19 @@ const ProfilePage = () => {
 
   const languages = ["English", "French", "Twi"];
 
-  const [banner, setBanner] = useState("/image.png");
-  const [avatar, setAvatar] = useState("/image.png");
+  const [banner, setBanner] = useState(null);
+  const [avatar, setAvatar] = useState(null);
   const [modalImage, setModalImage] = useState(null);
   const [showModal, setShowModal] = useState(false);
   const [fullscreen, setFullscreen] = useState(false);
   const fileInputRef = useRef(null);
+
+  useEffect(() => {
+    if (usera) {
+      setBanner(usera?.picture || null);
+      setAvatar(usera?.picture || null);
+    }
+  }, [usera]);
 
   const openModal = (imgSrc) => {
     setModalImage(imgSrc);
@@ -379,11 +446,11 @@ const ProfilePage = () => {
           <div className={styles.plceMent}>
 
             <div className={styles.leftSidebar} ref={sidebarRef}>
-              <div className={styles.aboutCard}>
+              <div className={styles.aboutCard} style={{ display: usera?.personalised?.profilevisibility ? "block" : "none" }}>
                 {/* Header */}
                 <div className={styles.headerSection}>
-                  <h2 className={styles.title}>About Me</h2>
-                  <p className={styles.subtitle}>Building experiences that blend creativity and logic</p>
+                  <h2 className={styles.titleme}>About  {usera?.name}</h2>
+                  <p className={styles.subtitle}>{usera?.personalised?.BIO}</p>
                 </div>
 
                 {/* Bio */}
@@ -593,7 +660,7 @@ const ProfilePage = () => {
           <div className={styles.aboutCard}>
             {/* Header */}
             <div className={styles.headerSection}>
-              <h2 className={styles.title}>About Me</h2>
+              <h2 className={styles.titleme}>About {usera?.name}</h2>
               <p className={styles.subtitle}>Building experiences that blend creativity and logic</p>
             </div>
 
@@ -903,17 +970,24 @@ const ProfilePage = () => {
 
       {/* Banner */}
       <section
-        className={styles.cover}
-        onClick={() => openModal(banner)}
+        className={loading ? styles.profileshimmermecover : styles.cover}
+        onClick={() =>
+          loading || !usera?.picture ? "" :
+            openModal(banner)
+        }
         style={{
-          background: `
+          background: loading ?
+            `linear-gradient(110deg, rgba(255, 255, 255, 0.04) 20%,
+               rgba(255, 255, 255, 0.12) 50%,
+      rgba(49, 31, 31, 0.04) 80%)`:
+            `
             linear-gradient(
               to top,
               rgba(197, 27, 24, 0.8) 0%,
               rgba(197, 27, 24, 0) 40%,
               rgba(13, 13, 13, 0.0) 80%
             ),
-            url(${banner}) center/100% 100% no-repeat
+            url(${usera?.picture}) center/100% 100% no-repeat
           `,
         }}
       >
@@ -922,18 +996,30 @@ const ProfilePage = () => {
 
       {/* Avatar + Details */}
       <div className={styles.avatarRow}>
-        <div className={styles.avatarWrap} onClick={() => openModal(avatar)}>
-          <img src={avatar} alt="Profile" className={styles.avatarImg} />
+        <div className={styles.avatarWrap}
+          onClick={() => {
+            loading || !usera?.picture ? "" :
+              openModal(avatar);
+
+          }}
+        >
+          <img src={usera?.picture}
+            className={loading ?
+              styles.profileshimmerme :
+              styles.avatarImg
+            } />
           <div className={styles.statusDot}></div>
         </div>
 
         <div className={styles.nameArea}>
-          <div className={styles.personName}>Akosua Kwarteng</div>
+          <div className={styles.personName}>{usera?.name}</div>
           <div className={styles.metaRow}>
-            <span className={styles.metaChip}>Full-Stack Developer</span>
-            <span className={styles.metaChip}>React</span>
-            <span className={styles.metaChip}>Node.js</span>
-            <span className={styles.metaChip}>AI/ML</span>
+            {usera?.personalised?.Interest.map((item, idx) => {
+              return <span key={idx} className={styles.metaChip}>{item}</span>;
+
+            })
+
+            }
             <span className={styles.metaChip}>2.4K reachers</span>
           </div>
           <span className={styles.metaChip}>
@@ -977,53 +1063,55 @@ const ProfilePage = () => {
       </main>
 
       {/* Modal */}
-      {showModal && (
-        <div
-          className={`${styles.modalOverlay} ${fullscreen ? styles.fullscreen : ""
-            }`}
+      {
+        showModal && (
+          <div
+            className={`${styles.modalOverlay} ${fullscreen ? styles.fullscreen : ""
+              }`}
 
-        >
-          <div className={styles.modalContent}>
-            <button
-              className={styles.closeBtn}
-              onClick={() => setShowModal(false)}
-            >
-              <X size={22} />
-            </button>
+          >
+            <div className={styles.modalContent}>
+              <button
+                className={styles.closeBtn}
+                onClick={() => setShowModal(false)}
+              >
+                <X size={22} />
+              </button>
 
-            <div className={styles.modalImageWrapper}>
-              <img
-                src={modalImage}
-                alt="Preview"
-                className={`${styles.modalImage} ${fullscreen ? styles.modalFull : ""
-                  }`}
-              />
+              <div className={styles.modalImageWrapper}>
+                <img
+                  src={modalImage}
+                  alt="Preview"
+                  className={`${styles.modalImage} ${fullscreen ? styles.modalFull : ""
+                    }`}
+                />
+              </div>
+
+              <button
+                className={`${styles.navBtn} ${styles.leftBtn}`}
+                onClick={() => setFullscreen(!fullscreen)}
+              >
+                <Maximize2 className={styles.navIcon} />
+              </button>
+              <button
+                className={styles.closeBtn}
+                onClick={() => setShowModal(false)}
+              >
+                <X size={22} />
+              </button>
+              <button
+                className={`${styles.navBtn} ${styles.rightBtn}`}
+                onClick={() =>
+                  triggerFileSelect(modalImage === banner ? "banner" : "avatar")
+                }
+              >
+                <ImageUp className={styles.navIcon} />
+              </button>
             </div>
-
-            <button
-              className={`${styles.navBtn} ${styles.leftBtn}`}
-              onClick={() => setFullscreen(!fullscreen)}
-            >
-              <Maximize2 className={styles.navIcon} />
-            </button>
-            <button
-              className={styles.closeBtn}
-              onClick={() => setShowModal(false)}
-            >
-              <X size={22} />
-            </button>
-            <button
-              className={`${styles.navBtn} ${styles.rightBtn}`}
-              onClick={() =>
-                triggerFileSelect(modalImage === banner ? "banner" : "avatar")
-              }
-            >
-              <ImageUp className={styles.navIcon} />
-            </button>
           </div>
-        </div>
-      )}
-    </div>
+        )
+      }
+    </div >
   );
 
 };

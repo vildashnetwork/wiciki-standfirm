@@ -24,6 +24,82 @@
   --warning-color: #ff7043;
 }
 
+
+.toop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  padding: 0;
+  margin: 0;
+  z-index: 9999;
+  background-color: #0d0d0d;
+}
+
+.settingsprofileshimmerme {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  padding: 0;
+  margin: 0;
+  z-index: 9999;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #f5f5f5 !important;
+  background: linear-gradient(110deg,
+      rgba(255, 255, 255, 0.04) 20%,
+      rgba(255, 255, 255, 0.12) 50%,
+      rgba(255, 255, 255, 0.04) 80%);
+  background-size: 200% 100%;
+  animation: shimmerMove 1.1s linear infinite;
+
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.02);
+  backdrop-filter: blur(2px);
+  transition: opacity 0.3s ease;
+}
+
+/* Optional center shimmer content */
+.settingsprofileshimmerme::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.2);
+}
+
+/* Shimmer animation */
+@keyframes shimmerMove {
+  0% {
+    background-position: -200% 0;
+  }
+
+  100% {
+    background-position: 200% 0;
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 /* Overlay for full-screen mobile experience */
 .aviary-overlay {
   position: fixed;
@@ -280,11 +356,11 @@
   overflow: hidden;
 }
 
-.bird-nest:hover {
+/* .bird-nest:hover {
   border-color: var(--accent-red);
   box-shadow: 0 4px 12px var(--glow-color);
   transform: translateY(-2px);
-}
+} */
 
 .nest-content {
   display: flex;
@@ -575,9 +651,10 @@
   }
 }
 
+/* 
 .bird-nest:hover {
   animation: hummingbirdHover 0.5s ease-in-out;
-}
+} */
 
 /* Enhanced Scrollbar */
 .aviary-nest::-webkit-scrollbar,

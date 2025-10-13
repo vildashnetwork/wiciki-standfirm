@@ -204,7 +204,7 @@ function AppContent() {
 
               {/* Protected Routes */}
               <Route path="/" element={<ProtectedRoute><GistsPage onLike={handleLike} onComment={handleComment} /></ProtectedRoute>} />
-              <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+              <Route path="/profile/:name" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
               <Route path="/vibes" element={<ProtectedRoute><VibesPage /></ProtectedRoute>} />
               <Route path="/reachouts" element={<ProtectedRoute><ReachoutsPage /></ProtectedRoute>} />
               <Route path="/notifications" element={<ProtectedRoute><NotificationsPage /></ProtectedRoute>} />

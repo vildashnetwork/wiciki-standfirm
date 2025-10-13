@@ -522,6 +522,7 @@
   border-top: 1px solid var(--border-color);
   border-bottom: 1px solid var(--border-color);
   background: var(--primary-bg);
+  overflow-y: hidden;
 }
 
 .tabsInner {
@@ -811,7 +812,7 @@
   margin-bottom: 24px;
 }
 
-.title {
+.titleme {
   font-size: 1.9rem;
   font-weight: 700;
   background: linear-gradient(90deg, #ff7b72, var(--accent-red), #ff8c94);
@@ -953,7 +954,7 @@
     padding: 22px;
   }
 
-  .title {
+  .titleme {
     font-size: 1.6rem;
   }
 
@@ -972,7 +973,7 @@
     border-radius: 16px;
   }
 
-  .title {
+  .titleme {
     font-size: 1.4rem;
   }
 
@@ -993,13 +994,50 @@
 
 
 
+.profileshimmermecover {
+  height: 360px;
+  width: 100%;
+  transition: transform 0.3s ease;
+  background: linear-gradient(110deg,
+      rgba(255, 255, 255, 0.04) 20%,
+      rgba(255, 255, 255, 0.12) 50%,
+      rgba(255, 255, 255, 0.04) 80%);
+  background-size: 200% 100%;
+  animation: shimmerMove 1.1s linear infinite;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.01);
+}
 
 
 
 
 
+.profileshimmerme {
+  width: 168px;
+  height: 168px;
+  border-radius: 50%;
+  border: 4px solid var(--primary-bg);
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  background: linear-gradient(110deg,
+      rgba(255, 255, 255, 0.04) 20%,
+      rgba(255, 255, 255, 0.12) 50%,
+      rgba(255, 255, 255, 0.04) 80%);
+  background-size: 200% 100%;
+  animation: shimmerMove 1.1s linear infinite;
+  box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.01);
+}
 
+/* shimmer animation */
+@keyframes shimmerMove {
+  0% {
+    background-position: -200% 0;
+  }
 
+  100% {
+    background-position: 200% 0;
+  }
+}
 
 
 .avatarImg {
@@ -1115,12 +1153,13 @@
   opacity: 1;
 }
 
+/* 
 .title {
   font-weight: 600;
   font-size: 1rem;
   color: #fff;
   text-shadow: 0 2px 6px rgba(0, 0, 0, 0.4);
-}
+} */
 
 .controls {
   display: flex;

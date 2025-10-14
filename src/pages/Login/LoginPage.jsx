@@ -411,10 +411,10 @@ const LoginPage = () => {
                 {loadinggoogle ? "loading.." : "Continue with Google"}
               </button>
 
-              <div className="guest-link">
+              {/* <div className="guest-link">
                 <PhoneCallIcon size={"20"} />
                 <a href="#">login with number</a>
-              </div>
+              </div> */}
 
               <div className="auth-switch">
                 Don't have an account?{" "}
@@ -539,10 +539,10 @@ const LoginPage = () => {
                 {loadinggoogle ? "loading.." : "Continue with Google"}
               </button>
 
-              <div className="guest-link">
+              {/* <div className="guest-link">
                 <PhoneCallIcon size={"20"} />
                 <a href="#">login with number</a>
-              </div>
+              </div> */}
               <div className="auth-switch">
                 Already have an account?{" "}
                 <button type="button" onClick={() => setIsFlipped(false)}>

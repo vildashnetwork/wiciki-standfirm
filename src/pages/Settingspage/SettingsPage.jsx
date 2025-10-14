@@ -465,7 +465,7 @@ import {
 import Cookies from "js-cookie";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-
+import { Code2, Edit2, Check } from "lucide-react";
 const SettingsPage = ({ isOpen, onClose }) => {
   const token = Cookies.get('token');
   const [user, setUser] = useState(null);
@@ -685,10 +685,127 @@ const SettingsPage = ({ isOpen, onClose }) => {
     }
   };
 
+  const [isEditing, setIsEditing] = useState(true);
+  const [question, setQuestion] = useState("");
+  const [selectedLangs, setSelectedLangs] = useState([]);
+  const [selectedTech, setSelectedTech] = useState([]);
+
   const [activeSection, setActiveSection] = useState('general');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   if (!isOpen) return null;
+
+  const spokenLanguages = [
+    { name: "English", icon: "🇬🇧" },
+    { name: "French", icon: "🇫🇷" },
+    { name: "Spanish", icon: "🇪🇸" },
+    { name: "Mandarin Chinese", icon: "🇨🇳" },
+    { name: "Hindi", icon: "🇮🇳" },
+    { name: "Arabic", icon: "🇸🇦" },
+    { name: "Bengali", icon: "🇧🇩" },
+    { name: "Portuguese", icon: "🇵🇹" },
+    { name: "Russian", icon: "🇷🇺" },
+    { name: "Japanese", icon: "🇯🇵" },
+    { name: "German", icon: "🇩🇪" },
+    { name: "Korean", icon: "🇰🇷" },
+    { name: "Italian", icon: "🇮🇹" },
+    { name: "Turkish", icon: "🇹🇷" },
+    { name: "Vietnamese", icon: "🇻🇳" },
+    { name: "Swahili", icon: "🇰🇪" },
+    { name: "Tamil", icon: "🇱🇰" },
+    { name: "Dutch", icon: "🇳🇱" },
+    { name: "Polish", icon: "🇵🇱" },
+    { name: "Thai", icon: "🇹🇭" },
+    { name: "Greek", icon: "🇬🇷" },
+    { name: "Hebrew", icon: "🇮🇱" },
+    { name: "Amharic", icon: "🇪🇹" },
+    { name: "Zulu", icon: "🇿🇦" },
+    { name: "Yoruba", icon: "🇳🇬" },
+    { name: "Hausa", icon: "🇳🇬" },
+    { name: "Igbo", icon: "🇳🇬" },
+    { name: "Twi", icon: "🇬🇭" },
+  ];
+
+
+  const techLanguages = [
+    // Front-end
+    { name: "HTML", icon: "📄" },
+    { name: "CSS", icon: "🎨" },
+    { name: "JavaScript", icon: "🟨" },
+    { name: "TypeScript", icon: "🔷" },
+    { name: "React", icon: "⚛️" },
+    { name: "Vue.js", icon: "🟩" },
+    { name: "Angular", icon: "🔺" },
+    { name: "Svelte", icon: "🔥" },
+    { name: "Next.js", icon: "⬛" },
+    { name: "Nuxt.js", icon: "🟢" },
+
+    // Back-end
+    { name: "Node.js", icon: "🟢" },
+    { name: "Express", icon: "🚀" },
+    { name: "Django", icon: "🐍" },
+    { name: "Flask", icon: "🥤" },
+    { name: "Laravel", icon: "❤️" },
+    { name: "Spring Boot", icon: "🌿" },
+    { name: "Ruby on Rails", icon: "💎" },
+    { name: ".NET", icon: "🟣" },
+    { name: "Go", icon: "💨" },
+    { name: "Rust", icon: "🦀" },
+    { name: "PHP", icon: "🐘" },
+    { name: "C", icon: "🔵" },
+    { name: "C++", icon: "💠" },
+    { name: "C#", icon: "⚙️" },
+    { name: "Java", icon: "☕" },
+    { name: "Kotlin", icon: "🟣" },
+    { name: "Swift", icon: "🦋" },
+    { name: "Objective-C", icon: "🍏" },
+    { name: "Scala", icon: "🔥" },
+    { name: "Perl", icon: "🧶" },
+    { name: "Elixir", icon: "💧" },
+    { name: "Erlang", icon: "🧠" },
+    { name: "Haskell", icon: "λ" },
+    { name: "Clojure", icon: "🌿" },
+    { name: "F#", icon: "🧩" },
+    { name: "Shell Script", icon: "💻" },
+    { name: "PowerShell", icon: "⚡" },
+    { name: "SQL", icon: "🗄️" },
+    { name: "GraphQL", icon: "🕸️" },
+    { name: "Firebase", icon: "🔥" },
+    { name: "Supabase", icon: "🟩" },
+
+    // Databases
+    { name: "MongoDB", icon: "🍃" },
+    { name: "MySQL", icon: "🐬" },
+    { name: "PostgreSQL", icon: "🐘" },
+    { name: "SQLite", icon: "💾" },
+    { name: "Redis", icon: "🧠" },
+    { name: "Cassandra", icon: "👁️" },
+    { name: "Firebase Realtime DB", icon: "🔥" },
+
+    // Mobile
+    { name: "React Native", icon: "📱" },
+    { name: "Flutter", icon: "💙" },
+    { name: "Ionic", icon: "🔵" },
+
+    // DevOps / Tools
+    { name: "Docker", icon: "🐳" },
+    { name: "Kubernetes", icon: "☸️" },
+    { name: "Git", icon: "🔧" },
+    { name: "GitHub Actions", icon: "⚙️" },
+    { name: "AWS", icon: "☁️" },
+    { name: "Azure", icon: "🔷" },
+    { name: "Google Cloud", icon: "🌥️" },
+    { name: "Linux", icon: "🐧" },
+  ];
+
+
+  const handleSelect = (name, selected, setSelected) => {
+    if (selected.includes(name)) {
+      setSelected(selected.filter((n) => n !== name));
+    } else {
+      setSelected([...selected, name]);
+    }
+  };
 
   return (
     <div className="aviary-overlay">
@@ -789,11 +906,97 @@ const SettingsPage = ({ isOpen, onClose }) => {
 
             <div className={"aviary-main-content"}>
               <div className="bird-grid">
-                {/* {activeSection === "account" && (
-                      <div>
-                        <input type="text" placeholder="hello*" style={{ height: "100px" }} />
+                {activeSection === "account" && (
+                  <div className="question-page">
+                    <div className="question-section">
+                      <div className="header">
+                        <h2>Questions:</h2>
+                        <button
+                          className={`edit-btn ${isEditing ? "disable" : "enable"}`}
+                          onClick={() => setIsEditing(!isEditing)}
+                        >
+                          {isEditing ? "Disable Edit ✖" : "Enable Edit ✏️"}
+                        </button>
                       </div>
-                    )} */}
+
+                      <div className="questioning-input-sec">
+                        <div className="questioning-input-wrap">
+                          <label>Profession:</label>
+                          <input type="text" disabled={!isEditing} />
+                        </div>
+
+                        <div className="questioning-input-wrap">
+
+                          <label>Years of Experience:</label>
+                          <input type="text" disabled={!isEditing} />
+                        </div>
+                        <div className="questioning-input-wrap">
+
+                          <label>Projects Completed:</label>
+                          <input type="number" disabled={!isEditing} />
+                        </div>
+                        <div className="questioning-input-wrap">
+
+                          <label>Education:</label>
+                          <input type="text" disabled={!isEditing} />
+                        </div>
+                      </div>
+
+
+
+                      <div className="selector-group">
+                        <h3>🌍 Spoken Languages</h3>
+                        <div className="options">
+                          {spokenLanguages.map((lang) => (
+                            <button
+                              key={lang.name}
+                              className={`option-btn ${selectedLangs.includes(lang.name) ? "selected" : ""
+                                }`}
+                              disabled={!isEditing}
+                              onClick={() =>
+                                handleSelect(lang.name, selectedLangs, setSelectedLangs)
+                              }
+                            >
+                              {lang.icon} {lang.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div className="selector-group">
+                        <h3>
+                          💻 Programming Languages
+                          <span className="note">
+                            (Select this only if you are a programmer)
+                          </span>
+                        </h3>
+                        <div className="options">
+                          {techLanguages.map((tech) => (
+                            <button
+                              key={tech.name}
+                              className={`option-btn ${selectedTech.includes(tech.name) ? "selected" : ""
+                                }`}
+                              disabled={!isEditing}
+                              onClick={() =>
+                                handleSelect(tech.name, selectedTech, setSelectedTech)
+                              }
+                            >
+                              {tech.icon} {tech.name}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+
+                      <button
+                        className="submit-btn1"
+                        disabled={!isEditing || !question.trim()}
+                      >
+                        Submit Question
+                      </button>
+                    </div>
+                  </div>
+                )}
+
                 {settingsSections[activeSection].settings.map((item) => (
                   <div key={item.key} className="bird-nest">
 

@@ -402,6 +402,47 @@ const ProfilePage = () => {
       if (video.requestFullscreen) video.requestFullscreen();
     };
 
+
+    const getReadableLocation = async (coords) => {
+      try {
+        if (!coords || typeof coords !== "string") {
+          throw new Error("Invalid coordinates format");
+        }
+
+        const [latRaw, lonRaw] = coords.split(",");
+        const lat = latRaw.trim();
+        const lon = lonRaw.trim();
+
+        // ✅ BigDataCloud reverse geocoding API (works in browser)
+        const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`;
+
+        const { data } = await axios.get(url);
+
+        const locationInfo = {
+          country: data.countryName || "Unknown",
+          principalSubdivision: data.principalSubdivision || "Unknown",
+          city: data.city || data.locality || "Unknown",
+          postcode: data.postcode || "Unknown",
+          fullAddress: `${data.locality || data.city || ""}, ${data.principalSubdivision || ""}, ${data.countryName || ""}`,
+        };
+
+        console.log("✅ Location Info:", locationInfo);
+        alert(JSON.stringify(locationInfo, null, 2));
+
+        return locationInfo;
+      } catch (error) {
+        console.error("❌ Error decoding location:", error);
+        alert("Could not decode location: " + (error.message || error));
+        return null;
+      }
+    };
+
+
+    useEffect(() => {
+      getReadableLocation("4.0534016,9.7353728");
+
+    }, [])
+
     return (
       <div className={styles.videoCard}>
         <div className={styles.videoWrapper}>

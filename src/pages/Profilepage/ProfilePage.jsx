@@ -30,6 +30,56 @@ const Tab = ({ label, active, onClick }) => (
 );
 
 const ProfilePage = () => {
+
+
+
+
+  const [userlocation, setUserLocation] = useState(null);
+
+  const getReadableLocation = async (coords) => {
+    try {
+      if (!coords) return null;
+
+      const [lat, lon] = coords.split(",").map((x) => x.trim());
+
+      const { data } = await axios.get(
+        "https://api.bigdatacloud.net/data/reverse-geocode-client",
+        {
+          params: {
+            latitude: lat,
+            longitude: lon,
+            localityLanguage: "en",
+          },
+          withCredentials: false, // ✅ prevents CORS issues
+        }
+      );
+
+      const locationInfo = {
+        country: data.countryName || "Unknown",
+        region: data.principalSubdivision || "Unknown",
+        city: data.city || data.locality || "Unknown",
+        postcode: data.postcode || "Unknown",
+        fullAddress: `${data.locality || data.city || ""}, ${data.principalSubdivision || ""}, ${data.countryName || ""}`,
+      };
+
+      return locationInfo;
+    } catch (error) {
+      console.error("❌ Error decoding location:", error);
+      return null;
+    }
+  };
+
+
+
+
+
+
+
+
+
+
+
+
   const { name } = useParams();
   const decodedName = decodeURIComponent(name);
   const token = Cookies.get('token');
@@ -86,7 +136,17 @@ const ProfilePage = () => {
 
 
 
+  useEffect(() => {
+    const fetchLocation = async () => {
+      if (user?.personalised?.presentlocation) {
+        const locationInfo = await getReadableLocation(user.personalised.presentlocation);
+        setUserLocation(locationInfo);
+        console.log("📍 User readable location:", locationInfo);
+      }
+    };
 
+    fetchLocation();
+  }, [user?.personalised?.presentlocation]);
 
   // LocalStorage utilities
   const storage = {
@@ -403,45 +463,7 @@ const ProfilePage = () => {
     };
 
 
-    const getReadableLocation = async (coords) => {
-      try {
-        if (!coords || typeof coords !== "string") {
-          throw new Error("Invalid coordinates format");
-        }
 
-        const [latRaw, lonRaw] = coords.split(",");
-        const lat = latRaw.trim();
-        const lon = lonRaw.trim();
-
-        // ✅ BigDataCloud reverse geocoding API (works in browser)
-        const url = `https://api.bigdatacloud.net/data/reverse-geocode-client?latitude=${lat}&longitude=${lon}&localityLanguage=en`;
-
-        const { data } = await axios.get(url);
-
-        const locationInfo = {
-          country: data.countryName || "Unknown",
-          principalSubdivision: data.principalSubdivision || "Unknown",
-          city: data.city || data.locality || "Unknown",
-          postcode: data.postcode || "Unknown",
-          fullAddress: `${data.locality || data.city || ""}, ${data.principalSubdivision || ""}, ${data.countryName || ""}`,
-        };
-
-        console.log("✅ Location Info:", locationInfo);
-        alert(JSON.stringify(locationInfo, null, 2));
-
-        return locationInfo;
-      } catch (error) {
-        console.error("❌ Error decoding location:", error);
-        alert("Could not decode location: " + (error.message || error));
-        return null;
-      }
-    };
-
-
-    useEffect(() => {
-      getReadableLocation("4.0534016,9.7353728");
-
-    }, [])
 
     return (
       <div className={styles.videoCard}>
@@ -498,26 +520,31 @@ const ProfilePage = () => {
                 <div className={styles.bioSection}>
                   <div className={styles.rowItem}>
                     <Briefcase className={styles.icon} />
-                    <span><strong>Profession:</strong> Full-Stack Developer</span>
+                    <span><strong>Profession:</strong> {user?.proffession}</span>
                   </div>
                   <div className={styles.rowItem}>
                     <MapPin className={styles.icon} />
-                    <span><strong>Location:</strong> Accra, Ghana</span>
+                    {userlocation ? (
+                      <p><strong>Full Address:</strong> {userlocation.fullAddress}</p>
+
+                    ) : (
+                      <p>Loading location...</p>
+                    )}
                   </div>
                   <div className={styles.rowItem}>
                     <GraduationCap className={styles.icon} />
-                    <span><strong>Education:</strong> University of Ghana</span>
+                    <span><strong>Education:</strong> {user?.Education}</span>
                   </div>
                   <div className={styles.rowItem}>
                     <Globe className={styles.icon} />
                     <span>
                       <strong>Website:</strong>{" "}
                       <a
-                        href="https://mywebsite.onwiciki.com"
+                        href={user?.website}
                         target="_blank"
                         rel="noopener noreferrer"
                       >
-                        mywebsite.onwiciki.com
+                        {user?.website}
                       </a>
                     </span>
                   </div>
@@ -527,10 +554,10 @@ const ProfilePage = () => {
                 <div className={styles.skillsSection}>
                   <h3>Technical Skills</h3>
                   <div className={styles.skillGrid}>
-                    {skills.map((skill, i) => (
+                    {user?.ProgrammingLanguages?.map((skill, i) => (
                       <div key={i} className={styles.skillBadge}>
-                        {skill.icon}
-                        <span>{skill.name}</span>
+                        {/* {skill.icon} */}
+                        <span>{skill}</span>
                       </div>
                     ))}
                   </div>
@@ -539,15 +566,16 @@ const ProfilePage = () => {
                 {/* Stats */}
                 <div className={styles.statsSection}>
                   <div className={styles.statBox}>
-                    <h4>6+</h4>
+                    <h4>{user?.YearsOfExperience}+</h4>
                     <p>Years of Experience</p>
                   </div>
                   <div className={styles.statBox}>
-                    <h4>50+</h4>
+                    <h4>{user?.ProjectsCompleted}+</h4>
                     <p>Projects Completed</p>
                   </div>
                   <div className={styles.statBox}>
-                    <h4>10+</h4>
+                    <h4>{user?.ProgrammingLanguages?.length}+</h4>
+
                     <p>Programming Languages</p>
                   </div>
                 </div>
@@ -556,11 +584,16 @@ const ProfilePage = () => {
                 <div className={styles.languagesSection}>
                   <h3>Languages</h3>
                   <div className={styles.languageList}>
-                    {languages.map((lang, i) => (
-                      <span key={i} className={styles.languageTag}>
-                        {lang}
-                      </span>
-                    ))}
+                    {user?.SpokenLanguages?.length > 0 ? (
+                      user.SpokenLanguages.map((lang, i) => (
+                        <span key={i} className={styles.languageTag}>
+                          {lang}
+                        </span>
+                      ))
+                    ) : (
+                      <span className={styles.languageTag}>No languages added</span>
+                    )}
+
                   </div>
                 </div>
               </div>
@@ -724,11 +757,11 @@ const ProfilePage = () => {
                 <span>
                   <strong>Website:</strong>{" "}
                   <a
-                    href="https://mywebsite.onwiciki.com"
+                    href={user?.website}
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    mywebsite.onwiciki.com
+                    {user?.website}
                   </a>
                 </span>
               </div>
@@ -1067,12 +1100,12 @@ const ProfilePage = () => {
             Website
             <LinkIcon size={14} />
             <a
-              href="https://mywebsite.onwiciki.com"
+              href={user?.website}
               target="_blank"
               rel="noopener noreferrer"
               style={{ color: "#eba0a7ff", textDecoration: "none" }}
             >
-              https://mywebsite.onwiciki.com
+              {user?.website}
             </a>
           </span>
         </div>

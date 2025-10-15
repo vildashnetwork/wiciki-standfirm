@@ -975,7 +975,12 @@
   font-weight: 600;
 }
 
-.edit-btn {
+.SaveSettings {
+  width: auto;
+}
+
+.edit-btn,
+.SaveSettings {
   background: var(--accent-red);
   border: none;
   color: var(--accent-white);
@@ -986,9 +991,11 @@
   font-weight: 500;
 }
 
-.edit-btn:hover {
+.edit-btn:hover,
+.SaveSettings:hover {
   background: var(--accent-red-light);
   box-shadow: 0 0 10px var(--glow-color);
+  transform: none !important;
 }
 
 .edit-btn.disable {

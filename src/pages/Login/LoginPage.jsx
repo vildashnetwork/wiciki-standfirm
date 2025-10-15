@@ -80,7 +80,7 @@ const LoginPage = () => {
           setCookie("token", response.data.usert, 7);
         }
 
-        console.log("Login success:", response.data);
+        // console.log("Login success:", response.data);
 
         // Redirect to questions page
         navigate("/");
@@ -139,7 +139,7 @@ const LoginPage = () => {
         setEmailCorrect(false);
       }
 
-      console.log("Email validation API:", data);
+      // console.log("Email validation API:", data);
     } catch (err) {
       console.error("Email check error:", err.response?.data || err.message);
       setEmailCorrect(false);

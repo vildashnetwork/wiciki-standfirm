@@ -18,6 +18,7 @@ import {
 import Cookies from "js-cookie";
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import toast from 'react-hot-toast';
 
 const SettingsPage = ({ isOpen, onClose }) => {
   const token = Cookies.get('token');
@@ -60,6 +61,35 @@ const SettingsPage = ({ isOpen, onClose }) => {
   const [activeSection, setActiveSection] = useState('general');
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
+
+  const [loadsave, setloadsave] = useState(false)
+  const saveprivacy = async (e) => {
+    e.preventDefault()
+    try {
+      setloadsave(true)
+      const method = user?.email != null ? "email" : "sms";
+      const updateprivacy = await axios.post("https://wicikibackend.onrender.com/decode/update/privacy",
+        {
+          profilevissibility: settings.profileVisibility,
+          twofactorenabled: settings.twoFactorAuth,
+          twofactormethod: method,
+          loginalerts: settings.loginAlerts
+        })
+
+      if (updateprivacy.status == 200) {
+        toast.success(updateprivacy.data.message, { id: "privacy", duration: 3000 })
+
+      } else {
+        toast.error(updateprivacy.data.message)
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error(error?.message)
+    } finally {
+      setloadsave(false)
+    }
+  }
 
   // Data lists
   const spokenLanguages = [
@@ -120,11 +150,82 @@ const SettingsPage = ({ isOpen, onClose }) => {
 
   // fetch user + initialize UI arrays
   useEffect(() => {
+    // const getUser = async () => {
+
+    //   if (!token) {
+    //     console.warn('No token for SettingsPage');
+    //     return;
+    //   }
+    //   try {
+    //     setLoading(true);
+    //     const res = await axios.get("https://wicikibackend.onrender.com/decode/me", {
+    //       headers: { Authorization: `Bearer ${token}` }
+    //     });
+
+    //     if (res.status === 200) {
+    //       const fetchedUser = res.data.user;
+    //       setUser(fetchedUser);
+
+    //       // set settings booleans (defensive checks)
+    //       const backendBool =
+    //         fetchedUser?.personalised?.profilevisibility ??
+    //         fetchedUser?.profilevisibility ??
+    //         null;
+
+    //       const backendBoolallowMessages =
+    //         fetchedUser?.personalised?.allowMessages ??
+    //         fetchedUser?.allowMessages ??
+    //         null;
+
+    //       const backendBoolshowBirthday =
+    //         fetchedUser?.personalised?.showBirthday ??
+    //         fetchedUser?.showBirthday ??
+    //         null;
+
+    //       const backendBoolallowTagging =
+    //         fetchedUser?.personalised?.allowTagging ??
+    //         fetchedUser?.allowTagging ??
+    //         null;
+
+    //       const backendBoolShowAllMentors =
+    //         fetchedUser?.personalised?.ShowAllMentors ??
+    //         fetchedUser?.ShowAllMentors ??
+    //         null;
+    //       const backendBooltwoFactorAuth =
+    //         fetchedUser?.twofactorenabled;
+    //       const backendBoolloginAlerts =
+    //         fetchedUser?.loginalerts;
+    //       setSettings(prev => ({
+    //         ...prev,
+    //         allowMessages: backendBoolallowMessages !== null && backendBoolallowMessages !== undefined ? Boolean(backendBoolallowMessages) : prev.allowMessages,
+    //         profilevisibility: backendBool !== null && backendBool !== undefined ? Boolean(backendBool) : prev.profilevisibility,
+    //         showBirthday: backendBoolshowBirthday !== null && backendBoolshowBirthday !== undefined ? Boolean(backendBoolshowBirthday) : prev.showBirthday,
+    //         allowTagging: backendBoolallowTagging !== null && backendBoolallowTagging !== undefined ? Boolean(backendBoolallowTagging) : prev.allowTagging,
+    //         ShowAllMentors: backendBoolShowAllMentors !== null && backendBoolShowAllMentors !== undefined ? Boolean(backendBoolShowAllMentors) : prev.ShowAllMentors,
+    //         loginAlerts: backendBoolloginAlerts !== null && backendBoolloginAlerts !== undefined ? Boolean(backendBoolloginAlerts) : prev.loginAlerts,
+
+    //         twoFactorAuth: backendBooltwoFactorAuth !== null && backendBooltwoFactorAuth !== undefined ? Boolean(backendBooltwoFactorAuth) : prev.twoFactorAuth,
+    //         profileVisibility: user?.profilevissibility != null ? user?.profilevissibility : prev.profileVisibility,
+    //       }));
+
+    //       // map backend spoken/programming languages into canonical lists for the UI
+    //       setSelectedLangs(mapBackendToCanonical(fetchedUser?.SpokenLanguages || fetchedUser?.spokenLanguages || [], spokenLanguages));
+    //       setSelectedTech(mapBackendToCanonical(fetchedUser?.ProgrammingLanguages || fetchedUser?.programmingLanguages || [], techLanguages));
+    //     } else {
+    //       console.warn('Could not fetch user:', res?.data?.message);
+    //     }
+    //   } catch (err) {
+    //     console.error('Error fetching user in SettingsPage:', err);
+    //   } finally {
+    //     setLoading(false);
+    //   }
+    // };
     const getUser = async () => {
       if (!token) {
         console.warn('No token for SettingsPage');
         return;
       }
+
       try {
         setLoading(true);
         const res = await axios.get("https://wicikibackend.onrender.com/decode/me", {
@@ -132,47 +233,102 @@ const SettingsPage = ({ isOpen, onClose }) => {
         });
 
         if (res.status === 200) {
-          const fetchedUser = res.data.user;
+          // prefer .data.user but fall back to .data
+          const fetchedUser = res.data?.user ?? res.data;
           setUser(fetchedUser);
 
-          // set settings booleans (defensive checks)
-          const backendBool =
+          // helper to normalize booleans that may come as string/number/boolean
+          const toBoolOrNull = (val) => {
+            if (val === null || val === undefined) return null;
+            if (typeof val === 'boolean') return val;
+            if (typeof val === 'number') return val !== 0;
+            if (typeof val === 'string') {
+              const s = val.trim().toLowerCase();
+              if (s === 'true') return true;
+              if (s === 'false') return false;
+            }
+            return Boolean(val);
+          };
+
+          const backendBool = toBoolOrNull(
             fetchedUser?.personalised?.profilevisibility ??
             fetchedUser?.profilevisibility ??
-            null;
+            null
+          );
 
-          const backendBoolallowMessages =
+          const backendBoolallowMessages = toBoolOrNull(
             fetchedUser?.personalised?.allowMessages ??
             fetchedUser?.allowMessages ??
-            null;
+            null
+          );
 
-          const backendBoolshowBirthday =
+          const backendBoolshowBirthday = toBoolOrNull(
             fetchedUser?.personalised?.showBirthday ??
             fetchedUser?.showBirthday ??
-            null;
+            null
+          );
 
-          const backendBoolallowTagging =
+          const backendBoolallowTagging = toBoolOrNull(
             fetchedUser?.personalised?.allowTagging ??
             fetchedUser?.allowTagging ??
-            null;
+            null
+          );
 
-          const backendBoolShowAllMentors =
+          const backendBoolShowAllMentors = toBoolOrNull(
             fetchedUser?.personalised?.ShowAllMentors ??
             fetchedUser?.ShowAllMentors ??
+            null
+          );
+
+          const backendBooltwoFactorAuth = toBoolOrNull(
+            fetchedUser?.personalised?.twofactorenabled ??
+            fetchedUser?.twofactorenabled ??
+            fetchedUser?.twoFactorEnabled ??
+            null
+          );
+
+          const backendBoolloginAlerts = toBoolOrNull(
+            fetchedUser?.personalised?.loginalerts ??
+            fetchedUser?.loginalerts ??
+            fetchedUser?.loginAlerts ??
+            null
+          );
+
+          // pick any profile-visibility string the backend might provide
+          const profileVisibilityString =
+            fetchedUser?.profileVisibility ??
+            fetchedUser?.profilevissibility ?? // possible misspelling in backend
+            fetchedUser?.profilevissibility ??
             null;
 
           setSettings(prev => ({
             ...prev,
-            allowMessages: backendBoolallowMessages !== null && backendBoolallowMessages !== undefined ? Boolean(backendBoolallowMessages) : prev.allowMessages,
-            profilevisibility: backendBool !== null && backendBool !== undefined ? Boolean(backendBool) : prev.profilevisibility,
-            showBirthday: backendBoolshowBirthday !== null && backendBoolshowBirthday !== undefined ? Boolean(backendBoolshowBirthday) : prev.showBirthday,
-            allowTagging: backendBoolallowTagging !== null && backendBoolallowTagging !== undefined ? Boolean(backendBoolallowTagging) : prev.allowTagging,
-            ShowAllMentors: backendBoolShowAllMentors !== null && backendBoolShowAllMentors !== undefined ? Boolean(backendBoolShowAllMentors) : prev.ShowAllMentors
+            allowMessages: backendBoolallowMessages ?? prev.allowMessages,
+            profilevisibility: backendBool ?? prev.profilevisibility,
+            showBirthday: backendBoolshowBirthday ?? prev.showBirthday,
+            allowTagging: backendBoolallowTagging ?? prev.allowTagging,
+            ShowAllMentors: backendBoolShowAllMentors ?? prev.ShowAllMentors,
+            loginAlerts: backendBoolloginAlerts ?? prev.loginAlerts,
+            twoFactorAuth: backendBooltwoFactorAuth ?? prev.twoFactorAuth,
+            // preserve previously-used string if backend didn't return one
+            profileVisibility: profileVisibilityString ?? prev.profileVisibility,
           }));
 
           // map backend spoken/programming languages into canonical lists for the UI
-          setSelectedLangs(mapBackendToCanonical(fetchedUser?.SpokenLanguages || fetchedUser?.spokenLanguages || [], spokenLanguages));
-          setSelectedTech(mapBackendToCanonical(fetchedUser?.ProgrammingLanguages || fetchedUser?.programmingLanguages || [], techLanguages));
+          setSelectedLangs(mapBackendToCanonical(
+            fetchedUser?.SpokenLanguages ??
+            fetchedUser?.spokenLanguages ??
+            fetchedUser?.languages ??
+            [],
+            spokenLanguages
+          ));
+          setSelectedTech(mapBackendToCanonical(
+            fetchedUser?.ProgrammingLanguages ??
+            fetchedUser?.programmingLanguages ??
+            fetchedUser?.skills ??
+            [],
+            techLanguages
+          ));
         } else {
           console.warn('Could not fetch user:', res?.data?.message);
         }
@@ -182,6 +338,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
         setLoading(false);
       }
     };
+
     getUser();
   }, [token]); // token dependency
 
@@ -228,7 +385,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
         { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
       );
 
-      alert("✅ " + (response.data?.message || "Updated"));
+      alert((response.data?.message || "Updated"));
       if (response.data?.user) {
         setUser(response.data.user);
         setSelectedLangs(mapBackendToCanonical(response.data.user?.SpokenLanguages || [], spokenLanguages));
@@ -260,19 +417,33 @@ const SettingsPage = ({ isOpen, onClose }) => {
         {
           type: 'select',
           key: 'profileVisibility',
-          label: 'Profile Visibility',
+          label: loading ? "loading.." : 'Profile Visibility',
           description: 'Who can see your profile',
           value: settings.profileVisibility,
           options: [
             { label: 'Public', value: 'public' },
-            { label: 'Friends', value: 'friends' },
             { label: 'Private', value: 'private' }
           ]
 
         },
-        { type: 'toggle', key: 'twoFactorAuth', label: 'Two-Factor Authentication', description: 'Extra security for your account', value: settings.twoFactorAuth },
-        { type: 'toggle', key: 'loginAlerts', label: 'Login Alerts', description: 'Get notified of new logins', value: settings.loginAlerts },
-        { type: 'toggle', key: 'profilevisibility', label: loading ? 'loading...' : 'Profile Visibility (toggle)', description: 'Allow Your History to be read By everyone', value: settings.profilevisibility },
+        {
+          type: 'toggle', key: 'twoFactorAuth',
+          label: loading ? "loading.." : 'Two-Factor Authentication',
+          description: 'Extra security for your account',
+          value: settings.twoFactorAuth
+        },
+        {
+          type: 'toggle', key: 'loginAlerts',
+          label: loading ? "loading.." : 'Login Alerts',
+          description: 'Get notified of new logins',
+          value: settings.loginAlerts
+        },
+        {
+          type: 'toggle', key: 'profilevisibility',
+          label: loading ? 'loading...' : 'Profile Visibility (toggle)',
+          description: 'Allow Your History to be read By everyone',
+          value: settings.profilevisibility
+        },
         { type: 'toggle', key: 'showBirthday', label: loading ? 'loading...' : 'Show Birthday For Everyone', description: 'Allow Your Birthday to be visible', value: settings.showBirthday },
         { type: 'toggle', key: 'allowTagging', label: loading ? 'loading...' : 'Allow Tagging', description: 'Allow everyone to tag you on their posts', value: settings.allowTagging },
         { type: 'toggle', key: 'ShowAllMentors', label: loading ? 'loading...' : 'Show All Mentors', description: 'Show all mentors', value: settings.ShowAllMentors },
@@ -508,7 +679,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
                   </div>
                 ))}
                 {(activeSection === "privacy" &&
-                  <button className='SaveSettings'>Save Settings</button>
+                  <button className='SaveSettings' style={{ opacity: loadsave && 0.5 }} onClick={saveprivacy} disabled={loadsave}>{loadsave ? "loading.." : "Save Settings"}</button>
                 )}
               </div>
             </div>

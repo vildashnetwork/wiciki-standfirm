@@ -1,1069 +1,875 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Professional Search Platform</title>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <title>WICIKI — Account History</title>
     <style>
+        /* ===========================
+       WICIKI Account History Page
+       Single-file: HTML + CSS + JS
+       =========================== */
+
         :root {
-            /* Backgrounds */
-            --primary-bg: #0d0d0d;
-            /* Almost black, easy on the eyes */
-            --secondary-bg: #1a1a1a;
-            /* Slightly lighter dark for sections */
-            --card-bg: #262626;
-            /* Dark grey for cards, subtle contrast */
-
-            /* Red accents */
-            --accent-red: #e53935;
-            /* Vibrant red, not too bright */
-            --accent-red-light: #ff6f61;
-            /* Soft, modern red for highlights */
-            --accent-red-dark: #ab000d;
-            /* Deep red for hover states */
-
-            /* Whites & Neutrals */
-            --accent-white: #ffffff;
-            /* Pure white for contrast */
-            --text-primary: #f5f5f5;
-            /* Soft white for text */
-            --text-secondary: #dcdcdc;
-            /* Light grey text */
-            --text-muted: #a6a6a6;
-            /* Muted grey for secondary text */
-
-            /* Borders & subtle effects */
-            --border-color: #333333;
-            /* Dark border for subtle separation */
-            --glow-color: rgba(229, 57, 53, 0.25);
-            /* Soft red glow for effects */
-
-            /* Status colors */
-            --success-color: #43a047;
-            /* Green for success */
-            --warning-color: #ff7043;
-            /* Orange-red warning */
+            /* brand colors (WICIKI-style) */
+            --brand-600: #6C5CE7;
+            /* deep violet */
+            --brand-400: #8E7BFB;
+            /* soft violet */
+            --accent-500: #00BFA6;
+            /* teal accent */
+            --bg: #0f1720;
+            /* dark page background */
+            --card: #0b1220;
+            --muted: #98A0B3;
+            --glass: rgba(255, 255, 255, 0.03);
+            --glass-2: rgba(255, 255, 255, 0.02);
+            --radius: 12px;
+            --glass-border: rgba(255, 255, 255, 0.04);
+            --success: #22c55e;
+            --danger: #ff6b6b;
+            --text: #E6EEF6;
+            --shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
+            --max-width: 1100px;
         }
 
         * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            box-sizing: border-box
+        }
+
+        html,
+        body {
+            height: 100%
         }
 
         body {
-            background: var(--primary-bg);
-            color: var(--text-primary);
-            line-height: 1.6;
+            margin: 0;
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+            background: linear-gradient(180deg, var(--bg) 0%, #071018 100%);
+            color: var(--text);
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            padding: 28px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            gap: 16px;
             min-height: 100vh;
         }
 
+        /* container */
         .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 0 20px;
-        }
-
-        /* Header Styles */
-        .app-header {
-            background: var(--secondary-bg);
-            border-bottom: 1px solid var(--border-color);
-            padding: 16px 0;
-            position: sticky;
-            top: 0;
-            z-index: 100;
-        }
-
-        .header-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .logo {
-            font-size: 24px;
-            font-weight: 700;
-            color: var(--accent-white);
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .logo span {
-            color: var(--accent-red);
-        }
-
-        .nav-links {
-            display: flex;
-            gap: 30px;
-        }
-
-        .nav-link {
-            color: var(--text-secondary);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.3s;
-            padding: 8px 0;
-            position: relative;
-        }
-
-        .nav-link:hover,
-        .nav-link.active {
-            color: var(--accent-white);
-        }
-
-        .nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -17px;
-            left: 0;
             width: 100%;
-            height: 3px;
-            background: var(--accent-red);
-        }
-
-        .user-actions {
-            display: flex;
-            align-items: center;
-            gap: 20px;
-        }
-
-        .notification-icon,
-        .user-avatar {
-            width: 40px;
-            height: 40px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            background: var(--card-bg);
-            cursor: pointer;
-            transition: background 0.3s;
-        }
-
-        .notification-icon:hover,
-        .user-avatar:hover {
-            background: var(--accent-red);
-        }
-
-        /* Search Layout */
-        .search-layout {
+            max-width: var(--max-width);
             display: grid;
-            grid-template-columns: 280px 1fr;
-            gap: 24px;
-            padding: 30px 0;
+            grid-template-columns: 300px 1fr 320px;
+            gap: 20px;
+            align-items: start;
         }
 
-        /* Search Header */
-        .search-header {
-            grid-column: 1 / -1;
-            margin-bottom: 20px;
-        }
-
-        .search-bar-container {
-            position: relative;
-            max-width: 800px;
-            margin: 0 auto 24px;
-        }
-
-        .search-input-wrapper {
-            display: flex;
-            align-items: center;
-            background: var(--card-bg);
-            border-radius: 12px;
-            border: 1px solid var(--border-color);
-            overflow: hidden;
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-        }
-
-        .search-input-wrapper:focus-within {
-            border-color: var(--accent-red);
-            box-shadow: 0 0 0 2px var(--glow-color);
-        }
-
-        .search-icon {
-            padding: 0 20px;
-            color: var(--text-muted);
-            font-size: 18px;
-        }
-
-        .search-input {
-            flex: 1;
-            padding: 16px 0;
-            background: transparent;
-            border: none;
-            color: var(--text-primary);
-            font-size: 16px;
-            outline: none;
-        }
-
-        .search-input::placeholder {
-            color: var(--text-muted);
-        }
-
-        .search-actions {
-            padding: 0 16px;
-        }
-
-        .search-btn {
-            background: var(--accent-red);
-            color: white;
-            border: none;
-            padding: 10px 20px;
-            border-radius: 8px;
-            cursor: pointer;
-            font-weight: 600;
-            transition: all 0.3s ease;
-        }
-
-        .search-btn:hover {
-            background: var(--accent-red-dark);
-            transform: translateY(-1px);
-        }
-
-        .quick-filters {
-            display: flex;
-            gap: 12px;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
-
-        .quick-filter-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 8px 16px;
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            color: var(--text-secondary);
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 14px;
-        }
-
-        .quick-filter-btn.active,
-        .quick-filter-btn:hover {
-            background: rgba(229, 57, 53, 0.1);
-            border-color: var(--accent-red);
-            color: var(--accent-red);
-        }
-
-        /* Sidebar */
-        .search-sidebar {
-            position: sticky;
-            top: 100px;
+        /* Left column: profile + filters */
+        .left {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+            border: 1px solid var(--glass-border);
+            padding: 18px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
             height: fit-content;
         }
 
-        .sidebar-card {
-            background: var(--card-bg);
-            border-radius: 12px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border: 1px solid var(--border-color);
-        }
-
-        .sidebar-card h3 {
-            color: var(--accent-white);
-            margin-bottom: 16px;
-            font-size: 18px;
-            font-weight: 600;
+        .profile {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .clear-history {
-            color: var(--accent-red);
-            font-size: 12px;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-
-        .filter-section {
-            margin-bottom: 24px;
-        }
-
-        .filter-section h4 {
-            color: var(--text-secondary);
-            margin-bottom: 12px;
-            font-size: 14px;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .filter-option {
-            display: flex;
-            align-items: center;
-            padding: 10px;
-            margin-bottom: 6px;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            color: var(--text-secondary);
-        }
-
-        .filter-option:hover {
-            background: rgba(229, 57, 53, 0.1);
-            color: var(--accent-red-light);
-        }
-
-        .filter-option.active {
-            background: rgba(229, 57, 53, 0.2);
-            color: var(--accent-red);
-        }
-
-        .filter-icon {
-            margin-right: 10px;
-            font-size: 16px;
-        }
-
-        .filter-label {
-            flex: 1;
-            font-weight: 500;
-        }
-
-        .filter-count {
-            background: var(--secondary-bg);
-            padding: 2px 8px;
-            border-radius: 10px;
-            font-size: 12px;
-        }
-
-        .recent-search {
-            display: flex;
-            align-items: center;
-            padding: 8px 0;
-            cursor: pointer;
-            color: var(--text-secondary);
-            transition: color 0.3s;
-        }
-
-        .recent-search:hover {
-            color: var(--accent-red);
-        }
-
-        .recent-search span:first-child {
-            margin-right: 10px;
-        }
-
-        /* Main Content */
-        .search-main {
-            min-height: 80vh;
-        }
-
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .section-header h2 {
-            color: var(--accent-white);
-            font-size: 22px;
-            font-weight: 700;
-        }
-
-        .see-all {
-            color: var(--accent-red);
-            cursor: pointer;
-            font-weight: 500;
-            transition: color 0.3s ease;
-            font-size: 14px;
-        }
-
-        .see-all:hover {
-            color: var(--accent-red-light);
-        }
-
-        /* Skill Tags */
-        .skill-tags-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
             gap: 12px;
-            margin-bottom: 30px;
-        }
-
-        .skill-tag-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
             align-items: center;
-            transition: all 0.3s ease;
-            cursor: pointer;
+            margin-bottom: 12px;
         }
 
-        .skill-tag-card:hover {
-            border-color: var(--accent-red);
-            transform: translateY(-2px);
-        }
-
-        .skill-tag {
-            color: var(--text-primary);
-            font-weight: 500;
-        }
-
-        .skill-count {
-            color: var(--accent-red);
-            font-size: 12px;
-            background: rgba(229, 57, 53, 0.1);
-            padding: 4px 8px;
-            border-radius: 8px;
-        }
-
-        /* Results Grid */
-        .results-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 20px;
-        }
-
-        .result-card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
+        .avatar {
+            width: 64px;
+            height: 64px;
             border-radius: 12px;
-            overflow: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .result-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
-            border-color: var(--accent-red);
-        }
-
-        .result-media {
-            height: 160px;
-            background: linear-gradient(135deg, #2c2c2c, #1a1a1a);
+            background: linear-gradient(135deg, var(--brand-600), var(--accent-500));
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 48px;
-            border-bottom: 1px solid var(--border-color);
+            font-weight: 700;
+            font-size: 22px;
+            color: white;
+            box-shadow: 0 6px 14px rgba(12, 8, 33, 0.6);
         }
 
-        .result-content {
-            padding: 20px;
+        .profile h3 {
+            margin: 0;
+            font-size: 16px
         }
 
-        .result-content h3 {
-            color: var(--accent-white);
-            margin-bottom: 10px;
-            font-size: 18px;
+        .profile p {
+            margin: 0;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        .filters {
+            margin-top: 12px
+        }
+
+        .filters h4 {
+            margin: 8px 0 10px;
+            font-size: 13px;
+            color: var(--brand-400)
+        }
+
+        .chip-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px
+        }
+
+        .chip {
+            background: var(--glass);
+            border: 1px solid var(--glass-border);
+            padding: 8px 10px;
+            border-radius: 999px;
+            font-size: 13px;
+            color: var(--text);
+            cursor: pointer;
+            transition: transform .12s ease, background .12s;
+            display: inline-flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .chip:hover {
+            transform: translateY(-3px)
+        }
+
+        .chip.active {
+            background: linear-gradient(90deg, var(--brand-600), var(--brand-400));
+            box-shadow: 0 6px 18px rgba(108, 92, 231, 0.18);
+            border: 0
+        }
+
+        .search {
+            margin-top: 16px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .search input {
+            flex: 1;
+            padding: 10px 12px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border);
+            background: transparent;
+            color: var(--text);
+            outline: none;
+            font-size: 14px;
+        }
+
+        .search button {
+            background: var(--accent-500);
+            border: 0;
+            padding: 10px 12px;
+            border-radius: 10px;
+            color: white;
+            cursor: pointer;
             font-weight: 600;
         }
 
-        .result-content p {
-            color: var(--text-muted);
-            margin-bottom: 15px;
-            font-size: 14px;
-            line-height: 1.5;
+        /* center: timeline */
+        .main {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+            border-radius: var(--radius);
+            padding: 18px;
+            border: 1px solid var(--glass-border);
+            box-shadow: var(--shadow);
+            min-height: 400px;
         }
 
-        .result-tags {
+        .main-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px
+        }
+
+        .main-title {
+            display: flex;
+            gap: 12px;
+            align-items: center
+        }
+
+        .logo-circle {
+            width: 44px;
+            height: 44px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, var(--brand-600), var(--brand-400));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800
+        }
+
+        .main-title h2 {
+            margin: 0;
+            font-size: 18px
+        }
+
+        .main-controls {
             display: flex;
             gap: 8px;
-            margin-bottom: 15px;
-            flex-wrap: wrap;
+            align-items: center
         }
 
-        .result-tag {
-            background: rgba(229, 57, 53, 0.1);
-            color: var(--accent-red-light);
-            padding: 4px 10px;
-            border-radius: 12px;
-            font-size: 12px;
+        .btn {
+            background: transparent;
+            border: 1px solid var(--glass-border);
+            padding: 8px 12px;
+            border-radius: 10px;
+            color: var(--text);
+            cursor: pointer;
+            font-size: 13px;
         }
 
-        .result-actions {
+        .btn.primary {
+            background: linear-gradient(90deg, var(--brand-600), var(--brand-400));
+            border: 0;
+            color: white;
+            box-shadow: 0 8px 30px rgba(108, 92, 231, 0.12)
+        }
+
+        .timeline {
             display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+
+        .timeline-day {
+            display: grid;
+            grid-template-columns: 46px 1fr;
+            gap: 12px;
+        }
+
+        .day-marker {
+            text-align: center;
+            color: var(--muted);
+            font-size: 13px;
+            padding-top: 6px
+        }
+
+        .day-items {
+            background: linear-gradient(180deg, var(--glass-2), transparent);
+            border: 1px solid var(--glass-border);
+            padding: 12px;
+            border-radius: 10px;
+            display: flex;
+            flex-direction: column;
             gap: 10px;
         }
 
-        .action-btn {
-            flex: 1;
-            padding: 8px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 13px;
-            transition: all 0.3s ease;
+        .event {
+            display: flex;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 10px;
+            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.01));
+            align-items: flex-start;
+            transition: transform .12s ease, box-shadow .12s;
+            border: 1px solid rgba(255, 255, 255, 0.015);
         }
 
-        .primary-btn {
-            background: var(--accent-red);
-            color: white;
+        .event:hover {
+            transform: translateY(-6px);
+            box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6)
         }
 
-        .primary-btn:hover {
-            background: var(--accent-red-dark);
+        .event .ev-avatar {
+            width: 56px;
+            height: 56px;
+            border-radius: 10px;
+            background: var(--card);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700
         }
 
-        .secondary-btn {
+        .ev-body {
+            flex: 1
+        }
+
+        .ev-meta {
+            display: flex;
+            justify-content: space-between;
+            gap: 12px;
+            align-items: center
+        }
+
+        .ev-meta h4 {
+            margin: 0;
+            font-size: 14px
+        }
+
+        .ev-meta small {
+            color: var(--muted)
+        }
+
+        .ev-content {
+            margin-top: 8px;
+            color: var(--text);
+            font-size: 14px;
+            line-height: 1.45
+        }
+
+        .ev-actions {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px
+        }
+
+        .action {
             background: transparent;
-            border: 1px solid var(--border-color);
-            color: var(--text-secondary);
+            border: 1px solid var(--glass-border);
+            padding: 6px 10px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: var(--muted);
+            cursor: pointer
         }
 
-        .secondary-btn:hover {
-            border-color: var(--accent-red);
-            color: var(--accent-red);
+        .tag {
+            font-size: 12px;
+            padding: 6px 8px;
+            border-radius: 999px;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.03);
+            color: var(--muted)
         }
 
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
+        /* right: details / summary */
+        .right {
+            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
+            border: 1px solid var(--glass-border);
+            padding: 18px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            height: fit-content;
         }
 
-        .empty-state-icon {
-            font-size: 64px;
-            margin-bottom: 20px;
-            opacity: 0.5;
+        .stats {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap
         }
 
-        /* Responsive Design */
-        @media (max-width: 1024px) {
-            .search-layout {
-                grid-template-columns: 1fr;
-            }
-
-            .search-sidebar {
-                position: static;
-                order: 2;
-            }
-
-            .search-main {
-                order: 1;
-            }
+        .stat {
+            flex: 1;
+            min-width: 120px;
+            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.01));
+            padding: 12px;
+            border-radius: 10px;
+            border: 1px solid var(--glass-border)
         }
 
-        @media (max-width: 768px) {
-            .header-content {
-                flex-direction: column;
-                gap: 15px;
-            }
-
-            .nav-links {
-                gap: 15px;
-            }
-
-            .search-bar-container {
-                margin-bottom: 20px;
-            }
-
-            .results-grid {
-                grid-template-columns: 1fr;
-            }
-
-            .skill-tags-grid {
-                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-            }
+        .stat h3 {
+            margin: 0;
+            font-size: 20px
         }
 
-        @media (max-width: 480px) {
+        .stat p {
+            margin: 4px 0 0;
+            color: var(--muted);
+            font-size: 13px
+        }
+
+        /* responsive */
+        @media (max-width:1100px) {
             .container {
-                padding: 0 15px;
+                grid-template-columns: 1fr;
+                padding-bottom: 60px
             }
 
-            .search-input-wrapper {
-                flex-direction: column;
-                border-radius: 8px;
+            .left,
+            .right {
+                order: 3
             }
 
-            .search-icon {
-                padding: 15px;
+            .main {
+                order: 2
             }
+        }
 
-            .search-input {
-                padding: 15px;
-                width: 100%;
-            }
+        /* small niceties */
+        .muted {
+            color: var(--muted)
+        }
 
-            .search-actions {
-                width: 100%;
-                padding: 0 15px 15px;
-            }
+        .empty {
+            text-align: center;
+            padding: 48px;
+            border-radius: 10px;
+            border: 1px dashed rgba(255, 255, 255, 0.03);
+            color: var(--muted)
+        }
 
-            .search-btn {
-                width: 100%;
-            }
+        /* subtle scrollbars for timeline */
+        .timeline-scroll {
+            max-height: 64vh;
+            overflow: auto;
+            padding-right: 6px
+        }
 
-            .quick-filters {
-                gap: 8px;
-            }
+        .timeline-scroll::-webkit-scrollbar {
+            width: 8px
+        }
 
-            .quick-filter-btn {
-                padding: 6px 12px;
-                font-size: 13px;
-            }
+        .timeline-scroll::-webkit-scrollbar-thumb {
+            background: linear-gradient(90deg, var(--brand-600), var(--brand-400));
+            border-radius: 8px;
+            opacity: 0.22
         }
     </style>
 </head>
 
 <body>
-    <!-- Header -->
-    <header class="app-header">
-        <div class="container">
-            <div class="header-content">
-                <div class="logo">
-                    <span>ProSearch</span>Platform
-                </div>
-                <nav class="nav-links">
-                    <a href="#" class="nav-link active">Search</a>
-                    <a href="#" class="nav-link">Discover</a>
-                    <a href="#" class="nav-link">Network</a>
-                    <a href="#" class="nav-link">Resources</a>
-                </nav>
-                <div class="user-actions">
-                    <div class="notification-icon">🔔</div>
-                    <div class="user-avatar">👤</div>
-                </div>
-            </div>
-        </div>
-    </header>
-
-    <!-- Main Content -->
-    <div class="container">
-        <div class="search-layout">
-            <!-- Search Header -->
-            <div class="search-header">
-                <div class="search-bar-container">
-                    <div class="search-input-wrapper">
-                        <div class="search-icon">🔍</div>
-                        <input type="text" class="search-input" id="searchInput"
-                            placeholder="Search for skills, people, projects, or mentors...">
-                        <div class="search-actions">
-                            <button class="search-btn" id="searchButton">Search</button>
-                        </div>
-                    </div>
-                </div>
-                <div class="quick-filters" id="quickFilters">
-                    <!-- Quick filters will be populated by JavaScript -->
+    <div class="container" role="main" aria-label="WICIKI account history">
+        <!-- Left -->
+        <aside class="left" aria-label="controls">
+            <div class="profile" role="region" aria-label="user profile">
+                <div class="avatar" id="mini-avatar">W</div>
+                <div>
+                    <h3 id="user-name">Wiciki User</h3>
+                    <p id="user-handle">@username • Member since 2023</p>
                 </div>
             </div>
 
-            <!-- Sidebar -->
-            <aside class="search-sidebar">
-                <div class="sidebar-card">
-                    <h3>Recent Searches <button class="clear-history" id="clearHistory">Clear</button></h3>
-                    <div id="recentSearches">
-                        <!-- Recent searches will be populated by JavaScript -->
+            <div class="filters" aria-label="filters">
+                <h4>Filter by activity</h4>
+                <div class="chip-list" id="filter-chips">
+                    <!-- chips injected by JS -->
+                </div>
+
+                <h4>Date range</h4>
+                <div style="display:flex;gap:8px;margin-top:8px">
+                    <input type="date" id="fromDate"
+                        style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--glass-border);background:transparent;color:var(--text)">
+                    <input type="date" id="toDate"
+                        style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--glass-border);background:transparent;color:var(--text)">
+                </div>
+
+                <div style="margin-top:14px" class="search" role="search">
+                    <input id="searchText" placeholder="Search history, posts, comments..." aria-label="search history">
+                    <button id="btnSearch" title="Search">Search</button>
+                </div>
+
+                <div style="margin-top:14px;display:flex;gap:8px">
+                    <button class="chip" id="btnClear">Clear</button>
+                    <button class="chip" id="btnExport">Export</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Main -->
+        <main class="main" aria-live="polite">
+            <div class="main-header">
+                <div class="main-title">
+                    <div class="logo-circle">W</div>
+                    <div>
+                        <h2>Account History</h2>
+                        <div class="muted">A chronological record of your activity on WICIKI</div>
                     </div>
                 </div>
-                <div class="sidebar-card">
-                    <h3>Filters</h3>
-                    <div class="filter-section">
-                        <h4>Category</h4>
-                        <div id="categoryFilters">
-                            <!-- Category filters will be populated by JavaScript -->
-                        </div>
-                    </div>
+
+                <div class="main-controls">
+                    <button class="btn" id="toggleView">Compact</button>
+                    <button class="btn" id="newPost">+ New Post</button>
+                    <button class="btn primary" id="btnRefresh">Refresh</button>
                 </div>
-            </aside>
+            </div>
 
-            <!-- Main Content Area -->
-            <main class="search-main">
-                <section class="trending-section">
-                    <div class="section-header">
-                        <h2>Trending Skills</h2>
-                        <span class="see-all">See all</span>
-                    </div>
-                    <div class="skill-tags-grid" id="trendingSkills">
-                        <!-- Trending skills will be populated by JavaScript -->
-                    </div>
-                </section>
+            <section class="timeline-scroll">
+                <div class="timeline" id="timeline">
+                    <!-- timeline injected here -->
+                </div>
+                <div id="loadingMore" class="muted" style="text-align:center;padding:14px;display:none">Loading more…
+                </div>
+            </section>
 
-                <section class="results-section">
-                    <div class="section-header">
-                        <h2 id="resultsTitle">Featured Projects</h2>
-                        <span class="see-all" id="seeAllResults">View all</span>
-                    </div>
-                    <div class="results-grid" id="resultsGrid">
-                        <!-- Results will be populated by JavaScript -->
-                    </div>
-                </section>
-            </main>
+            <div style="margin-top:12px;text-align:center">
+                <button class="btn" id="btnLoadMore">Load more history</button>
+            </div>
+
+        </main>
+
+        <!-- Right -->
+        <aside class="right" aria-label="summary">
+            <h4>Summary</h4>
+            <div class="stats" style="margin-top:12px">
+                <div class="stat">
+                    <h3 id="stat-posts">0</h3>
+                    <p>Posts</p>
+                </div>
+                <div class="stat">
+                    <h3 id="stat-comments">0</h3>
+                    <p>Comments</p>
+                </div>
+                <div class="stat">
+                    <h3 id="stat-likes">0</h3>
+                    <p>Reactions</p>
+                </div>
+            </div>
+
+            <div style="margin-top:18px">
+                <h4>Recent activity types</h4>
+                <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px" id="recent-types">
+                    <!-- types -->
+                </div>
+            </div>
+
+            <div style="margin-top:18px">
+                <h4>Export</h4>
+                <p class="muted" style="font-size:13px">Download a CSV of the current filtered view.</p>
+                <div style="margin-top:8px">
+                    <button class="btn" id="exportCSV">Download CSV</button>
+                </div>
+            </div>
+        </aside>
+    </div>
+
+    <!-- Modal template (detail view) -->
+    <div id="detailModal"
+        style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:99">
+        <div
+            style="background:var(--card);border-radius:12px;padding:18px;max-width:720px;width:95%;border:1px solid var(--glass-border)">
+            <div style="display:flex;justify-content:space-between;align-items:center">
+                <strong id="detailTitle">Event</strong>
+                <button id="closeModal" class="btn">Close</button>
+            </div>
+            <div id="detailBody" style="margin-top:12px;color:var(--muted)"></div>
         </div>
     </div>
 
     <script>
-        // Data storage and management
-        const storage = {
-            // Save data to localStorage
-            set: (key, value) => {
-                try {
-                    localStorage.setItem(key, JSON.stringify(value));
-                } catch (e) {
-                    console.error('Error saving to localStorage:', e);
-                }
-            },
+        /* ======================
+           Mock data + Renderer
+           Replace mock fetch with real API calls as needed
+           ====================== */
 
-            // Get data from localStorage
-            get: (key, defaultValue = null) => {
-                try {
-                    const item = localStorage.getItem(key);
-                    return item ? JSON.parse(item) : defaultValue;
-                } catch (e) {
-                    console.error('Error reading from localStorage:', e);
-                    return defaultValue;
-                }
-            }
+        // Activity types to show as chips
+        const ACTIVITY_TYPES = [
+            { key: 'post', label: 'Posts', color: 'var(--brand-600)' },
+            { key: 'comment', label: 'Comments', color: 'var(--brand-400)' },
+            { key: 'like', label: 'Reactions', color: 'var(--accent-500)' },
+            { key: 'follow', label: 'Follows', color: '#FFB86B' },
+            { key: 'mentor', label: 'Mentorship', color: '#9AE6B4' },
+            { key: 'payment', label: 'Payments', color: '#FF9AA2' },
+            { key: 'system', label: 'System', color: '#9FB4FF' }
+        ];
+
+        // Sample timeline items (you'll replace this with your API)
+        const SAMPLE = [
+            { id: 1, type: 'post', title: 'Shared a new gist', body: 'I built a tiny React hook to manage forms.', date: '2025-10-14T12:30:00Z', meta: { likes: 12, comments: 3 } },
+            { id: 2, type: 'comment', title: 'Commented on Alice’s post', body: 'Nice work! Could you share the repo?', date: '2025-10-14T11:00:00Z', meta: { postId: 1 } },
+            { id: 3, type: 'like', title: 'Reacted to a post', body: '❤️ Reacted to "How to build timelines"', date: '2025-09-01T09:20:00Z', meta: {} },
+            { id: 4, type: 'follow', title: 'Followed mentor John', body: 'Started following John Doe (Mentor in Backend)', date: '2025-08-30T15:12:00Z', meta: {} },
+            { id: 5, type: 'payment', title: 'Subscription charged', body: 'Charged $4.99 for Pro membership', date: '2025-07-01T07:22:00Z', meta: { amount: 4.99 } },
+            { id: 6, type: 'mentor', title: 'Connected with Mentor', body: 'You matched with mentor Sara (Design)', date: '2025-06-12T16:40:00Z', meta: {} },
+            { id: 7, type: 'system', title: 'Password changed', body: 'You updated your account password', date: '2025-05-01T10:00:00Z', meta: {} },
+            // more items to demonstrate multiple days and ordering
+            { id: 8, type: 'post', title: 'Published "Deploying to Render"', body: 'Step-by-step guide included', date: '2025-10-12T09:00:00Z', meta: { likes: 5 } },
+            { id: 9, type: 'comment', title: 'Commented on your post', body: 'Great tutorial!', date: '2025-10-12T10:10:00Z', meta: {} }
+        ];
+
+        // app state
+        let state = {
+            items: [],    // full list
+            filtered: [], // filtered view
+            activeChips: new Set(), // selected filters
+            compact: false,
+            page: 1,
+            pageSize: 8
         };
 
-        // Sample data
-        const sampleData = {
-            filters: [
-                { id: 'all', label: 'All', icon: '🔍', count: 1247 },
-                { id: 'skills', label: 'Skills', icon: '💡', count: 543 },
-                { id: 'people', label: 'People', icon: '👥', count: 892 },
-                { id: 'projects', label: 'Projects', icon: '🚀', count: 321 },
-                { id: 'mentors', label: 'Mentors', icon: '🎓', count: 156 }
-            ],
+        // DOM refs
+        const chipsEl = document.getElementById('filter-chips');
+        const timelineEl = document.getElementById('timeline');
+        const statPosts = document.getElementById('stat-posts');
+        const statComments = document.getElementById('stat-comments');
+        const statLikes = document.getElementById('stat-likes');
+        const recentTypes = document.getElementById('recent-types');
+        const btnLoadMore = document.getElementById('btnLoadMore');
+        const btnRefresh = document.getElementById('btnRefresh');
+        const btnExport = document.getElementById('btnExport');
+        const searchText = document.getElementById('searchText');
+        const btnSearch = document.getElementById('btnSearch');
+        const btnClear = document.getElementById('btnClear');
+        const btnToggle = document.getElementById('toggleView');
+        const loadingMore = document.getElementById('loadingMore');
 
-            trendingSkills: [
-                'AI/Machine Learning', 'Blockchain', 'UI/UX Design',
-                'Data Science', 'Mobile Development', 'Digital Marketing',
-                'Cloud Computing', 'Cybersecurity', 'DevOps', 'Product Management'
-            ],
-
-            projects: [
-                {
-                    id: 1,
-                    title: "African Fintech Innovation Hub",
-                    description: "A collaborative space for fintech developers across Africa building next-gen payment solutions",
-                    tags: ["Fintech", "Collaboration", "Blockchain"],
-                    type: "project",
-                    icon: "🚀"
-                },
-                {
-                    id: 2,
-                    title: "AI Healthcare Diagnostics",
-                    description: "Machine learning platform for early disease detection in rural communities",
-                    tags: ["AI", "Healthcare", "Machine Learning"],
-                    type: "project",
-                    icon: "🩺"
-                },
-                {
-                    id: 3,
-                    title: "Sarah Johnson",
-                    description: "Product Design Lead with 8+ years of experience in UX research and interface design",
-                    tags: ["UI/UX", "Product Design", "Figma"],
-                    type: "person",
-                    icon: "👩‍🎨"
-                },
-                {
-                    id: 4,
-                    title: "Cloud Infrastructure Optimization",
-                    description: "Best practices for reducing cloud costs while maintaining performance",
-                    tags: ["Cloud", "DevOps", "AWS"],
-                    type: "skill",
-                    icon: "☁️"
-                },
-                {
-                    id: 5,
-                    title: "Marcus Rivera",
-                    description: "Senior Blockchain Developer specializing in smart contracts and DeFi applications",
-                    tags: ["Blockchain", "Smart Contracts", "DeFi"],
-                    type: "mentor",
-                    icon: "👨‍💼"
-                },
-                {
-                    id: 6,
-                    title: "Sustainable Energy Grid",
-                    description: "Smart grid technology for optimizing renewable energy distribution",
-                    tags: ["Sustainability", "Energy", "IoT"],
-                    type: "project",
-                    icon: "⚡"
-                }
-            ]
-        };
-
-        // Initialize data if not present
-        if (!storage.get('recentSearches')) {
-            storage.set('recentSearches', []);
+        // render chips
+        function renderChips() {
+            chipsEl.innerHTML = '';
+            ACTIVITY_TYPES.forEach(t => {
+                const btn = document.createElement('button');
+                btn.className = 'chip';
+                btn.innerHTML = `<span style="width:10px;height:10px;border-radius:50%;background:${t.color};display:inline-block;margin-right:8px"></span>${t.label}`;
+                btn.setAttribute('data-key', t.key);
+                btn.addEventListener('click', () => {
+                    if (state.activeChips.has(t.key)) state.activeChips.delete(t.key); else state.activeChips.add(t.key);
+                    btn.classList.toggle('active', state.activeChips.has(t.key));
+                    applyFilters();
+                });
+                chipsEl.appendChild(btn);
+            });
         }
 
-        if (!storage.get('activeFilter')) {
-            storage.set('activeFilter', 'all');
+        // group items by date (YYYY-MM-DD)
+        function groupByDate(items) {
+            const groups = {};
+            items.forEach(it => {
+                const d = new Date(it.date);
+                // local date string for grouping
+                const key = d.toLocaleDateString();
+                if (!groups[key]) groups[key] = [];
+                groups[key].push(it);
+            });
+            // return sorted by date descending
+            return Object.entries(groups).sort((a, b) => new Date(b[0]) - new Date(a[0]));
         }
 
-        // Application state
-        const state = {
-            activeFilter: storage.get('activeFilter', 'all'),
-            searchQuery: '',
-            recentSearches: storage.get('recentSearches', []),
-            results: sampleData.projects
-        };
-
-        // DOM elements
-        const elements = {
-            searchInput: document.getElementById('searchInput'),
-            searchButton: document.getElementById('searchButton'),
-            quickFilters: document.getElementById('quickFilters'),
-            recentSearches: document.getElementById('recentSearches'),
-            clearHistory: document.getElementById('clearHistory'),
-            categoryFilters: document.getElementById('categoryFilters'),
-            trendingSkills: document.getElementById('trendingSkills'),
-            resultsTitle: document.getElementById('resultsTitle'),
-            seeAllResults: document.getElementById('seeAllResults'),
-            resultsGrid: document.getElementById('resultsGrid')
-        };
-
-        // Render functions
-        const render = {
-            // Render quick filters
-            quickFilters: () => {
-                elements.quickFilters.innerHTML = sampleData.filters.map(filter => `
-                    <button class="quick-filter-btn ${state.activeFilter === filter.id ? 'active' : ''}" 
-                            data-filter="${filter.id}">
-                        <span class="filter-icon">${filter.icon}</span>
-                        ${filter.label}
-                    </button>
-                `).join('');
-            },
-
-            // Render recent searches
-            recentSearches: () => {
-                if (state.recentSearches.length === 0) {
-                    elements.recentSearches.innerHTML = '<div class="recent-search">No recent searches</div>';
-                    return;
-                }
-
-                elements.recentSearches.innerHTML = state.recentSearches.map(search => `
-                    <div class="recent-search" data-query="${search}">
-                        <span>🔍</span>
-                        <span>${search}</span>
-                    </div>
-                `).join('');
-            },
-
-            // Render category filters
-            categoryFilters: () => {
-                elements.categoryFilters.innerHTML = sampleData.filters.map(filter => `
-                    <div class="filter-option ${state.activeFilter === filter.id ? 'active' : ''}" 
-                         data-filter="${filter.id}">
-                        <span class="filter-icon">${filter.icon}</span>
-                        <span class="filter-label">${filter.label}</span>
-                        <span class="filter-count">${filter.count}</span>
-                    </div>
-                `).join('');
-            },
-
-            // Render trending skills
-            trendingSkills: () => {
-                elements.trendingSkills.innerHTML = sampleData.trendingSkills.map(skill => `
-                    <div class="skill-tag-card" data-skill="${skill}">
-                        <span class="skill-tag">${skill}</span>
-                        <span class="skill-count">${Math.floor(Math.random() * 500) + 100}+</span>
-                    </div>
-                `).join('');
-            },
-
-            // Render results
-            results: () => {
-                if (state.results.length === 0) {
-                    elements.resultsGrid.innerHTML = `
-                        <div class="empty-state">
-                            <div class="empty-state-icon">🔍</div>
-                            <h3>No results found</h3>
-                            <p>Try adjusting your search terms or filters</p>
-                        </div>
-                    `;
-                    return;
-                }
-
-                elements.resultsGrid.innerHTML = state.results.map(item => `
-                    <div class="result-card" data-id="${item.id}">
-                        <div class="result-media">${item.icon}</div>
-                        <div class="result-content">
-                            <h3>${item.title}</h3>
-                            <p>${item.description}</p>
-                            <div class="result-tags">
-                                ${item.tags.map(tag => `<span class="result-tag">${tag}</span>`).join('')}
-                            </div>
-                            <div class="result-actions">
-                                <button class="action-btn primary-btn">View Details</button>
-                                <button class="action-btn secondary-btn">Save</button>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            },
-
-            // Update results title based on active filter
-            resultsTitle: () => {
-                const filter = sampleData.filters.find(f => f.id === state.activeFilter);
-                elements.resultsTitle.textContent = filter ? `${filter.label} (${state.results.length})` : 'Results';
-            },
-
-            // Update see all text based on active filter
-            seeAllResults: () => {
-                const filter = sampleData.filters.find(f => f.id === state.activeFilter);
-                elements.seeAllResults.textContent = filter ? `View all ${filter.label.toLowerCase()}` : 'View all';
-            },
-
-            // Render everything
-            all: () => {
-                render.quickFilters();
-                render.recentSearches();
-                render.categoryFilters();
-                render.trendingSkills();
-                render.resultsTitle();
-                render.seeAllResults();
-                render.results();
-            }
-        };
-
-        // Filter results based on active filter and search query
-        const filterResults = () => {
-            let filtered = sampleData.projects;
-
-            // Apply category filter
-            if (state.activeFilter !== 'all') {
-                filtered = filtered.filter(item => item.type === state.activeFilter);
+        // render timeline
+        function renderTimeline() {
+            timelineEl.innerHTML = '';
+            const page = state.page;
+            const size = state.pageSize;
+            const slice = state.filtered.slice(0, page * size);
+            if (slice.length === 0) {
+                timelineEl.innerHTML = `<div class="empty">No history found for the selected filters.</div>`;
+                return;
             }
 
-            // Apply search query
-            if (state.searchQuery) {
-                const query = state.searchQuery.toLowerCase();
-                filtered = filtered.filter(item =>
-                    item.title.toLowerCase().includes(query) ||
-                    item.description.toLowerCase().includes(query) ||
-                    item.tags.some(tag => tag.toLowerCase().includes(query))
-                );
+            const grouped = groupByDate(slice);
+            grouped.forEach(([date, items]) => {
+                const dayWrap = document.createElement('div');
+                dayWrap.className = 'timeline-day';
+
+                const dayMarker = document.createElement('div');
+                dayMarker.className = 'day-marker';
+                dayMarker.innerHTML = `<strong>${new Date(items[0].date).toLocaleDateString()}</strong><div class="muted" style="font-size:12px">${items.length} event(s)</div>`;
+
+                const dayItems = document.createElement('div');
+                dayItems.className = 'day-items';
+
+                items.forEach(ev => {
+                    const evNode = document.createElement('article');
+                    evNode.className = 'event';
+                    evNode.setAttribute('tabindex', '0');
+
+                    // compact vs full
+                    const avatar = `<div class="ev-avatar" style="background:linear-gradient(135deg, rgba(108,92,231,0.12), rgba(0,191,166,0.08));border:1px solid rgba(255,255,255,0.02)">${ev.type.slice(0, 2).toUpperCase()}</div>`;
+
+                    const metaTime = new Date(ev.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+                    const meta = `<div class="ev-meta"><h4>${ev.title}</h4><small>${metaTime}</small></div>`;
+
+                    const content = `<div class="ev-content">${ev.body || ''}</div>`;
+                    const actions = `<div class="ev-actions"><button class="action" data-id="${ev.id}" data-action="view">View</button><button class="action" data-id="${ev.id}" data-action="share">Share</button><span class="tag">${ev.type}</span></div>`;
+
+                    evNode.innerHTML = (state.compact ? `
+            ${avatar}
+            <div class="ev-body">
+              ${meta}
+              <div style="margin-top:6px;color:var(--muted);font-size:13px">${ev.body ? ev.body.slice(0, 80) + (ev.body.length > 80 ? '…' : '') : ''}</div>
+            </div>
+          ` : `
+            ${avatar}
+            <div class="ev-body">
+              ${meta}
+              ${content}
+              ${actions}
+            </div>
+          `);
+
+                    // add event listeners to actions
+                    evNode.querySelectorAll('.action').forEach(btn => {
+                        btn.addEventListener('click', (e) => {
+                            const id = Number(btn.dataset.id);
+                            const action = btn.dataset.action;
+                            if (action === 'view') showDetail(id);
+                            if (action === 'share') navigator.clipboard?.writeText(window.location.href + '#ev' + id).then(() => alert('Link copied to clipboard'));
+                        });
+                    });
+
+                    dayItems.appendChild(evNode);
+                });
+
+                dayWrap.appendChild(dayMarker);
+                dayWrap.appendChild(dayItems);
+                timelineEl.appendChild(dayWrap);
+            });
+
+            // update summary counts
+            updateStats();
+        }
+
+        // update stats summary
+        function updateStats() {
+            const all = state.items;
+            statPosts.textContent = all.filter(i => i.type === 'post').length;
+            statComments.textContent = all.filter(i => i.type === 'comment').length;
+            statLikes.textContent = all.filter(i => i.type === 'like').length + all.filter(i => i.type === 'reaction').length;
+            // recent types
+            const freq = {};
+            state.filtered.slice(0, 50).forEach(i => freq[i.type] = (freq[i.type] || 0) + 1);
+            recentTypes.innerHTML = '';
+            Object.keys(freq).sort((a, b) => freq[b] - freq[a]).slice(0, 6).forEach(k => {
+                const t = ACTIVITY_TYPES.find(x => x.key === k) || { label: k, color: '#888' };
+                const el = document.createElement('div');
+                el.className = 'tag';
+                el.style.display = 'inline-block';
+                el.style.marginBottom = '6px';
+                el.textContent = `${t.label} (${freq[k]})`;
+                recentTypes.appendChild(el);
+            });
+        }
+
+        // apply filters & search & date range
+        function applyFilters() {
+            const text = (searchText.value || '').trim().toLowerCase();
+            const from = document.getElementById('fromDate').value;
+            const to = document.getElementById('toDate').value;
+
+            let list = state.items.slice();
+
+            // filter by chips
+            if (state.activeChips.size) {
+                list = list.filter(it => state.activeChips.has(it.type));
             }
 
-            state.results = filtered;
-        };
-
-        // Add a search to recent searches
-        const addToRecentSearches = (query) => {
-            if (!query.trim()) return;
-
-            // Remove if already exists
-            state.recentSearches = state.recentSearches.filter(item => item !== query);
-
-            // Add to beginning
-            state.recentSearches.unshift(query);
-
-            // Keep only last 5 searches
-            state.recentSearches = state.recentSearches.slice(0, 5);
-
-            // Save to storage
-            storage.set('recentSearches', state.recentSearches);
-
-            // Update UI
-            render.recentSearches();
-        };
-
-        // Event handlers
-        const handleSearch = () => {
-            state.searchQuery = elements.searchInput.value.trim();
-            addToRecentSearches(state.searchQuery);
-            filterResults();
-            render.resultsTitle();
-            render.results();
-        };
-
-        const handleFilterChange = (filterId) => {
-            state.activeFilter = filterId;
-            storage.set('activeFilter', filterId);
-            filterResults();
-            render.all();
-        };
-
-        const handleRecentSearchClick = (query) => {
-            elements.searchInput.value = query;
-            handleSearch();
-        };
-
-        const handleClearHistory = () => {
-            state.recentSearches = [];
-            storage.set('recentSearches', []);
-            render.recentSearches();
-        };
-
-        const handleSkillClick = (skill) => {
-            elements.searchInput.value = skill;
-            handleSearch();
-        };
-
-        // Event listeners
-        elements.searchButton.addEventListener('click', handleSearch);
-
-        elements.searchInput.addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') {
-                handleSearch();
+            // date range
+            if (from) {
+                const f = new Date(from);
+                list = list.filter(it => new Date(it.date) >= f);
             }
+            if (to) {
+                const t = new Date(to);
+                // include end of day
+                t.setHours(23, 59, 59, 999);
+                list = list.filter(it => new Date(it.date) <= t);
+            }
+
+            // search
+            if (text) {
+                list = list.filter(it => (it.title + ' ' + (it.body || '')).toLowerCase().includes(text));
+            }
+
+            // sort newest first
+            list.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            state.filtered = list;
+            state.page = 1; // reset paging
+            renderTimeline();
+        }
+
+        // show detail modal
+        function showDetail(id) {
+            const ev = state.items.find(x => x.id === id);
+            if (!ev) return;
+            document.getElementById('detailTitle').textContent = ev.title;
+            document.getElementById('detailBody').innerHTML = `
+        <div style="color:var(--muted)">${new Date(ev.date).toLocaleString()}</div>
+        <div style="margin-top:10px">${ev.body || '<em>No details</em>'}</div>
+        <div style="margin-top:12px;color:var(--muted);font-size:13px">Meta: ${JSON.stringify(ev.meta || {})}</div>
+      `;
+            document.getElementById('detailModal').style.display = 'flex';
+        }
+
+        // export visible items to CSV
+        function exportCSV() {
+            const data = state.filtered.slice(0, state.page * state.pageSize);
+            if (data.length === 0) { alert('No items to export'); return; }
+            const rows = [['id', 'type', 'title', 'body', 'date', 'meta']];
+            data.forEach(r => {
+                rows.push([r.id, r.type, csvSafe(r.title), csvSafe(r.body), r.date, csvSafe(JSON.stringify(r.meta || {}))]);
+            });
+            const csv = rows.map(r => r.join(',')).join('\\n');
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a'); a.href = url; a.download = 'wiciki-history.csv'; a.click();
+            URL.revokeObjectURL(url);
+        }
+
+        function csvSafe(s = '') { return '"' + String(s).replace(/"/g, '""') + '"' }
+
+        // load initial items (mock)
+        async function loadInitial() {
+            // simulate network fetch with delay
+            await new Promise(r => setTimeout(r, 200));
+            // clone sample many times to simulate large history
+            const items = [];
+            for (let i = 0; i < 60; i++) {
+                const base = SAMPLE[i % SAMPLE.length];
+                const copy = Object.assign({}, base, { id: i + 1, date: new Date(Date.now() - i * 3600 * 1000 * 6).toISOString() });
+                items.push(copy);
+            }
+            // set items
+            state.items = items;
+            state.filtered = items.slice();
+            renderTimeline();
+        }
+
+        // simple "load more" to reveal additional items (simulate pagination)
+        function loadMore() {
+            const maxPages = Math.ceil(state.filtered.length / state.pageSize);
+            if (state.page < maxPages) {
+                state.page++;
+                renderTimeline();
+            } else {
+                loadingMore.style.display = 'block';
+                setTimeout(() => { loadingMore.style.display = 'none'; alert('No more history available'); }, 700);
+            }
+        }
+
+        // UI wiring
+        document.getElementById('closeModal').addEventListener('click', () => document.getElementById('detailModal').style.display = 'none');
+        btnLoadMore.addEventListener('click', loadMore);
+        btnRefresh.addEventListener('click', () => { applyFilters(); alert('Refreshed'); });
+        btnExport.addEventListener('click', exportCSV);
+        document.getElementById('btnExport').addEventListener('click', exportCSV);
+        btnSearch.addEventListener('click', applyFilters);
+        btnClear.addEventListener('click', () => {
+            state.activeChips.clear(); document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+            searchText.value = ''; document.getElementById('fromDate').value = ''; document.getElementById('toDate').value = '';
+            applyFilters();
+        });
+        btnToggle.addEventListener('click', () => {
+            state.compact = !state.compact;
+            btnToggle.textContent = state.compact ? 'Expanded' : 'Compact';
+            renderTimeline();
         });
 
-        elements.clearHistory.addEventListener('click', handleClearHistory);
-
-        // Delegated event listeners
-        document.addEventListener('click', (e) => {
-            // Quick filter buttons
-            if (e.target.closest('.quick-filter-btn')) {
-                const button = e.target.closest('.quick-filter-btn');
-                handleFilterChange(button.dataset.filter);
-            }
-
-            // Category filter options
-            if (e.target.closest('.filter-option')) {
-                const option = e.target.closest('.filter-option');
-                handleFilterChange(option.dataset.filter);
-            }
-
-            // Recent searches
-            if (e.target.closest('.recent-search')) {
-                const search = e.target.closest('.recent-search');
-                handleRecentSearchClick(search.dataset.query);
-            }
-
-            // Skill tags
-            if (e.target.closest('.skill-tag-card')) {
-                const card = e.target.closest('.skill-tag-card');
-                handleSkillClick(card.dataset.skill);
-            }
-
-            // See all results
-            if (e.target.id === 'seeAllResults') {
-                state.activeFilter = 'all';
-                state.searchQuery = '';
-                elements.searchInput.value = '';
-                filterResults();
-                render.all();
-            }
+        // simple keyboard accessibility for Enter key on timeline items
+        document.addEventListener('keyup', (e) => {
+            if (e.key === 'Escape') document.getElementById('detailModal').style.display = 'none';
         });
 
-        // Initialize the application
-        const init = () => {
-            // Set the active filter from storage
-            state.activeFilter = storage.get('activeFilter', 'all');
+        // initialize
+        renderChips();
+        loadInitial();
 
-            // Set recent searches from storage
-            state.recentSearches = storage.get('recentSearches', []);
+        // Hook: Example of how to replace mock load with real API (pseudo)
+        /*
+        async function fetchFromBackend(){
+          const token = '...'; // get from cookies
+          const res = await fetch('/api/user/history',{
+            headers: { Authorization: 'Bearer ' + token }
+          });
+          const json = await res.json();
+          state.items = json.items; // map fields as needed
+          applyFilters();
+        }
+        */
 
-            // Filter results based on initial state
-            filterResults();
-
-            // Render everything
-            render.all();
-        };
-
-        // Start the application
-        init();
     </script>
 </body>
 

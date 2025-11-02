@@ -30,10 +30,10 @@ const SettingsPage = ({ isOpen, onClose }) => {
 
   // Settings state (kept keys you had; consider normalizing profileVisibility vs profilevisibility later)
   const [settings, setSettings] = useState({
-    pushNotifications: true,
+    pushNotifications: false,
     emailNotifications: false,
     smsNotifications: false,
-    soundEnabled: true,
+    soundEnabled: false,
     vibration: true,
     profileVisibility: 'public', // string (select)
     messageRequests: 'everyone',
@@ -41,11 +41,13 @@ const SettingsPage = ({ isOpen, onClose }) => {
     locationServices: false,
     dataSaver: false,
     profilevisibility: false, // boolean toggle (confusing duplicate — consider renaming)
-    darkMode: true,
+    // darkMode: true,
     reduceMotion: false,
     fontSize: 'medium',
+    imageQuality: "high",
     language: 'english',
     twoFactorAuth: false,
+    Deactivate: false,
     loginAlerts: false,
     backupData: false,
     allowMessages: false,
@@ -55,7 +57,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
   });
 
   // toggle/select helper state
-  const [isEditing, setIsEditing] = useState(true);
+  const [isEditing, setIsEditing] = useState(false);
   const [selectedLangs, setSelectedLangs] = useState([]);
   const [selectedTech, setSelectedTech] = useState([]);
   const [activeSection, setActiveSection] = useState('general');
@@ -90,6 +92,129 @@ const SettingsPage = ({ isOpen, onClose }) => {
       setloadsave(false)
     }
   }
+
+  const [loadsavegeneral, setloadsavegeneral] = useState(false)
+
+  const savegeneral = async (e) => {
+    e.preventDefault()
+    try {
+      setloadsavegeneral(true)
+      const updateprivacy = await axios.post("https://wicikibackend.onrender.com/decode/update/notifications",
+        {
+          PushNotifications: settings.pushNotifications,
+          emailsmsNotifications: settings.emailNotifications,
+          NotificationSounds: settings.soundEnabled
+        })
+
+      if (updateprivacy.status == 200) {
+        toast.success(updateprivacy.data.message, { id: "privacy", duration: 3000 })
+
+      } else {
+        toast.error(updateprivacy.data.message)
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error(error?.message)
+    } finally {
+      setloadsavegeneral(false)
+    }
+  }
+
+  const [loadsaveappearance, setloadsaveappearance] = useState(false)
+
+  const saveappearance = async (e) => {
+    e.preventDefault()
+    try {
+      setloadsaveappearance(true)
+      const updateprivacy = await axios.post("https://wicikibackend.onrender.com/decode/update/display",
+        {
+          FontSize: settings.fontSize,
+          ReduceMotion: settings.reduceMotion,
+          imageAndVideoQuality: settings.imageQuality
+        })
+
+      if (updateprivacy.status == 200) {
+        toast.success(updateprivacy.data.message, { id: "privacy", duration: 3000 })
+
+      } else {
+        toast.error(updateprivacy.data.message)
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error(error?.message)
+    } finally {
+      setloadsaveappearance(false)
+    }
+  }
+
+  const deactivateaccount = async (e) => {
+    e.preventDefault()
+    try {
+      setloadsaveappearance(true)
+      const updateprivacy = await axios.post("https://wicikibackend.onrender.com/decode/update/deactivate",
+        {
+          Deactivate: settings.Deactivate
+        })
+
+      if (updateprivacy.status == 200) {
+        toast.success(updateprivacy.data.message, { id: "privacy", duration: 3000 })
+
+      } else {
+        toast.error(updateprivacy.data.message)
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error(error?.message)
+    } finally {
+      setloadsaveappearance(false)
+    }
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+  const [userbio, setuserbio] = useState("")
+
+  const savebio = async (e) => {
+    e.preventDefault()
+    try {
+      setloadsaveappearance(true)
+      const updateprivacy = await axios.post("https://wicikibackend.onrender.com/decode/update/bio",
+        {
+          BIO: userbio
+        })
+
+      if (updateprivacy.status == 200) {
+        toast.success(updateprivacy.data.message, { id: "privacy", duration: 3000 })
+
+      } else {
+        toast.error(updateprivacy.data.message)
+      }
+
+    } catch (error) {
+      console.error(error);
+      toast.error(error?.message)
+    } finally {
+      setloadsaveappearance(false)
+    }
+  }
+
+  useEffect(() => {
+    if (user?.personalised?.BIO !== undefined) {
+      setuserbio(user.personalised.BIO);
+    }
+  }, [user?.personalised?.BIO]);
 
   // Data lists
   const spokenLanguages = [
@@ -220,6 +345,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
     //     setLoading(false);
     //   }
     // };
+
     const getUser = async () => {
       if (!token) {
         console.warn('No token for SettingsPage');
@@ -233,7 +359,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
         });
 
         if (res.status === 200) {
-          // prefer .data.user but fall back to .data
+          1          // prefer .data.user but fall back to .data
           const fetchedUser = res.data?.user ?? res.data;
           setUser(fetchedUser);
 
@@ -293,14 +419,54 @@ const SettingsPage = ({ isOpen, onClose }) => {
             fetchedUser?.loginAlerts ??
             null
           );
+          const backendBoolpushNotifications =
+            toBoolOrNull(
+              fetchedUser?.personalised?.PushNotifications ??
+              fetchedUser?.PushNotifications ??
+              fetchedUser?.PushNotifications ??
+              null
+            );
+          const backendBoolemailNotifications = toBoolOrNull(
+            fetchedUser?.personalised?.emailsmsNotifications ??
+            fetchedUser?.emailsmsNotifications ??
+            fetchedUser?.emailsmsNotifications ??
+            null
+          );
+          const backendBoolsoundEnabled = toBoolOrNull(
+            fetchedUser?.personalised?.NotificationSounds ??
+            fetchedUser?.NotificationSounds ??
+            fetchedUser?.NotificationSounds ??
+            null
+          );
 
+          const backendBoolreduceMotion = toBoolOrNull(
+            fetchedUser?.personalised?.ReduceMotion ??
+            fetchedUser?.ReduceMotion ??
+            fetchedUser?.ReduceMotion ??
+            null
+          );
+          const backendBoolDeactivate = toBoolOrNull(
+            fetchedUser?.personalised?.Deactivate ??
+            fetchedUser?.Deactivate ??
+            fetchedUser?.Deactivate ??
+            null
+          );
           // pick any profile-visibility string the backend might provide
           const profileVisibilityString =
             fetchedUser?.profileVisibility ??
             fetchedUser?.profilevissibility ?? // possible misspelling in backend
             fetchedUser?.profilevissibility ??
             null;
-
+          const fontSizestring =
+            fetchedUser?.FontSize ??
+            fetchedUser?.FontSize ?? // possible misspelling in backend
+            fetchedUser?.FontSize ??
+            null;
+          const imageQualitystring =
+            fetchedUser?.imageAndVideoQuality ??
+            fetchedUser?.imageAndVideoQuality ?? // possible misspelling in backend
+            fetchedUser?.imageAndVideoQuality ??
+            null;
           setSettings(prev => ({
             ...prev,
             allowMessages: backendBoolallowMessages ?? prev.allowMessages,
@@ -310,8 +476,14 @@ const SettingsPage = ({ isOpen, onClose }) => {
             ShowAllMentors: backendBoolShowAllMentors ?? prev.ShowAllMentors,
             loginAlerts: backendBoolloginAlerts ?? prev.loginAlerts,
             twoFactorAuth: backendBooltwoFactorAuth ?? prev.twoFactorAuth,
-            // preserve previously-used string if backend didn't return one
+            pushNotifications: backendBoolpushNotifications ?? prev.pushNotifications,
+            emailNotifications: backendBoolemailNotifications ?? prev.emailNotifications,
+            soundEnabled: backendBoolsoundEnabled ?? prev.soundEnabled,
+            reduceMotion: backendBoolreduceMotion ?? prev.reduceMotion,
             profileVisibility: profileVisibilityString ?? prev.profileVisibility,
+            fontSize: fontSizestring ?? prev.fontSize,
+            Deactivate: backendBoolDeactivate ?? prev.Deactivate,
+            imageQuality: imageQualitystring ?? prev.imageQuality
           }));
 
           // map backend spoken/programming languages into canonical lists for the UI
@@ -405,9 +577,24 @@ const SettingsPage = ({ isOpen, onClose }) => {
       icon: <Bell size={20} />,
       title: 'Notifications',
       settings: [
-        { type: 'toggle', key: 'pushNotifications', label: 'Push Notifications', description: 'Receive notifications on your device', value: settings.pushNotifications },
-        { type: 'toggle', key: 'emailNotifications', label: 'Email Notifications', description: 'Get updates via email', value: settings.emailNotifications },
-        { type: 'toggle', key: 'soundEnabled', label: 'Notification Sounds', description: 'Play sounds for new notifications', value: settings.soundEnabled }
+        {
+          type: 'toggle', key: 'pushNotifications',
+          label: loading ? "loading.." : 'Push Notifications',
+          description: 'Receive notifications on your device',
+          value: settings.pushNotifications
+        },
+        {
+          type: 'toggle', key: 'emailNotifications',
+          label: loading ? "loading.." : 'Email & sms Notifications',
+          description: 'Get updates via email',
+          value: settings.emailNotifications
+        },
+        {
+          type: 'toggle', key: 'soundEnabled',
+          label: loading ? "loading.." : 'Notification Sounds',
+          description: 'Play sounds for new notifications',
+          value: settings.soundEnabled
+        }
       ]
     },
     privacy: {
@@ -454,18 +641,21 @@ const SettingsPage = ({ isOpen, onClose }) => {
       icon: <Palette size={20} />,
       title: 'Theme & Appearance',
       settings: [
-        { type: 'toggle', key: 'darkMode', label: 'Dark Mode', description: 'Use dark theme across app', value: settings.darkMode },
-        { type: 'select', key: 'fontSize', label: 'Font Size', description: 'Adjust text size', value: settings.fontSize, options: [{ label: 'Small', value: 'small' }, { label: 'Medium', value: 'medium' }, { label: 'Large', value: 'large' }] },
-        { type: 'toggle', key: 'reduceMotion', label: 'Reduce Motion', description: 'Minimize animations', value: settings.reduceMotion }
+        // { type: 'toggle', key: 'darkMode', label: 'Dark Mode', description: 'Use dark theme across app', value: settings.darkMode },
+        { type: 'select', key: 'fontSize', label: loading ? "loading.." : 'Font Size', description: 'Adjust text size', value: settings.fontSize, options: [{ label: 'Small', value: 'small' }, { label: 'Medium', value: 'medium' }, { label: 'Large', value: 'large' }] },
+        { type: 'toggle', key: 'reduceMotion', label: loading ? "loading.." : 'Reduce Motion', description: 'Minimize animations', value: settings.reduceMotion },
+
+        { type: 'select', key: 'imageQuality', label: loading ? "loading.." : 'Image And Video Quality', description: 'Adjust text size', value: settings.imageQuality, options: [{ label: 'Low', value: 'low' }, { label: 'Medium', value: 'medium' }, { label: 'High', value: 'high' }] },
+
       ]
     },
     account: {
       icon: <User size={20} />,
       title: 'Account Settings',
       settings: [
-        { type: 'button', key: 'changePassword', label: 'Change Password', description: 'Update your login password' },
-        { type: 'button', key: 'backupData', label: 'Backup Data', description: 'Download your information' },
-        { type: 'button', key: 'deactivate', label: 'Deactivate Account', description: 'Temporarily disable your account', danger: true }
+        // { type: 'button', key: 'changePassword', label: 'Change Password', description: 'Update your login password' },
+        // { type: 'button', key: 'backupData', label: 'Backup Data', description: 'Download your information' },
+        { type: 'toggle', key: 'Deactivate', label: loading ? "loading.." : 'Deactivate Account', description: 'Temporarily disable your account', value: settings.Deactivate }
       ]
     }
   };
@@ -488,7 +678,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
 
             <button className="robin-search">
               <i className="search-icon"><SearchCheckIcon /> </i>
-              <span className="search-text">Search settings</span>
+              <span className="search-text">Search something</span>
             </button>
 
             <button className="robin-close" onClick={onClose} aria-label="Close settings">
@@ -631,8 +821,10 @@ const SettingsPage = ({ isOpen, onClose }) => {
 
                       <div style={{ marginTop: 12 }}>
                         <button className="submit-btn1" onClick={handleSaveWorkInfo} disabled={!isEditing || loadingsaving}>
-                          {loadingsaving ? 'Saving...' : '💾 Save Work Info'}
+                          {loadingsaving ? 'Saving...' : 'Save Work Info'}
                         </button>
+
+
                       </div>
                     </div>
                   </div>
@@ -669,6 +861,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
                           </select>
                         )}
 
+
                         {item.type === 'button' && (
                           <button className={`owl-action ${item.danger ? 'danger' : ''}`}>
                             <ChevronRight size={16} />
@@ -679,7 +872,79 @@ const SettingsPage = ({ isOpen, onClose }) => {
                   </div>
                 ))}
                 {(activeSection === "privacy" &&
-                  <button className='SaveSettings' style={{ opacity: loadsave && 0.5 }} onClick={saveprivacy} disabled={loadsave}>{loadsave ? "loading.." : "Save Settings"}</button>
+                  <button className='SaveSettings' style={{ opacity: loadsave && 0.5, cursor: loadsave && "not-allowed" }} onClick={saveprivacy} disabled={loadsave}>{loadsave ? "loading.." : "Save Settings"}</button>
+                )}
+                {(activeSection === "general" &&
+                  <button className='SaveSettings' style={{ opacity: loadsavegeneral && 0.5, cursor: loadsavegeneral && "not-allowed" }} onClick={savegeneral} disabled={loadsavegeneral}>{loadsavegeneral ? "loading.." : "Save Settings"}</button>
+                )}
+                {(activeSection === "appearance" &&
+                  <button className='SaveSettings' style={{ opacity: loadsaveappearance && 0.5, cursor: loadsaveappearance && "not-allowed" }} onClick={saveappearance} disabled={loadsaveappearance}>{loadsaveappearance ? "loading.." : "Save Settings"}</button>
+                )}
+                {/*  */}
+                {(activeSection === "account" &&
+                  <>
+                    <button className='SaveSettings' style={{ opacity: loadsaveappearance && 0.5, cursor: loadsaveappearance && "not-allowed" }} onClick={deactivateaccount} disabled={loadsaveappearance}>{loadsaveappearance ? "loading.." : "Save Settings"}</button>
+
+
+                    <div className="account-history">
+                      {/* LEFT PANEL */}
+                      <div className="account-left">
+                        <div className="section-header">
+                          <h3>About <span>{user?.name}</span></h3>
+                          <button className="edit-btn" onClick={savebio} disabled={loadsaveappearance}>
+                            {loadsaveappearance ? "loading.." : "save"}
+                          </button>
+                        </div>
+
+                        <div className="bio-section">
+                          <label htmlFor="bio" className="label">Bio</label>
+                          <textarea
+                            id="bio"
+                            className="textarefore"
+                            placeholder="Write something about yourself..."
+                            onChange={(e) => setuserbio(e.target.value)}
+                            value={userbio}
+
+                          />
+                        </div>
+
+                        <div className="details">
+                          <label className="label">Email:</label>
+                          <p>{user?.email}</p>
+
+                          <label className="labeling">Username:</label>
+                          <p>@{user?.name}</p>
+
+                          {/* <label className="labeling">Role:</label>
+                          <p>{user?.personalised?.whoareyou}</p> */}
+                        </div>
+                      </div>
+
+                      {/* RIGHT PANEL */}
+                      <div className="account-right">
+                        <h3>Account History</h3>
+                        <div className="history-card">
+                          <p>
+                            <strong>Created On:</strong>{" "}
+                            {user?.createdAt
+                              ? new Date(user.createdAt).toLocaleString()
+                              : "Unknown"}
+                          </p>
+                          {/* <p>
+                            <strong>Last Updated:</strong>{" "}
+                            {user?.updatedAt
+                              ? new Date(user.updatedAt).toLocaleString()
+                              : "Not available"}
+                          </p> */}
+                          <p>
+                            <strong>Status:</strong>{" "}
+                            <span className="status active">Active</span>
+                          </p>
+                        </div>
+                      </div>
+                    </div>
+
+                  </>
                 )}
               </div>
             </div>

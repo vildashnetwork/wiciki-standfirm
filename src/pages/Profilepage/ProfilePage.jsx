@@ -134,6 +134,18 @@ const ProfilePage = () => {
     }
   }, [token, name]);
 
+  const [isright, setisright] = useState(false)
+
+  useEffect(() => {
+    const isrightuser = async () => {
+      if (user?._id == usera?._id) {
+        setisright(true)
+      } else {
+        setisright(false)
+      }
+    }
+    isrightuser()
+  }, [user, usera])
 
 
   useEffect(() => {
@@ -513,7 +525,17 @@ const ProfilePage = () => {
                 {/* Header */}
                 <div className={styles.headerSection}>
                   <h2 className={styles.titleme}>About  {usera?.name}</h2>
-                  <p className={styles.subtitle}>{usera?.personalised?.BIO}</p>
+                  <p className={styles.subtitle}>{usera?.personalised?.BIO}
+                    {/* {isright && <span style={{
+                      color: "#747474ff",
+                      padding: "6px",
+                      width: "20px",
+                      borderBottom: "1px solid #ab000d",
+                      cursor: "pointer"
+
+                    }}>edit</span>} */}
+                    {/* {loading && "load.."} */}
+                  </p>
                 </div>
 
                 {/* Bio */}
@@ -726,31 +748,46 @@ const ProfilePage = () => {
                 onComment={handleComment}
               />
             </div>
-          </div>
+          </div >
         );
 
       case "About":
         return (
-          <div className={styles.aboutCard}>
+          <div className={styles.aboutCard} style={{ display: usera?.personalised?.profilevisibility ? "block" : "none" }}>
             {/* Header */}
             <div className={styles.headerSection}>
-              <h2 className={styles.titleme}>About {usera?.name}</h2>
-              <p className={styles.subtitle}>Building experiences that blend creativity and logic</p>
+              <h2 className={styles.titleme}>About  {usera?.name}</h2>
+              <p className={styles.subtitle}>{usera?.personalised?.BIO}
+                {isright && <span style={{
+                  color: "#747474ff",
+                  padding: "6px",
+                  width: "20px",
+                  borderBottom: "1px solid #ab000d",
+                  cursor: "pointer"
+
+                }}>edit</span>}
+                {loading && "load.."}
+              </p>
             </div>
 
             {/* Bio */}
             <div className={styles.bioSection}>
               <div className={styles.rowItem}>
                 <Briefcase className={styles.icon} />
-                <span><strong>Profession:</strong> Full-Stack Developer</span>
+                <span><strong>Profession:</strong> {user?.proffession}</span>
               </div>
               <div className={styles.rowItem}>
                 <MapPin className={styles.icon} />
-                <span><strong>Location:</strong> Accra, Ghana</span>
+                {userlocation ? (
+                  <p><strong>Full Address:</strong> {userlocation.fullAddress}</p>
+
+                ) : (
+                  <p>Loading location...</p>
+                )}
               </div>
               <div className={styles.rowItem}>
                 <GraduationCap className={styles.icon} />
-                <span><strong>Education:</strong> University of Ghana</span>
+                <span><strong>Education:</strong> {user?.Education}</span>
               </div>
               <div className={styles.rowItem}>
                 <Globe className={styles.icon} />
@@ -771,10 +808,10 @@ const ProfilePage = () => {
             <div className={styles.skillsSection}>
               <h3>Technical Skills</h3>
               <div className={styles.skillGrid}>
-                {skills.map((skill, i) => (
+                {user?.ProgrammingLanguages?.map((skill, i) => (
                   <div key={i} className={styles.skillBadge}>
-                    {skill.icon}
-                    <span>{skill.name}</span>
+                    {/* {skill.icon} */}
+                    <span>{skill}</span>
                   </div>
                 ))}
               </div>
@@ -783,15 +820,16 @@ const ProfilePage = () => {
             {/* Stats */}
             <div className={styles.statsSection}>
               <div className={styles.statBox}>
-                <h4>6+</h4>
+                <h4>{user?.YearsOfExperience}+</h4>
                 <p>Years of Experience</p>
               </div>
               <div className={styles.statBox}>
-                <h4>50+</h4>
+                <h4>{user?.ProjectsCompleted}+</h4>
                 <p>Projects Completed</p>
               </div>
               <div className={styles.statBox}>
-                <h4>10+</h4>
+                <h4>{user?.ProgrammingLanguages?.length}+</h4>
+
                 <p>Programming Languages</p>
               </div>
             </div>
@@ -800,11 +838,16 @@ const ProfilePage = () => {
             <div className={styles.languagesSection}>
               <h3>Languages</h3>
               <div className={styles.languageList}>
-                {languages.map((lang, i) => (
-                  <span key={i} className={styles.languageTag}>
-                    {lang}
-                  </span>
-                ))}
+                {user?.SpokenLanguages?.length > 0 ? (
+                  user.SpokenLanguages.map((lang, i) => (
+                    <span key={i} className={styles.languageTag}>
+                      {lang}
+                    </span>
+                  ))
+                ) : (
+                  <span className={styles.languageTag}>No languages added</span>
+                )}
+
               </div>
             </div>
           </div>

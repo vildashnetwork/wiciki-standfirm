@@ -71,7 +71,7 @@ function AppContent() {
   const handleCreatePost = (post) => {
     console.log('New post created:', post);
     // Here you can add logic to update state or send post to backend
-    navigate(-1); // Go back after creating post
+    navigate(-1);
   };
   // Your posts state and handlers
   const [posts, setPosts] = useState([]);
@@ -143,6 +143,40 @@ function AppContent() {
 
 
 
+  // function setCookie(name, value, days) {
+  //   let expires = "";
+  //   if (days) {
+  //     const date = new Date();
+  //     date.setTime(date.getTime() + days * 24 * 60 * 60 * 1000);
+  //     expires = "; expires=" + date.toUTCString();
+  //   }
+  //   document.cookie = `${name}=${value || ""}${expires}; path=/; SameSite=Lax`;
+  // }
+
+  // useEffect(() => {
+  //   const query = new URLSearchParams(location.search);
+  //   const token = query.keys().next().value;
+
+  //   if (token) {
+  //     try {
+  //       setCookie("token", token, 7);
+  //       console.log("✅ Token saved as cookie:", token);
+
+
+  //       navigate("/questions", { replace: true });
+  //     } catch (error) {
+  //       console.error("❌ Error setting cookie:", error);
+  //     }
+  //   } else {
+  //     console.warn("⚠️ No token found in URL.");
+  //   }
+  // }, [location, navigate]);
+
+
+
+
+
+  // keep your original setCookie function exactly as you requested
   function setCookie(name, value, days) {
     let expires = "";
     if (days) {
@@ -153,24 +187,53 @@ function AppContent() {
     document.cookie = `${name}=${value || ""}${expires}; path=/; SameSite=Lax`;
   }
 
+  // improved token-extracting effect (replace your old useEffect with this)
   useEffect(() => {
-    const query = new URLSearchParams(location.search);
-    const token = query.keys().next().value;
+    try {
+      const query = new URLSearchParams(location.search);
 
-    if (token) {
-      try {
+      // 1) prefer explicit keys
+      let token = query.get("token") || query.get("t") || null;
+
+      // JWT regex (simple check for header.payload.signature)
+      const jwtRegex = /^[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+$/;
+
+      // 2) if not found, handle case like ?<JWT>  (the token is the raw search string or the param name)
+      if (!token && location.search) {
+        const raw = location.search.startsWith("?") ? location.search.slice(1) : location.search; // remove leading '?'
+        // if it's plain `key` (no '=') and matches JWT format => treat it as token
+        if (!raw.includes("=")) {
+          const decoded = decodeURIComponent(raw).trim();
+          if (jwtRegex.test(decoded)) token = decoded;
+        } else {
+          // otherwise, check if any **param name** matches a JWT (handles ?<JWT>= or malformed cases)
+          for (const [k] of query.entries()) {
+            if (jwtRegex.test(k)) { token = k; break; }
+          }
+        }
+      }
+
+      // 3) also check pathname for a pasted token (e.g. /%20auth?eyJ... or /auth/<token>)
+      if (!token) {
+        const pathMatch = location.pathname.match(/[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+\.[A-Za-z0-9\-_]+/);
+        if (pathMatch) token = pathMatch[0];
+      }
+
+      if (token) {
+        // use your setCookie function exactly
         setCookie("token", token, 7);
         console.log("✅ Token saved as cookie:", token);
 
-
-        navigate("/questions");
-      } catch (error) {
-        console.error("❌ Error setting cookie:", error);
+        // navigate to questions (same as original behavior)
+        navigate("/questions", { replace: true });
+      } else {
+        console.warn("⚠️ No token found in URL.");
       }
-    } else {
-      console.warn("⚠️ No token found in URL.");
+    } catch (err) {
+      console.error("Error processing token from URL:", err);
     }
   }, [location, navigate]);
+
 
 
 

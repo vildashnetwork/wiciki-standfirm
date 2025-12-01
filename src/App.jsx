@@ -22,11 +22,15 @@ import AddStatusModal from './pages/Gists/AddStatusModal/AddStatusModal';
 import FullScreenPost from './pages/Gists/Feed/fullscreen/FullScreenPost';
 import { Toaster } from 'react-hot-toast';
 import ResetPassword from './pages/ResetPassword/Resetpassword';
-
+import { useAuthStore } from './pages/Vibespage/store/useAuthStore'
 function AppContent() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isFullscreenMode, setIsFullscreenMode] = useState(false);
   const [currentReelIndex, setCurrentReelIndex] = useState(0);
+
+
+
+
 
 
 
@@ -222,6 +226,7 @@ function AppContent() {
       if (token) {
         // use your setCookie function exactly
         setCookie("token", token, 7);
+        localStorage.setItem("token", token)
         console.log("✅ Token saved as cookie:", token);
 
         // navigate to questions (same as original behavior)
@@ -323,6 +328,20 @@ function AppContent() {
 }
 
 export default function App() {
+  
+  //truama
+
+  const { authUser, isCheckingAuth, onlineUsers } = useAuthStore();
+  console.log(onlineUsers);
+  
+   const checkAuth = useAuthStore((s) => s.checkAuth);
+
+  useEffect(() => {
+    checkAuth();
+  }, [checkAuth]);
+
+
+  //end truama
   return (
     <Router>
       <AppContent />

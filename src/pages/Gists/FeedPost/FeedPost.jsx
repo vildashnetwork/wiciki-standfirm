@@ -305,7 +305,7 @@ const FeedPost = ({ post, onLike, onComment, onLikeComment }) => {
                     </div>
                 </div>
 
-                <div className="post-content">{post.content}</div>
+                <div className="post-content">{post.content.slice(0, 30)}</div>
 
                 {post.mediaUrl && (
                     <div className="post-media">

@@ -1,876 +1,1186 @@
-<!doctype html>
-<html lang="en">
+// import { Tabs } from 'expo-router';
+// import React from 'react';
+// import { View, Text, Image, TouchableOpacity, StyleSheet } from 'react-native';
+// import { SafeAreaView } from 'react-native-safe-area-context';
 
-<head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width,initial-scale=1" />
-    <title>WICIKI — Account History</title>
-    <style>
-        /* ===========================
-       WICIKI Account History Page
-       Single-file: HTML + CSS + JS
-       =========================== */
+// import { HapticTab } from '@/components/haptic-tab';
+// import { IconSymbol } from '@/components/ui/icon-symbol';
+// import { Colors } from '@/constants/theme';
+// import { useColorScheme } from '@/hooks/use-color-scheme';
 
-        :root {
-            /* brand colors (WICIKI-style) */
-            --brand-600: #6C5CE7;
-            /* deep violet */
-            --brand-400: #8E7BFB;
-            /* soft violet */
-            --accent-500: #00BFA6;
-            /* teal accent */
-            --bg: #0f1720;
-            /* dark page background */
-            --card: #0b1220;
-            --muted: #98A0B3;
-            --glass: rgba(255, 255, 255, 0.03);
-            --glass-2: rgba(255, 255, 255, 0.02);
-            --radius: 12px;
-            --glass-border: rgba(255, 255, 255, 0.04);
-            --success: #22c55e;
-            --danger: #ff6b6b;
-            --text: #E6EEF6;
-            --shadow: 0 6px 18px rgba(2, 6, 23, 0.6);
-            --max-width: 1100px;
+// export default function TabLayout() {
+//   const colorScheme = useColorScheme();
+
+//   // Custom top header
+//   const renderHeader = () => (
+//     <SafeAreaView edges={['top']} style={styles.safeHeader}>
+//       <View style={styles.header}>
+//         {/* Sidebar / Menu button */}
+//         <TouchableOpacity onPress={() => console.log('Open sidebar')}>
+//           <IconSymbol name="line.horizontal.3" size={28} color="#fff" />
+//         </TouchableOpacity>
+
+//         {/* App title */}
+//         <Text style={styles.title}>WICIKI</Text>
+
+//         {/* Profile picture */}
+//         <TouchableOpacity onPress={() => console.log('Go to profile')}>
+//           <Image
+//             source={{ uri: 'https://randomuser.me/api/portraits/men/32.jpg' }}
+//             style={styles.avatar}
+//           />
+//         </TouchableOpacity>
+//       </View>
+//     </SafeAreaView>
+//   );
+
+//   return (
+
+// <Tabs
+//   screenOptions={{
+//     tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+//     tabBarButton: HapticTab,
+//     header: renderHeader,
+//     tabBarStyle: {
+//       backgroundColor: "#0b0b0b",
+//       borderBottomColor: 'rgba(255,255,255,0.1)',
+//     },
+//   }}
+
+// >
+//   <Tabs.Screen
+//     name="index"
+//     options={{
+//       title: 'Home',
+//       tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+//     }}
+//   />
+//   <Tabs.Screen
+//     name="explore"
+//     options={{
+//       title: 'Explore',
+//       tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+//     }}
+//   />
+// </Tabs >
+//   );
+// }
+
+// const styles = StyleSheet.create({
+//   safeHeader: {
+//     backgroundColor: '#0b0b0b',
+//   },
+//   header: {
+//     height: 60,
+//     flexDirection: 'row',
+//     alignItems: 'center',
+//     justifyContent: 'space-between',
+//     paddingHorizontal: 12,
+//     borderBottomWidth: 1,
+//     borderBottomColor: 'rgba(255,255,255,0.1)',
+//   },
+//   title: { color: '#fff', fontSize: 18, fontWeight: 'bold' },
+//   avatar: { width: 36, height: 36, borderRadius: 18 },
+// });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// app/(tabs)/_layout.js
+import { Picker } from "@react-native-picker/picker";
+import { HapticTab } from "@/components/haptic-tab";
+import { Colors } from "@/constants/theme";
+import { useColorScheme } from "@/hooks/use-color-scheme";
+import { MaterialCommunityIcons } from '@expo/vector-icons';
+import { Tabs, usePathname, useRouter } from "expo-router";
+import React, { useRef, useState, useEffect, useCallback } from "react";
+import { Switch, TextInput } from "react-native";
+import {
+  Animated,
+  Dimensions,
+  Image,
+  PanResponder,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  Platform,
+} from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { Alert } from "react-native";
+
+const SCREEN_WIDTH = Dimensions.get("window").width;
+const DRAWER_WIDTH = SCREEN_WIDTH; // full screen width drawer
+const EDGE_ACTIVATE_WIDTH = 22; // left-edge activation for opening drawer
+const TAB_SWIPE_MIN_DISTANCE = 50;
+const TAB_SWIPE_VELOCITY = 0.25;
+const H_MOVE_THRESHOLD = 6;
+
+export default function TabLayout() {
+  const router = useRouter();
+  const pathname = usePathname?.() ?? "/";
+  const colorScheme = useColorScheme?.() ?? "light";
+
+  // Tabs order (must match your Tabs.Screen names/paths)
+  const tabs = ["/", "/explore"];
+  const currentIndex = Math.max(0, tabs.indexOf(pathname) || 0);
+
+  // Drawer animation & state
+  const translateX = useRef(new Animated.Value(-DRAWER_WIDTH)).current;
+  const [isOpen, setIsOpen] = useState(false);
+  let size = 25;
+  // Drawer internal tab state (top horizontal nav inside drawer)
+  const drawerNavItems = [
+    {
+      key: "Privacy&Security",
+      label: "Privacy",
+      icon: <MaterialCommunityIcons size={size} name="shield-account" color={"#fff"} />
+    },
+    {
+      key: "AccountSettings",
+      label: "Account info",
+      icon: <MaterialCommunityIcons size={size} name="account-circle" color={"#fff"} />
+    },
+    {
+      key: "notifications",
+      label: "Notifications",
+      icon: <MaterialCommunityIcons size={size} name="bell" color={"#fff"} />
+    },
+    {
+      key: "Appearance",
+      label: "Appearance",
+      icon: <MaterialCommunityIcons size={size} name="palette" color={"#fff"} />
+    },
+  ];
+  const [drawerActiveTab, setDrawerActiveTab] = useState(drawerNavItems[0].key);
+
+  // temp drag value
+  const dragOffset = useRef(0);
+  const gestureType = useRef("none"); // "none" | "drawer" | "tabs"
+
+  const openDrawer = (duration = 240) => {
+    setIsOpen(true);
+    Animated.timing(translateX, {
+      toValue: 0,
+      duration,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const closeDrawer = (duration = 240) => {
+    Animated.timing(translateX, {
+      toValue: -DRAWER_WIDTH,
+      duration,
+      useNativeDriver: true,
+    }).start(() => setIsOpen(false));
+  };
+
+  const navigateTo = (path) => {
+    closeDrawer();
+    setTimeout(() => router.push(path), 160);
+  };
+
+  const goToIndex = (index) => {
+    if (index < 0 || index >= tabs.length) return;
+    router.push(tabs[index]);
+  };
+
+  // PanResponder handles both drawer swipe and tab swipe
+  const panResponder = useRef(
+    PanResponder.create({
+      onStartShouldSetPanResponder: () => false,
+      onMoveShouldSetPanResponder: (evt, gs) => {
+        const { dx, dy, x0 } = gs;
+        if (Math.abs(dx) > Math.abs(dy) && Math.abs(dx) > H_MOVE_THRESHOLD) {
+          if (isOpen) return true;
+          if (x0 <= EDGE_ACTIVATE_WIDTH && dx > 0) return true;
+          return true;
+        }
+        return false;
+      },
+      onPanResponderGrant: () => {
+        gestureType.current = "none";
+        dragOffset.current = 0;
+      },
+      onPanResponderMove: (evt, gs) => {
+        const { dx, x0 } = gs;
+        if (gestureType.current === "none") {
+          if (isOpen) gestureType.current = "drawer";
+          else {
+            if (x0 <= EDGE_ACTIVATE_WIDTH && dx > 0) gestureType.current = "drawer";
+            else gestureType.current = "tabs";
+          }
         }
 
-        * {
-            box-sizing: border-box
+        if (gestureType.current === "drawer") {
+          const base = isOpen ? 0 : -DRAWER_WIDTH;
+          let newX = base + dx;
+          newX = Math.max(-DRAWER_WIDTH, Math.min(0, newX));
+          translateX.setValue(newX);
+          dragOffset.current = dx;
+        } else if (gestureType.current === "tabs") {
+          dragOffset.current = dx;
+          // no content translation to avoid interfering with screen internals
+        }
+      },
+      onPanResponderRelease: (evt, gs) => {
+        const { dx, vx } = gs;
+        const absDx = Math.abs(dx);
+
+        if (gestureType.current === "drawer") {
+          const shouldOpen =
+            (!isOpen && (dx > DRAWER_WIDTH / 3 || vx > 0.3)) ||
+            (isOpen && !(dx < -DRAWER_WIDTH / 3 || vx < -0.3));
+          if (shouldOpen) openDrawer();
+          else closeDrawer();
+        } else if (gestureType.current === "tabs") {
+          if (absDx > TAB_SWIPE_MIN_DISTANCE || Math.abs(vx) > TAB_SWIPE_VELOCITY) {
+            if (dx < 0) goToIndex(currentIndex + 1);
+            else goToIndex(currentIndex - 1);
+          }
         }
 
-        html,
-        body {
-            height: 100%
+        dragOffset.current = 0;
+        gestureType.current = "none";
+      },
+      onPanResponderTerminate: () => {
+        if (isOpen) openDrawer(); else closeDrawer();
+        gestureType.current = "none";
+        dragOffset.current = 0;
+      },
+    })
+  ).current;
+
+
+
+  const [loading, setloading] = useState<boolean>(true)
+  type SettingsState = {
+    pushNotifications: boolean;
+    emailNotifications: boolean;
+    soundEnabled: boolean;
+    profileVisibility: string;
+    twoFactorAuth: boolean;
+    loginAlerts: boolean;
+    fontSize: string;
+    reduceMotion: boolean;
+    imageQuality: string;
+    Deactivate: boolean;
+    projectsCompleted: String;
+    profession: String;
+    bio: String;
+    yearsExperience: String;
+  };
+
+  const [settings, setSettings] = useState<SettingsState>({
+    pushNotifications: false,
+    emailNotifications: false,
+    soundEnabled: false,
+    profileVisibility: "public",
+    twoFactorAuth: false,
+    loginAlerts: false,
+    fontSize: "medium",
+    reduceMotion: false,
+    imageQuality: "high",
+    Deactivate: false,
+    profession: "",
+    projectsCompleted: "0",
+    bio: "",
+    yearsExperience: "",
+  });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  const [saving, setSaving] = useState<boolean>(false)
+
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const raw = await AsyncStorage.getItem('auth_token');
+        if (raw) {
+          const parsed = JSON.parse(raw) as Partial<SettingsState>;
+          setSettings((s) => ({ ...s, ...parsed }));
         }
-
-        body {
-            margin: 0;
-            font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
-            background: linear-gradient(180deg, var(--bg) 0%, #071018 100%);
-            color: var(--text);
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            padding: 28px;
-            display: flex;
-            justify-content: center;
-            align-items: flex-start;
-            gap: 16px;
-            min-height: 100vh;
-        }
-
-        /* container */
-        .container {
-            width: 100%;
-            max-width: var(--max-width);
-            display: grid;
-            grid-template-columns: 300px 1fr 320px;
-            gap: 20px;
-            align-items: start;
-        }
-
-        /* Left column: profile + filters */
-        .left {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
-            border: 1px solid var(--glass-border);
-            padding: 18px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            height: fit-content;
-        }
-
-        .profile {
-            display: flex;
-            gap: 12px;
-            align-items: center;
-            margin-bottom: 12px;
-        }
-
-        .avatar {
-            width: 64px;
-            height: 64px;
-            border-radius: 12px;
-            background: linear-gradient(135deg, var(--brand-600), var(--accent-500));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700;
-            font-size: 22px;
-            color: white;
-            box-shadow: 0 6px 14px rgba(12, 8, 33, 0.6);
-        }
-
-        .profile h3 {
-            margin: 0;
-            font-size: 16px
-        }
-
-        .profile p {
-            margin: 0;
-            color: var(--muted);
-            font-size: 13px
-        }
-
-        .filters {
-            margin-top: 12px
-        }
-
-        .filters h4 {
-            margin: 8px 0 10px;
-            font-size: 13px;
-            color: var(--brand-400)
-        }
-
-        .chip-list {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 8px
-        }
-
-        .chip {
-            background: var(--glass);
-            border: 1px solid var(--glass-border);
-            padding: 8px 10px;
-            border-radius: 999px;
-            font-size: 13px;
-            color: var(--text);
-            cursor: pointer;
-            transition: transform .12s ease, background .12s;
-            display: inline-flex;
-            gap: 8px;
-            align-items: center;
-        }
-
-        .chip:hover {
-            transform: translateY(-3px)
-        }
-
-        .chip.active {
-            background: linear-gradient(90deg, var(--brand-600), var(--brand-400));
-            box-shadow: 0 6px 18px rgba(108, 92, 231, 0.18);
-            border: 0
-        }
-
-        .search {
-            margin-top: 16px;
-            display: flex;
-            gap: 8px;
-        }
-
-        .search input {
-            flex: 1;
-            padding: 10px 12px;
-            border-radius: 10px;
-            border: 1px solid var(--glass-border);
-            background: transparent;
-            color: var(--text);
-            outline: none;
-            font-size: 14px;
-        }
-
-        .search button {
-            background: var(--accent-500);
-            border: 0;
-            padding: 10px 12px;
-            border-radius: 10px;
-            color: white;
-            cursor: pointer;
-            font-weight: 600;
-        }
-
-        /* center: timeline */
-        .main {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
-            border-radius: var(--radius);
-            padding: 18px;
-            border: 1px solid var(--glass-border);
-            box-shadow: var(--shadow);
-            min-height: 400px;
-        }
-
-        .main-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px
-        }
-
-        .main-title {
-            display: flex;
-            gap: 12px;
-            align-items: center
-        }
-
-        .logo-circle {
-            width: 44px;
-            height: 44px;
-            border-radius: 10px;
-            background: linear-gradient(135deg, var(--brand-600), var(--brand-400));
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 800
-        }
-
-        .main-title h2 {
-            margin: 0;
-            font-size: 18px
-        }
-
-        .main-controls {
-            display: flex;
-            gap: 8px;
-            align-items: center
-        }
-
-        .btn {
-            background: transparent;
-            border: 1px solid var(--glass-border);
-            padding: 8px 12px;
-            border-radius: 10px;
-            color: var(--text);
-            cursor: pointer;
-            font-size: 13px;
-        }
-
-        .btn.primary {
-            background: linear-gradient(90deg, var(--brand-600), var(--brand-400));
-            border: 0;
-            color: white;
-            box-shadow: 0 8px 30px rgba(108, 92, 231, 0.12)
-        }
-
-        .timeline {
-            display: flex;
-            flex-direction: column;
-            gap: 14px;
-        }
-
-        .timeline-day {
-            display: grid;
-            grid-template-columns: 46px 1fr;
-            gap: 12px;
-        }
-
-        .day-marker {
-            text-align: center;
-            color: var(--muted);
-            font-size: 13px;
-            padding-top: 6px
-        }
-
-        .day-items {
-            background: linear-gradient(180deg, var(--glass-2), transparent);
-            border: 1px solid var(--glass-border);
-            padding: 12px;
-            border-radius: 10px;
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .event {
-            display: flex;
-            gap: 12px;
-            padding: 12px;
-            border-radius: 10px;
-            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.01));
-            align-items: flex-start;
-            transition: transform .12s ease, box-shadow .12s;
-            border: 1px solid rgba(255, 255, 255, 0.015);
-        }
-
-        .event:hover {
-            transform: translateY(-6px);
-            box-shadow: 0 10px 30px rgba(2, 6, 23, 0.6)
-        }
-
-        .event .ev-avatar {
-            width: 56px;
-            height: 56px;
-            border-radius: 10px;
-            background: var(--card);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: 700
-        }
-
-        .ev-body {
-            flex: 1
-        }
-
-        .ev-meta {
-            display: flex;
-            justify-content: space-between;
-            gap: 12px;
-            align-items: center
-        }
-
-        .ev-meta h4 {
-            margin: 0;
-            font-size: 14px
-        }
-
-        .ev-meta small {
-            color: var(--muted)
-        }
-
-        .ev-content {
-            margin-top: 8px;
-            color: var(--text);
-            font-size: 14px;
-            line-height: 1.45
-        }
-
-        .ev-actions {
-            display: flex;
-            gap: 8px;
-            margin-top: 12px
-        }
-
-        .action {
-            background: transparent;
-            border: 1px solid var(--glass-border);
-            padding: 6px 10px;
-            border-radius: 8px;
-            font-size: 13px;
-            color: var(--muted);
-            cursor: pointer
-        }
-
-        .tag {
-            font-size: 12px;
-            padding: 6px 8px;
-            border-radius: 999px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.03);
-            color: var(--muted)
-        }
-
-        /* right: details / summary */
-        .right {
-            background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), transparent);
-            border: 1px solid var(--glass-border);
-            padding: 18px;
-            border-radius: var(--radius);
-            box-shadow: var(--shadow);
-            height: fit-content;
-        }
-
-        .stats {
-            display: flex;
-            gap: 12px;
-            flex-wrap: wrap
-        }
-
-        .stat {
-            flex: 1;
-            min-width: 120px;
-            background: linear-gradient(180deg, transparent, rgba(255, 255, 255, 0.01));
-            padding: 12px;
-            border-radius: 10px;
-            border: 1px solid var(--glass-border)
-        }
-
-        .stat h3 {
-            margin: 0;
-            font-size: 20px
-        }
-
-        .stat p {
-            margin: 4px 0 0;
-            color: var(--muted);
-            font-size: 13px
-        }
-
-        /* responsive */
-        @media (max-width:1100px) {
-            .container {
-                grid-template-columns: 1fr;
-                padding-bottom: 60px
-            }
-
-            .left,
-            .right {
-                order: 3
-            }
-
-            .main {
-                order: 2
-            }
-        }
-
-        /* small niceties */
-        .muted {
-            color: var(--muted)
-        }
-
-        .empty {
-            text-align: center;
-            padding: 48px;
-            border-radius: 10px;
-            border: 1px dashed rgba(255, 255, 255, 0.03);
-            color: var(--muted)
-        }
-
-        /* subtle scrollbars for timeline */
-        .timeline-scroll {
-            max-height: 64vh;
-            overflow: auto;
-            padding-right: 6px
-        }
-
-        .timeline-scroll::-webkit-scrollbar {
-            width: 8px
-        }
-
-        .timeline-scroll::-webkit-scrollbar-thumb {
-            background: linear-gradient(90deg, var(--brand-600), var(--brand-400));
-            border-radius: 8px;
-            opacity: 0.22
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container" role="main" aria-label="WICIKI account history">
-        <!-- Left -->
-        <aside class="left" aria-label="controls">
-            <div class="profile" role="region" aria-label="user profile">
-                <div class="avatar" id="mini-avatar">W</div>
-                <div>
-                    <h3 id="user-name">Wiciki User</h3>
-                    <p id="user-handle">@username • Member since 2023</p>
-                </div>
-            </div>
-
-            <div class="filters" aria-label="filters">
-                <h4>Filter by activity</h4>
-                <div class="chip-list" id="filter-chips">
-                    <!-- chips injected by JS -->
-                </div>
-
-                <h4>Date range</h4>
-                <div style="display:flex;gap:8px;margin-top:8px">
-                    <input type="date" id="fromDate"
-                        style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--glass-border);background:transparent;color:var(--text)">
-                    <input type="date" id="toDate"
-                        style="flex:1;padding:8px;border-radius:8px;border:1px solid var(--glass-border);background:transparent;color:var(--text)">
-                </div>
-
-                <div style="margin-top:14px" class="search" role="search">
-                    <input id="searchText" placeholder="Search history, posts, comments..." aria-label="search history">
-                    <button id="btnSearch" title="Search">Search</button>
-                </div>
-
-                <div style="margin-top:14px;display:flex;gap:8px">
-                    <button class="chip" id="btnClear">Clear</button>
-                    <button class="chip" id="btnExport">Export</button>
-                </div>
-            </div>
-        </aside>
-
-        <!-- Main -->
-        <main class="main" aria-live="polite">
-            <div class="main-header">
-                <div class="main-title">
-                    <div class="logo-circle">W</div>
-                    <div>
-                        <h2>Account History</h2>
-                        <div class="muted">A chronological record of your activity on WICIKI</div>
-                    </div>
-                </div>
-
-                <div class="main-controls">
-                    <button class="btn" id="toggleView">Compact</button>
-                    <button class="btn" id="newPost">+ New Post</button>
-                    <button class="btn primary" id="btnRefresh">Refresh</button>
-                </div>
-            </div>
-
-            <section class="timeline-scroll">
-                <div class="timeline" id="timeline">
-                    <!-- timeline injected here -->
-                </div>
-                <div id="loadingMore" class="muted" style="text-align:center;padding:14px;display:none">Loading more…
-                </div>
-            </section>
-
-            <div style="margin-top:12px;text-align:center">
-                <button class="btn" id="btnLoadMore">Load more history</button>
-            </div>
-
-        </main>
-
-        <!-- Right -->
-        <aside class="right" aria-label="summary">
-            <h4>Summary</h4>
-            <div class="stats" style="margin-top:12px">
-                <div class="stat">
-                    <h3 id="stat-posts">0</h3>
-                    <p>Posts</p>
-                </div>
-                <div class="stat">
-                    <h3 id="stat-comments">0</h3>
-                    <p>Comments</p>
-                </div>
-                <div class="stat">
-                    <h3 id="stat-likes">0</h3>
-                    <p>Reactions</p>
-                </div>
-            </div>
-
-            <div style="margin-top:18px">
-                <h4>Recent activity types</h4>
-                <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px" id="recent-types">
-                    <!-- types -->
-                </div>
-            </div>
-
-            <div style="margin-top:18px">
-                <h4>Export</h4>
-                <p class="muted" style="font-size:13px">Download a CSV of the current filtered view.</p>
-                <div style="margin-top:8px">
-                    <button class="btn" id="exportCSV">Download CSV</button>
-                </div>
-            </div>
-        </aside>
-    </div>
-
-    <!-- Modal template (detail view) -->
-    <div id="detailModal"
-        style="position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(2,6,23,0.6);z-index:99">
-        <div
-            style="background:var(--card);border-radius:12px;padding:18px;max-width:720px;width:95%;border:1px solid var(--glass-border)">
-            <div style="display:flex;justify-content:space-between;align-items:center">
-                <strong id="detailTitle">Event</strong>
-                <button id="closeModal" class="btn">Close</button>
-            </div>
-            <div id="detailBody" style="margin-top:12px;color:var(--muted)"></div>
-        </div>
-    </div>
-
-    <script>
-        /* ======================
-           Mock data + Renderer
-           Replace mock fetch with real API calls as needed
-           ====================== */
-
-        // Activity types to show as chips
-        const ACTIVITY_TYPES = [
-            { key: 'post', label: 'Posts', color: 'var(--brand-600)' },
-            { key: 'comment', label: 'Comments', color: 'var(--brand-400)' },
-            { key: 'like', label: 'Reactions', color: 'var(--accent-500)' },
-            { key: 'follow', label: 'Follows', color: '#FFB86B' },
-            { key: 'mentor', label: 'Mentorship', color: '#9AE6B4' },
-            { key: 'payment', label: 'Payments', color: '#FF9AA2' },
-            { key: 'system', label: 'System', color: '#9FB4FF' }
-        ];
-
-        // Sample timeline items (you'll replace this with your API)
-        const SAMPLE = [
-            { id: 1, type: 'post', title: 'Shared a new gist', body: 'I built a tiny React hook to manage forms.', date: '2025-10-14T12:30:00Z', meta: { likes: 12, comments: 3 } },
-            { id: 2, type: 'comment', title: 'Commented on Alice’s post', body: 'Nice work! Could you share the repo?', date: '2025-10-14T11:00:00Z', meta: { postId: 1 } },
-            { id: 3, type: 'like', title: 'Reacted to a post', body: '❤️ Reacted to "How to build timelines"', date: '2025-09-01T09:20:00Z', meta: {} },
-            { id: 4, type: 'follow', title: 'Followed mentor John', body: 'Started following John Doe (Mentor in Backend)', date: '2025-08-30T15:12:00Z', meta: {} },
-            { id: 5, type: 'payment', title: 'Subscription charged', body: 'Charged $4.99 for Pro membership', date: '2025-07-01T07:22:00Z', meta: { amount: 4.99 } },
-            { id: 6, type: 'mentor', title: 'Connected with Mentor', body: 'You matched with mentor Sara (Design)', date: '2025-06-12T16:40:00Z', meta: {} },
-            { id: 7, type: 'system', title: 'Password changed', body: 'You updated your account password', date: '2025-05-01T10:00:00Z', meta: {} },
-            // more items to demonstrate multiple days and ordering
-            { id: 8, type: 'post', title: 'Published "Deploying to Render"', body: 'Step-by-step guide included', date: '2025-10-12T09:00:00Z', meta: { likes: 5 } },
-            { id: 9, type: 'comment', title: 'Commented on your post', body: 'Great tutorial!', date: '2025-10-12T10:10:00Z', meta: {} }
-        ];
-
-        // app state
-        let state = {
-            items: [],    // full list
-            filtered: [], // filtered view
-            activeChips: new Set(), // selected filters
-            compact: false,
-            page: 1,
-            pageSize: 8
-        };
-
-        // DOM refs
-        const chipsEl = document.getElementById('filter-chips');
-        const timelineEl = document.getElementById('timeline');
-        const statPosts = document.getElementById('stat-posts');
-        const statComments = document.getElementById('stat-comments');
-        const statLikes = document.getElementById('stat-likes');
-        const recentTypes = document.getElementById('recent-types');
-        const btnLoadMore = document.getElementById('btnLoadMore');
-        const btnRefresh = document.getElementById('btnRefresh');
-        const btnExport = document.getElementById('btnExport');
-        const searchText = document.getElementById('searchText');
-        const btnSearch = document.getElementById('btnSearch');
-        const btnClear = document.getElementById('btnClear');
-        const btnToggle = document.getElementById('toggleView');
-        const loadingMore = document.getElementById('loadingMore');
-
-        // render chips
-        function renderChips() {
-            chipsEl.innerHTML = '';
-            ACTIVITY_TYPES.forEach(t => {
-                const btn = document.createElement('button');
-                btn.className = 'chip';
-                btn.innerHTML = `<span style="width:10px;height:10px;border-radius:50%;background:${t.color};display:inline-block;margin-right:8px"></span>${t.label}`;
-                btn.setAttribute('data-key', t.key);
-                btn.addEventListener('click', () => {
-                    if (state.activeChips.has(t.key)) state.activeChips.delete(t.key); else state.activeChips.add(t.key);
-                    btn.classList.toggle('active', state.activeChips.has(t.key));
-                    applyFilters();
-                });
-                chipsEl.appendChild(btn);
-            });
-        }
-
-        // group items by date (YYYY-MM-DD)
-        function groupByDate(items) {
-            const groups = {};
-            items.forEach(it => {
-                const d = new Date(it.date);
-                // local date string for grouping
-                const key = d.toLocaleDateString();
-                if (!groups[key]) groups[key] = [];
-                groups[key].push(it);
-            });
-            // return sorted by date descending
-            return Object.entries(groups).sort((a, b) => new Date(b[0]) - new Date(a[0]));
-        }
-
-        // render timeline
-        function renderTimeline() {
-            timelineEl.innerHTML = '';
-            const page = state.page;
-            const size = state.pageSize;
-            const slice = state.filtered.slice(0, page * size);
-            if (slice.length === 0) {
-                timelineEl.innerHTML = `<div class="empty">No history found for the selected filters.</div>`;
-                return;
-            }
-
-            const grouped = groupByDate(slice);
-            grouped.forEach(([date, items]) => {
-                const dayWrap = document.createElement('div');
-                dayWrap.className = 'timeline-day';
-
-                const dayMarker = document.createElement('div');
-                dayMarker.className = 'day-marker';
-                dayMarker.innerHTML = `<strong>${new Date(items[0].date).toLocaleDateString()}</strong><div class="muted" style="font-size:12px">${items.length} event(s)</div>`;
-
-                const dayItems = document.createElement('div');
-                dayItems.className = 'day-items';
-
-                items.forEach(ev => {
-                    const evNode = document.createElement('article');
-                    evNode.className = 'event';
-                    evNode.setAttribute('tabindex', '0');
-
-                    // compact vs full
-                    const avatar = `<div class="ev-avatar" style="background:linear-gradient(135deg, rgba(108,92,231,0.12), rgba(0,191,166,0.08));border:1px solid rgba(255,255,255,0.02)">${ev.type.slice(0, 2).toUpperCase()}</div>`;
-
-                    const metaTime = new Date(ev.date).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-                    const meta = `<div class="ev-meta"><h4>${ev.title}</h4><small>${metaTime}</small></div>`;
-
-                    const content = `<div class="ev-content">${ev.body || ''}</div>`;
-                    const actions = `<div class="ev-actions"><button class="action" data-id="${ev.id}" data-action="view">View</button><button class="action" data-id="${ev.id}" data-action="share">Share</button><span class="tag">${ev.type}</span></div>`;
-
-                    evNode.innerHTML = (state.compact ? `
-            ${avatar}
-            <div class="ev-body">
-              ${meta}
-              <div style="margin-top:6px;color:var(--muted);font-size:13px">${ev.body ? ev.body.slice(0, 80) + (ev.body.length > 80 ? '…' : '') : ''}</div>
-            </div>
-          ` : `
-            ${avatar}
-            <div class="ev-body">
-              ${meta}
-              ${content}
-              ${actions}
-            </div>
-          `);
-
-                    // add event listeners to actions
-                    evNode.querySelectorAll('.action').forEach(btn => {
-                        btn.addEventListener('click', (e) => {
-                            const id = Number(btn.dataset.id);
-                            const action = btn.dataset.action;
-                            if (action === 'view') showDetail(id);
-                            if (action === 'share') navigator.clipboard?.writeText(window.location.href + '#ev' + id).then(() => alert('Link copied to clipboard'));
-                        });
-                    });
-
-                    dayItems.appendChild(evNode);
-                });
-
-                dayWrap.appendChild(dayMarker);
-                dayWrap.appendChild(dayItems);
-                timelineEl.appendChild(dayWrap);
-            });
-
-            // update summary counts
-            updateStats();
-        }
-
-        // update stats summary
-        function updateStats() {
-            const all = state.items;
-            statPosts.textContent = all.filter(i => i.type === 'post').length;
-            statComments.textContent = all.filter(i => i.type === 'comment').length;
-            statLikes.textContent = all.filter(i => i.type === 'like').length + all.filter(i => i.type === 'reaction').length;
-            // recent types
-            const freq = {};
-            state.filtered.slice(0, 50).forEach(i => freq[i.type] = (freq[i.type] || 0) + 1);
-            recentTypes.innerHTML = '';
-            Object.keys(freq).sort((a, b) => freq[b] - freq[a]).slice(0, 6).forEach(k => {
-                const t = ACTIVITY_TYPES.find(x => x.key === k) || { label: k, color: '#888' };
-                const el = document.createElement('div');
-                el.className = 'tag';
-                el.style.display = 'inline-block';
-                el.style.marginBottom = '6px';
-                el.textContent = `${t.label} (${freq[k]})`;
-                recentTypes.appendChild(el);
-            });
-        }
-
-        // apply filters & search & date range
-        function applyFilters() {
-            const text = (searchText.value || '').trim().toLowerCase();
-            const from = document.getElementById('fromDate').value;
-            const to = document.getElementById('toDate').value;
-
-            let list = state.items.slice();
-
-            // filter by chips
-            if (state.activeChips.size) {
-                list = list.filter(it => state.activeChips.has(it.type));
-            }
-
-            // date range
-            if (from) {
-                const f = new Date(from);
-                list = list.filter(it => new Date(it.date) >= f);
-            }
-            if (to) {
-                const t = new Date(to);
-                // include end of day
-                t.setHours(23, 59, 59, 999);
-                list = list.filter(it => new Date(it.date) <= t);
-            }
-
-            // search
-            if (text) {
-                list = list.filter(it => (it.title + ' ' + (it.body || '')).toLowerCase().includes(text));
-            }
-
-            // sort newest first
-            list.sort((a, b) => new Date(b.date) - new Date(a.date));
-
-            state.filtered = list;
-            state.page = 1; // reset paging
-            renderTimeline();
-        }
-
-        // show detail modal
-        function showDetail(id) {
-            const ev = state.items.find(x => x.id === id);
-            if (!ev) return;
-            document.getElementById('detailTitle').textContent = ev.title;
-            document.getElementById('detailBody').innerHTML = `
-        <div style="color:var(--muted)">${new Date(ev.date).toLocaleString()}</div>
-        <div style="margin-top:10px">${ev.body || '<em>No details</em>'}</div>
-        <div style="margin-top:12px;color:var(--muted);font-size:13px">Meta: ${JSON.stringify(ev.meta || {})}</div>
-      `;
-            document.getElementById('detailModal').style.display = 'flex';
-        }
-
-        // export visible items to CSV
-        function exportCSV() {
-            const data = state.filtered.slice(0, state.page * state.pageSize);
-            if (data.length === 0) { alert('No items to export'); return; }
-            const rows = [['id', 'type', 'title', 'body', 'date', 'meta']];
-            data.forEach(r => {
-                rows.push([r.id, r.type, csvSafe(r.title), csvSafe(r.body), r.date, csvSafe(JSON.stringify(r.meta || {}))]);
-            });
-            const csv = rows.map(r => r.join(',')).join('\\n');
-            const blob = new Blob([csv], { type: 'text/csv' });
-            const url = URL.createObjectURL(blob);
-            const a = document.createElement('a'); a.href = url; a.download = 'wiciki-history.csv'; a.click();
-            URL.revokeObjectURL(url);
-        }
-
-        function csvSafe(s = '') { return '"' + String(s).replace(/"/g, '""') + '"' }
-
-        // load initial items (mock)
-        async function loadInitial() {
-            // simulate network fetch with delay
-            await new Promise(r => setTimeout(r, 200));
-            // clone sample many times to simulate large history
-            const items = [];
-            for (let i = 0; i < 60; i++) {
-                const base = SAMPLE[i % SAMPLE.length];
-                const copy = Object.assign({}, base, { id: i + 1, date: new Date(Date.now() - i * 3600 * 1000 * 6).toISOString() });
-                items.push(copy);
-            }
-            // set items
-            state.items = items;
-            state.filtered = items.slice();
-            renderTimeline();
-        }
-
-        // simple "load more" to reveal additional items (simulate pagination)
-        function loadMore() {
-            const maxPages = Math.ceil(state.filtered.length / state.pageSize);
-            if (state.page < maxPages) {
-                state.page++;
-                renderTimeline();
-            } else {
-                loadingMore.style.display = 'block';
-                setTimeout(() => { loadingMore.style.display = 'none'; alert('No more history available'); }, 700);
-            }
-        }
-
-        // UI wiring
-        document.getElementById('closeModal').addEventListener('click', () => document.getElementById('detailModal').style.display = 'none');
-        btnLoadMore.addEventListener('click', loadMore);
-        btnRefresh.addEventListener('click', () => { applyFilters(); alert('Refreshed'); });
-        btnExport.addEventListener('click', exportCSV);
-        document.getElementById('btnExport').addEventListener('click', exportCSV);
-        btnSearch.addEventListener('click', applyFilters);
-        btnClear.addEventListener('click', () => {
-            state.activeChips.clear(); document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
-            searchText.value = ''; document.getElementById('fromDate').value = ''; document.getElementById('toDate').value = '';
-            applyFilters();
-        });
-        btnToggle.addEventListener('click', () => {
-            state.compact = !state.compact;
-            btnToggle.textContent = state.compact ? 'Expanded' : 'Compact';
-            renderTimeline();
-        });
-
-        // simple keyboard accessibility for Enter key on timeline items
-        document.addEventListener('keyup', (e) => {
-            if (e.key === 'Escape') document.getElementById('detailModal').style.display = 'none';
-        });
-
-        // initialize
-        renderChips();
-        loadInitial();
-
-        // Hook: Example of how to replace mock load with real API (pseudo)
-        /*
-        async function fetchFromBackend(){
-          const token = '...'; // get from cookies
-          const res = await fetch('/api/user/history',{
-            headers: { Authorization: 'Bearer ' + token }
-          });
-          const json = await res.json();
-          state.items = json.items; // map fields as needed
-          applyFilters();
-        }
-        */
-
-    </script>
-</body>
-
-</html>
+      } catch (e) {
+        console.warn("Failed to load settings", e);
+      }
+    })();
+  }, []);
+  let STORAGE_KEY = 'auth_token';
+
+  // Save helper
+  const persist = useCallback(async (newSettings: SettingsState) => {
+    setSaving(true);
+    try {
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(newSettings));
+      setSettings(newSettings);
+      // small UX feedback
+      setTimeout(() => {
+        setSaving(false);
+        Alert.alert("Settings saved", "Your preferences were saved successfully.");
+      }, 400);
+    } catch (e) {
+      setSaving(false);
+      console.warn("Failed to save settings", e);
+      Alert.alert("Error", "Could not save settings. Try again.");
+    }
+  }, []);
+
+  // Update a single key + persist
+  const updateAndSave = useCallback(
+    async <K extends keyof SettingsState>(key: K, value: SettingsState[K]) => {
+      const updated = { ...settings, [key]: value };
+      await persist(updated);
+    },
+    [settings, persist]
+  );
+
+
+
+  const renderDrawerContent = () => {
+    switch (drawerActiveTab) {
+      case "Privacy&Security":
+        return (
+          <ScrollView style={settingsstyle.contentPane} contentContainerStyle={{ paddingBottom: 40 }}>
+            <Text style={settingsstyle.paneTitle}>Privacy & Security</Text>
+
+            <View style={settingsstyle.row}>
+              <Text style={settingsstyle.label}>Profile Visibility</Text>
+              <Text style={settingsstyle.value}>{settings.profileVisibility}</Text>
+            </View>
+
+            <View style={settingsstyle.card}>
+              <Text style={settingsstyle.cardTitleSmall}>Who can see your profile?</Text>
+              <View style={settingsstyle.pickerWrap}>
+                <Picker
+                  selectedValue={settings.profileVisibility}
+                  onValueChange={(val) => updateAndSave("profileVisibility", val as any)}
+                  style={settingsstyle.picker}
+                  dropdownIconColor="#fff"
+                >
+                  <Picker.Item label="Everyone" value="Everyone" />
+                  <Picker.Item label="Friends" value="Friends" />
+                  <Picker.Item label="Only Me" value="Only Me" />
+                </Picker>
+              </View>
+            </View>
+
+            <View style={settingsstyle.row}>
+              <Text style={settingsstyle.label}>Two Factor Auth</Text>
+              <Switch
+                value={settings.twoFactorAuth}
+                onValueChange={(v) => updateAndSave("twoFactorAuth", v)}
+                trackColor={{ false: "#666", true: "#ff4b4b" }}
+                thumbColor={Platform.OS === "android" ? (settings.twoFactorAuth ? "#fff" : "#fff") : undefined}
+              />
+            </View>
+
+            <View style={settingsstyle.row}>
+              <Text style={settingsstyle.label}>Login Alerts</Text>
+              <Switch
+                value={settings.loginAlerts}
+                onValueChange={(v) => updateAndSave("loginAlerts", v)}
+                trackColor={{ false: "#666", true: "#ff4b4b" }}
+                thumbColor={Platform.OS === "android" ? (settings.loginAlerts ? "#fff" : "#fff") : undefined}
+              />
+            </View>
+
+            <View style={{ marginTop: 10 }}>
+              <Text style={settingsstyle.cardTitleSmall}>Bio</Text>
+              <TextInput
+                placeholder="Tell people about yourself..."
+                placeholderTextColor="#cfcfcf"
+                style={settingsstyle.textInput}
+                value={settings.bio}
+                onChangeText={(t) => setSettings((s) => ({ ...s, bio: t }))}
+                multiline
+                numberOfLines={4}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={[settingsstyle.actionBtn, { marginTop: 14 }]}
+              activeOpacity={0.85}
+              onPress={() => persist(settings)}
+            >
+              <Text style={settingsstyle.actionBtnText}>{saving ? "Saving..." : "Save Privacy"}</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        );
+
+      case "AccountSettings":
+        return (
+          <ScrollView style={settingsstyle.contentPane} contentContainerStyle={{ paddingBottom: 40 }}>
+            <Text style={settingsstyle.paneTitle}>Professional Information</Text>
+
+            <Text style={[settingsstyle.label, { marginTop: 6 }]}>Profession</Text>
+            <TextInput
+              style={settingsstyle.fieldInput}
+              placeholder="e.g. Software Engineer"
+              placeholderTextColor="#cfcfcf"
+              value={settings.profession}
+              onChangeText={(t) => setSettings((s) => ({ ...s, profession: t }))}
+            />
+
+            <Text style={[settingsstyle.label, { marginTop: 10 }]}>Years of Experience</Text>
+            <TextInput
+              style={settingsstyle.fieldInput}
+              placeholder="e.g. 3"
+              keyboardType="numeric"
+              placeholderTextColor="#cfcfcf"
+              value={settings.yearsExperience}
+              onChangeText={(t) => setSettings((s) => ({ ...s, yearsExperience: t }))}
+            />
+
+            <Text style={[settingsstyle.label, { marginTop: 10 }]}>Projects Completed</Text>
+            <TextInput
+              style={settingsstyle.fieldInput}
+              placeholder="e.g. 12"
+              keyboardType="numeric"
+              placeholderTextColor="#cfcfcf"
+              value={settings.projectsCompleted}
+              onChangeText={(t) => setSettings((s) => ({ ...s, projectsCompleted: t }))}
+            />
+
+            <TouchableOpacity
+              style={[settingsstyle.actionBtn, { marginTop: 14 }]}
+              activeOpacity={0.85}
+              onPress={() => persist(settings)}
+            >
+              <Text style={settingsstyle.actionBtnText}>{saving ? "Saving..." : "Save Work Info"}</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        );
+
+      case "notifications":
+        return (
+          <ScrollView style={settingsstyle.contentPane} contentContainerStyle={{ paddingBottom: 40 }}>
+            <Text style={settingsstyle.paneTitle}>Notifications</Text>
+
+            <View style={settingsstyle.row}>
+              <Text style={settingsstyle.label}>Push Notifications</Text>
+              <Switch
+                value={settings.pushNotifications}
+                onValueChange={(v) => updateAndSave("pushNotifications", v)}
+                trackColor={{ false: "#666", true: "#ff4b4b" }}
+                thumbColor={Platform.OS === "android" ? (settings.pushNotifications ? "#fff" : "#fff") : undefined}
+              />
+            </View>
+
+            <View style={settingsstyle.row}>
+              <Text style={settingsstyle.label}>Email & SMS</Text>
+              <Switch
+                value={settings.emailNotifications}
+                onValueChange={(v) => updateAndSave("emailNotifications", v)}
+                trackColor={{ false: "#666", true: "#ff4b4b" }}
+                thumbColor={Platform.OS === "android" ? (settings.emailNotifications ? "#fff" : "#fff") : undefined}
+              />
+            </View>
+
+            <View style={settingsstyle.row}>
+              <Text style={settingsstyle.label}>Notification Sounds</Text>
+              <Switch
+                value={settings.soundEnabled}
+                onValueChange={(v) => updateAndSave("soundEnabled", v)}
+                trackColor={{ false: "#666", true: "#ff4b4b" }}
+                thumbColor={Platform.OS === "android" ? (settings.soundEnabled ? "#fff" : "#fff") : undefined}
+              />
+            </View>
+
+            <TouchableOpacity
+              style={[settingsstyle.actionBtn, { marginTop: 14 }]}
+              activeOpacity={0.85}
+              onPress={() => persist(settings)}
+            >
+              <Text style={settingsstyle.actionBtnText}>{saving ? "Saving..." : "Save Notifications"}</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        );
+
+      case "Appearance":
+        return (
+          <ScrollView style={settingsstyle.contentPane} contentContainerStyle={{ paddingBottom: 40 }}>
+            <Text style={settingsstyle.paneTitle}>Appearance</Text>
+
+            <View style={settingsstyle.row}>
+              <Text style={settingsstyle.label}>Font Size</Text>
+              <Text style={settingsstyle.value}>{settings.fontSize}</Text>
+            </View>
+
+            <View style={settingsstyle.card}>
+              <Text style={settingsstyle.cardTitleSmall}>Select font size</Text>
+              <View style={settingsstyle.pickerWrap}>
+                <Picker
+                  selectedValue={settings.fontSize}
+                  onValueChange={(v) => updateAndSave("fontSize", v as any)}
+                  style={settingsstyle.picker}
+                  dropdownIconColor="#fff"
+                >
+                  <Picker.Item label="Small" value="Small" />
+                  <Picker.Item label="Medium" value="Medium" />
+                  <Picker.Item label="Large" value="Large" />
+                </Picker>
+              </View>
+            </View>
+
+            <View style={settingsstyle.row}>
+              <Text style={settingsstyle.label}>Reduce Motion</Text>
+              <Switch
+                value={settings.reduceMotion}
+                onValueChange={(v) => updateAndSave("reduceMotion", v)}
+                trackColor={{ false: "#666", true: "#ff4b4b" }}
+                thumbColor={Platform.OS === "android" ? (settings.reduceMotion ? "#fff" : "#fff") : undefined}
+              />
+            </View>
+
+            <View style={settingsstyle.card}>
+              <Text style={settingsstyle.cardTitleSmall}>Image & Video Quality</Text>
+              <View style={settingsstyle.pickerWrap}>
+                <Picker
+                  selectedValue={settings.imageQuality}
+                  onValueChange={(v) => updateAndSave("imageQuality", v as any)}
+                  style={settingsstyle.picker}
+                  dropdownIconColor="#fff"
+                >
+                  <Picker.Item label="Low" value="Low" />
+                  <Picker.Item label="Medium" value="Medium" />
+                  <Picker.Item label="High" value="High" />
+                </Picker>
+              </View>
+            </View>
+
+            <TouchableOpacity
+              style={[settingsstyle.actionBtn, { marginTop: 14 }]}
+              activeOpacity={0.85}
+              onPress={() => persist(settings)}
+            >
+              <Text style={settingsstyle.actionBtnText}>{saving ? "Saving..." : "Save Appearance"}</Text>
+            </TouchableOpacity>
+          </ScrollView>
+        );
+
+      default:
+        return (
+          <View style={settingsstyle.contentPane}>
+            <Text style={settingsstyle.paneTitle}>Unknown</Text>
+          </View>
+        );
+    }
+  };
+
+
+
+  const settingsstyle = StyleSheet.create({
+    drawerContent: { flex: 1, paddingHorizontal: 16, paddingVertical: 8 },
+    contentPane: { paddingVertical: 8 },
+    paneTitle: { color: "#fff", fontSize: 18, fontWeight: "700", marginBottom: 8 },
+    paneText: { color: "#d6d6d6", fontSize: 14, lineHeight: 20 },
+    row: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 },
+    label: { color: "#d6d6d6", fontSize: 14 },
+    value: { color: "#fff", fontSize: 14, fontWeight: "600" },
+
+    picker: {
+      color: "#fff",
+      ...(Platform.OS === "ios" ? { height: 140 } : {}),
+    },
+    pickerWrap: {
+      backgroundColor: "#120909",
+      borderRadius: 8,
+      overflow: "hidden",
+      marginTop: 8,
+    },
+
+    card: {
+      backgroundColor: "#0b0b0b",
+      padding: 12,
+      borderRadius: 10,
+      marginBottom: 12,
+    },
+
+    cardTitleSmall: {
+      color: "#fff",
+      fontSize: 13,
+      fontWeight: "600",
+    },
+
+    textInput: {
+      marginTop: 8,
+      backgroundColor: "#121212",
+      color: "#fff",
+      borderRadius: 8,
+      padding: 10,
+      minHeight: 90,
+      textAlignVertical: "top",
+    },
+
+    fieldInput: {
+      marginTop: 6,
+      backgroundColor: "#121212",
+      color: "#fff",
+      borderRadius: 8,
+      paddingHorizontal: 12,
+      paddingVertical: Platform.OS === "ios" ? 12 : 8,
+    },
+
+    actionBtn: {
+      marginTop: 12,
+      backgroundColor: "#7b1f1f",
+      paddingVertical: 10,
+      paddingHorizontal: 14,
+      borderRadius: 8,
+      alignItems: "center",
+    },
+    actionBtnText: { color: "#fff", fontWeight: "700" },
+
+    tabRow: { flexDirection: "row", padding: 8, backgroundColor: "#0a0a0a" },
+    tabBtn: {
+      paddingVertical: 8,
+      paddingHorizontal: 12,
+      marginRight: 8,
+      borderRadius: 8,
+      backgroundColor: "#1a1a1a",
+    },
+    tabBtnActive: { backgroundColor: "#7b1f1f" },
+    tabText: { color: "#d6d6d6", fontSize: 13 },
+    tabTextActive: { color: "#fff", fontWeight: "700" },
+  });
+
+
+
+
+
+
+
+
+  // const renderDrawerContent = () => {
+
+
+  //   switch (drawerActiveTab) {
+  //     case "Privacy&Security":
+  //       return (
+  //         <ScrollView style={settingsstyle.contentPane}>
+  //           <Text style={settingsstyle.paneTitle}>Privacy & Security</Text>
+
+  //           <View style={settingsstyle.row}>
+  //             <Text style={settingsstyle.label}>Profile Visibility</Text>
+  //             <Text style={settingsstyle.value}>{settings.profileVisibility}</Text>
+  //           </View>
+
+  //           <View style={settingsstyle.row}>
+  //             <Text style={settingsstyle.label}>Two Factor Auth</Text>
+  //             <Text style={settingsstyle.value}>{settings.twoFactorAuth ? "Enabled" : "Disabled"}</Text>
+  //           </View>
+
+  //           <View style={settingsstyle.row}>
+  //             <Text style={settingsstyle.label}>Login Alerts</Text>
+  //             <Text style={settingsstyle.value}>{settings.loginAlerts ? "On" : "Off"}</Text>
+  //           </View>
+
+
+
+
+  //           <TouchableOpacity style={settingsstyle.actionBtn} >
+  //             <Text style={settingsstyle.actionBtnText}>Save Bio</Text>
+  //           </TouchableOpacity>
+  //         </ScrollView>
+  //       );
+  //     case "AccountSettings":
+  //       return (
+  //         <ScrollView style={settingsstyle.contentPane}>
+  //           <Text style={settingsstyle.paneTitle}>Professional Information</Text>
+
+  //           <Text style={settingsstyle.label}>Profession</Text>
+  //           <Text style={settingsstyle.value}>{"—"}</Text>
+
+  //           <Text style={settingsstyle.label}>Years of Experience</Text>
+  //           <Text style={settingsstyle.value}>{"—"}</Text>
+
+  //           <Text style={settingsstyle.label}>Projects Completed</Text>
+  //           <Text style={settingsstyle.value}>{"—"}</Text>
+
+  //           <TouchableOpacity style={settingsstyle.actionBtn}>
+  //             <Text style={settingsstyle.actionBtnText}>Save Work Info</Text>
+  //           </TouchableOpacity>
+  //         </ScrollView>
+  //       );
+  //     case "notifications":
+  //       return (
+  //         <ScrollView style={settingsstyle.contentPane}>
+  //           <Text style={settingsstyle.paneTitle}>Notifications</Text>
+
+  //           <View style={settingsstyle.row}>
+  //             <Text style={settingsstyle.label}>Push Notifications</Text>
+  //             <Text style={settingsstyle.value}>{settings.pushNotifications ? "On" : "Off"}</Text>
+  //           </View>
+
+  //           <View style={settingsstyle.row}>
+  //             <Text style={settingsstyle.label}>Email & SMS</Text>
+  //             <Text style={settingsstyle.value}>{settings.emailNotifications ? "On" : "Off"}</Text>
+  //           </View>
+
+  //           <View style={settingsstyle.row}>
+  //             <Text style={settingsstyle.label}>Notification Sounds</Text>
+  //             <Text style={settingsstyle.value}>{settings.soundEnabled ? "On" : "Off"}</Text>
+  //           </View>
+
+  //           <TouchableOpacity style={settingsstyle.actionBtn}>
+  //             <Text style={settingsstyle.actionBtnText}>{"Save Notifications"}</Text>
+  //           </TouchableOpacity>
+  //         </ScrollView>
+  //       );
+
+  //     case "Appearance":
+  //       return (
+  //         <ScrollView style={settingsstyle.contentPane}>
+  //           <Text style={settingsstyle.paneTitle}>Appearance</Text>
+
+  //           <View style={settingsstyle.row}>
+  //             <Text style={settingsstyle.label}>Font Size</Text>
+  //             <Text style={settingsstyle.value}>{settings.fontSize}</Text>
+  //           </View>
+
+  //           <View style={settingsstyle.row}>
+  //             <Text style={settingsstyle.label}>Reduce Motion</Text>
+  //             <Text style={settingsstyle.value}>{settings.reduceMotion ? "Yes" : "No"}</Text>
+  //           </View>
+
+  //           <View style={settingsstyle.row}>
+  //             <Text style={settingsstyle.label}>Image & Video Quality</Text>
+  //             <Text style={settingsstyle.value}>{settings.imageQuality}</Text>
+  //           </View>
+
+  //           <TouchableOpacity style={settingsstyle.actionBtn}>
+
+  //             <Text style={settingsstyle.actionBtnText}>{"Save Appearance"}</Text>
+  //           </TouchableOpacity>
+  //         </ScrollView>
+  //       );
+
+  //     default:
+  //       return (
+  //         <View style={styles.contentPane}>
+  //           <Text style={styles.paneTitle}>Unknown</Text>
+  //         </View>
+  //       );
+  //   }
+  // };
+
+
+
+  // const settingsstyle = StyleSheet.create({
+  //   safe: {
+  //     overflow: 'hidden',
+  //   },
+  //   picker: {
+  //     color: '#fff',
+  //     ...(Platform.OS === 'ios' ? { height: 140 } : {}),
+  //   },
+  //   rowControl: {
+  //     flexDirection: 'row',
+  //     justifyContent: 'space-between',
+  //     alignItems: 'center',
+  //     marginTop: 6,
+  //   },
+  //   label: {
+  //     color: '#fff',
+  //     fontSize: 14,
+  //   },
+  //   helperText: {
+  //     color: '#fff',
+  //     opacity: 0.75,
+  //     marginTop: 8,
+  //     fontSize: 12,
+  //   },
+  //   textInput: {
+  //     marginTop: 10,
+  //     backgroundColor: '#121212',
+  //     color: '#fff',
+  //     borderRadius: 8,
+  //     padding: 10,
+  //     minHeight: 90,
+  //     textAlignVertical: 'top',
+  //   },
+  //   actionRow: {
+  //     flexDirection: 'row',
+  //     justifyContent: 'space-between',
+  //   },
+  //   btn: {
+  //     flex: 1,
+  //     paddingVertical: 12,
+  //     borderRadius: 10,
+  //     alignItems: 'center',
+  //     justifyContent: 'center',
+  //     marginHorizontal: 6,
+  //   },
+  //   saveBtn: {
+  //     backgroundColor: '#ff6b6b',
+  //   },
+  //   logoutBtn: {
+  //     backgroundColor: '#fff',
+  //   },
+  //   btnText: {
+  //     color: '#fff',
+  //     fontWeight: '700',
+  //   },
+
+
+
+  //   drawerContent: { flex: 1, paddingHorizontal: 16, paddingVertical: 12 },
+  //   contentPane: { paddingVertical: 8 },
+  //   paneTitle: { color: "#fff", fontSize: 18, fontWeight: "700", marginBottom: 8 },
+  //   paneText: { color: "#d6d6d6", fontSize: 14, lineHeight: 20 },
+  //   row: { flexDirection: "row", justifyContent: "space-between", alignItems: "center", marginBottom: 12 },
+  //   label: { color: "#d6d6d6", fontSize: 14 },
+  //   value: { color: "#fff", fontSize: 14, fontWeight: "600" },
+  //   actionBtn: { marginTop: 12, backgroundColor: "#7b1f1f", paddingVertical: 10, paddingHorizontal: 14, borderRadius: 8, alignItems: "center" },
+  //   actionBtnText: { color: "#fff", fontWeight: "700" },
+  // });
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // Drawer component (full width)
+
+
+
+  const Drawer = () => (
+    <Animated.View
+      style={[
+        styles.drawerContainer,
+        { transform: [{ translateX }] },
+      ]}
+      pointerEvents={isOpen ? "auto" : "none"}
+    >
+      <SafeAreaView style={styles.drawerSafe}>
+        {/* TOP: header row with avatar + close button */}
+        <View style={styles.drawerHeaderRow}>
+          <View style={styles.drawerHeaderLeft}>
+            <Image
+              source={{ uri: "https://randomuser.me/api/portraits/men/32.jpg" }}
+              style={styles.drawerAvatar}
+            />
+            <Text style={styles.drawerName}>Your Name</Text>
+          </View>
+
+          <TouchableOpacity onPress={closeDrawer} style={styles.closeBtn}>
+            <Text style={styles.closeText}>✕</Text>
+          </TouchableOpacity>
+        </View>
+
+
+
+
+        {/* Divider */}
+        <View style={styles.divider} />
+
+        {/* Content below (switch-case) */}
+        <View style={styles.drawerContent}>{renderDrawerContent()}</View>
+
+
+
+
+        <View style={styles.topNavWrap}>
+          <ScrollView
+            horizontal={true}
+            showsHorizontalScrollIndicator={false}
+            contentContainerStyle={styles.topNav}
+          >
+            {drawerNavItems.map((item) => {
+              const active = item.key === drawerActiveTab;
+              return (
+                <Pressable
+                  key={item.key}
+                  onPress={() => setDrawerActiveTab(item.key)}
+                  style={[styles.navItem, active && styles.navItemActive]}
+                >
+                  <View>
+                    {item.icon || ""}
+                  </View>
+                  <Text style={[styles.navText, active && styles.navTextActive]}>
+                    {item.label}
+                  </Text>
+                </Pressable>
+              );
+            })}
+          </ScrollView>
+        </View>
+
+
+
+      </SafeAreaView>
+    </Animated.View>
+  );
+
+  // No outside backdrop (drawer full-width), but keep a subtle overlay behind drawer when open to dim
+  const Backdrop = () =>
+    isOpen ? <Animated.View style={[styles.backdrop, { opacity: 0.35 }]} pointerEvents="none" /> : null;
+
+  // App header shown at top of the screen (tabs header)
+  const AppHeader = () => (
+    <SafeAreaView style={styles.safeHeader} edges={["top"]}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => openDrawer()}>
+
+          <MaterialCommunityIcons size={23} name="cog-outline" color={"#fff"} />
+
+        </TouchableOpacity>
+
+        <Text style={styles.title}>WICIKI</Text>
+
+        <TouchableOpacity onPress={() => router.push("/profile")}>
+          <Image
+            source={{ uri: "https://randomuser.me/api/portraits/men/32.jpg" }}
+            style={styles.avatar}
+          />
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
+  );
+
+  return (
+    <View style={{ flex: 1 }} {...panResponder.panHandlers}>
+      {/* Drawer (full width) sits above everything */}
+      <Drawer />
+      <Backdrop />
+
+
+      <Tabs
+        screenOptions={{
+          tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+          tabBarButton: HapticTab,
+          header: AppHeader,
+          tabBarStyle: {
+            backgroundColor: "#000000ff",
+
+            borderBottomColor: 'rgba(83, 74, 74, 0.1)',
+          },
+        }}
+
+      >
+        <Tabs.Screen
+          name="index"
+          options={{
+            title: 'Home',
+            tabBarIcon: ({ color }) => <MaterialCommunityIcons size={29} name="home-city" color={color} />,
+          }}
+        />
+        <Tabs.Screen
+          name="explore"
+          options={{
+            title: 'Reels',  //paperplane.fill
+            tabBarIcon: ({ color }) => <MaterialCommunityIcons size={29} name="play-box-multiple" color={color} />,
+          }}
+        />
+      </Tabs >
+    </View>
+  );
+}
+
+const styles = StyleSheet.create({
+  // HEADER
+  safeHeader: { backgroundColor: "#0b0b0b" },
+  header: {
+    height: 60,
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingHorizontal: 12,
+    borderBottomWidth: 1,
+    borderBottomColor: "rgba(255,255,255,0.1)",
+  },
+  title: { color: "#fff", fontSize: 18, fontWeight: "bold" },
+  avatar: { width: 36, height: 36, borderRadius: 18 },
+
+  // DRAWER (full screen width)
+  drawerContainer: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    width: DRAWER_WIDTH,
+    height: "100%",
+    backgroundColor: "#010202ff",
+    zIndex: 60,
+    elevation: 60,
+    shadowColor: "#000",
+    shadowOpacity: 0.35,
+    shadowRadius: 12,
+    shadowOffset: { width: 0, height: 0 },
+  },
+  drawerSafe: { flex: 1 },
+
+  // top header row inside drawer (avatar + close button)
+  drawerHeaderRow: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    paddingHorizontal: 16,
+    paddingTop: 12,
+  },
+  drawerHeaderLeft: { flexDirection: "row", alignItems: "center" },
+  drawerAvatar: { width: 52, height: 52, borderRadius: 26, marginRight: 12 },
+  drawerName: { color: "#fff", fontSize: 16, fontWeight: "700" },
+  closeBtn: {
+    padding: 8,
+    borderRadius: 20,
+    backgroundColor: "transparent",
+  },
+  closeText: { color: "#fff", fontSize: 20 },
+
+  // horizontal nav
+  topNavWrap: {
+    width: "100%",
+    paddingVertical: 7,
+    backgroundColor: "#0a0a0a",
+    position: "fixed",
+    zIndex: 100,
+    display: "flex",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+
+  topNav: {
+    flexGrow: 1,
+    flexDirection: "row",
+    overflowX: "scroll",
+    alignItems: "center",
+    justifyContent: "center",
+
+  },
+
+  navItem: {
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    marginRight: 10,
+    borderRadius: 20,
+    display: "flex",
+    flexDirection: "column",
+    justifyContent: "center",
+    alignItems: "center"
+  },
+
+  navItemActive: {
+    backgroundColor: "rgba(117, 19, 19, 1)",
+
+  },
+
+  navText: {
+    color: "#ccc",
+    fontSize: 10,
+  },
+
+  navTextActive: {
+    color: "#fff",
+    fontWeight: "700",
+  },
+
+  divider: {
+    height: 1,
+    backgroundColor: "rgba(255,255,255,0.03)",
+    marginHorizontal: 12,
+    marginBottom: 8,
+  },
+
+  // drawer content area (below nav)
+  drawerContent: {
+    flex: 1,
+    paddingHorizontal: 16,
+    paddingVertical: 12,
+
+  },
+  contentPane: {
+    paddingVertical: 8,
+  },
+  paneTitle: { color: "#fff", fontSize: 18, fontWeight: "700", marginBottom: 8 },
+  paneText: { color: "#d6d6d6", fontSize: 14, lineHeight: 20 },
+
+  // dark overlay behind drawer (pointerEvents none so it doesn't intercept touches)
+  backdrop: {
+    position: "absolute",
+    left: 0,
+    top: 0,
+    width: SCREEN_WIDTH,
+    height: "100%",
+    backgroundColor: "#000",
+    zIndex: 50,
+    elevation: 50,
+  },
+});

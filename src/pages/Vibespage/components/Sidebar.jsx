@@ -3,7 +3,7 @@ import { useChatStore } from "../store/useChatStore";
 import { useAuthStore } from "../store/useAuthStore";
 import SidebarSkeleton from "./skeletons/SidebarSkeleton";
 import { Users } from "lucide-react";
-
+// import styles from "./ContactsSidebar.module.css";
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
 
@@ -19,6 +19,7 @@ const Sidebar = () => {
     : users;
 
   if (isUsersLoading) return <SidebarSkeleton />;
+
 
   return (
     <aside className="h-full w-20 lg:w-72 border-r border-base-300 flex flex-col transition-all duration-200">
@@ -84,6 +85,87 @@ const Sidebar = () => {
       </div>
     </aside>
   );
+
+
+
+
+
+
+
+
+
+
+
+
+
+  // return (
+  //   <aside className={styles.sidebar}>
+  //     {/* Header */}
+  //     <div className={styles.header}>
+  //       <div className={styles.headerTop}>
+  //         <Users className={styles.headerIcon} />
+  //         <span className={styles.headerTitle}>Contacts</span>
+  //       </div>
+
+  //       {/* Online filter */}
+  //       <div className={styles.filterRow}>
+  //         <label className={styles.filterLabel}>
+  //           <input
+  //             type="checkbox"
+  //             checked={showOnlineOnly}
+  //             onChange={(e) => setShowOnlineOnly(e.target.checked)}
+  //             className={styles.checkbox}
+  //           />
+  //           <span className={styles.filterText}>Show online only</span>
+  //         </label>
+
+  //         <span className={styles.onlineCount}>
+  //           ({onlineUsers.length - 1} online)
+  //         </span>
+  //       </div>
+  //     </div>
+
+  //     {/* Users list */}
+  //     <div className={styles.userList}>
+  //       {filteredUsers.map((user) => {
+  //         const isSelected = selectedUser?._id === user._id;
+  //         const isOnline = onlineUsers.includes(user._id);
+
+  //         return (
+  //           <button
+  //             key={user._id}
+  //             onClick={() => setSelectedUser(user)}
+  //             className={`${styles.userButton} ${isSelected ? styles.userButtonActive : ""
+  //               }`}
+  //           >
+  //             {/* Avatar */}
+  //             <div className={styles.avatarWrapper}>
+  //               <img
+  //                 src={user.picture || "/avatar.png"}
+  //                 alt={user.name}
+  //                 className={styles.avatar}
+  //               />
+  //               {isOnline && <span className={styles.onlineDot} />}
+  //             </div>
+
+  //             {/* User info (desktop only) */}
+  //             <div className={styles.userInfo}>
+  //               <div className={styles.userName}>{user.name}</div>
+  //               <div className={styles.userStatus}>
+  //                 {isOnline ? "Online" : "Offline"}
+  //               </div>
+  //             </div>
+  //           </button>
+  //         );
+  //       })}
+
+  //       {filteredUsers.length === 0 && (
+  //         <div className={styles.emptyState}>No online users</div>
+  //       )}
+  //     </div>
+  //   </aside>
+  // );
+
 };
 export default Sidebar;
 

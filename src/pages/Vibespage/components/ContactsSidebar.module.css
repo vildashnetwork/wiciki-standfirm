@@ -1,0 +1,189 @@
+.sidebar {
+    height: 100%;
+    width: 5rem;
+
+    border-right: 1px solid #d1d5db;
+    display: flex;
+    flex-direction: column;
+    transition: all 200ms ease;
+    overflow-x: hidden;
+}
+
+@media (min-width: 1024px) {
+    .sidebar {
+        width: 18rem;
+        overflow-x: hidden;
+    }
+}
+
+.header {
+    border-bottom: 1px solid #d1d5db;
+    width: 100%;
+    padding: 1.95rem;
+    overflow: hidden;
+    z-index: 1;
+}
+
+/* flex items-center gap-2 */
+.headerTop {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* size-6 */
+.headerIcon {
+    width: 1.5rem;
+    height: 1.5rem;
+}
+
+/* font-medium hidden lg:block */
+.headerTitle {
+    font-weight: 500;
+    display: none;
+}
+
+@media (min-width: 1024px) {
+    .headerTitle {
+        display: block;
+    }
+}
+
+/* mt-3 hidden lg:flex items-center gap-2 */
+.filterRow {
+    margin-top: 0.75rem;
+    display: none;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+@media (min-width: 1024px) {
+    .filterRow {
+        display: flex;
+    }
+}
+
+/* cursor-pointer flex items-center gap-2 */
+.filterLabel {
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* checkbox checkbox-sm */
+.checkbox {
+    width: 1rem;
+    height: 1rem;
+    cursor: pointer;
+}
+
+/* text-sm */
+.filterText {
+    font-size: 0.875rem;
+}
+
+/* text-xs text-zinc-500 */
+.onlineCount {
+    font-size: 0.75rem;
+    color: #71717a;
+}
+
+/* overflow-y-auto w-full py-3 */
+.userList {
+    overflow-y: auto;
+    width: 100%;
+    padding: 0.75rem 0;
+}
+
+/* w-full p-3 flex items-center gap-3 hover:bg-base-300 transition-colors */
+.userButton {
+    width: 100%;
+    padding: 0.5rem;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    overflow-x: hidden;
+    transition: background-color 150ms ease;
+}
+
+.userButton:hover {
+    background-color: #000000;
+}
+
+/* bg-base-300 ring-1 ring-base-300 */
+.userButtonActive {
+    background-color: #e5e7eb;
+    box-shadow: inset 0 0 0 1px #e5e7eb;
+}
+
+/* relative mx-auto lg:mx-0 */
+.avatarWrapper {
+    position: relative;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+@media (min-width: 1024px) {
+    .avatarWrapper {
+        margin-left: 0;
+        margin-right: 0;
+    }
+}
+
+/* size-12 object-cover rounded-full */
+.avatar {
+    width: 3rem;
+    height: 3rem;
+    object-fit: cover;
+    border-radius: 9999px;
+}
+
+/* absolute bottom-0 right-0 size-3 bg-green-500 rounded-full ring-2 ring-zinc-900 */
+.onlineDot {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    width: 0.75rem;
+    height: 0.75rem;
+    background-color: #22c55e;
+    border-radius: 9999px;
+    box-shadow: 0 0 0 2px #18181b;
+}
+
+/* hidden lg:block text-left min-w-0 */
+.userInfo {
+    display: none;
+    text-align: left;
+    min-width: 0;
+}
+
+@media (min-width: 1024px) {
+    .userInfo {
+        display: block;
+    }
+}
+
+/* font-medium truncate */
+.userName {
+    font-weight: 500;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* text-sm text-zinc-400 */
+.userStatus {
+    font-size: 0.875rem;
+    color: #a1a1aa;
+}
+
+/* text-center text-zinc-500 py-4 */
+.emptyState {
+    text-align: center;
+    color: #71717a;
+    padding: 1rem 0;
+}

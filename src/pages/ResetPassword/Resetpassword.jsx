@@ -2,7 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import "./ResetPassword.css";
 import { Eye, EyeOff } from "lucide-react";
 
-const API_BASE = "https://wicikibackend.onrender.com/otp";
+const API_BASE = "https://wiciki-media-backend.onrender.com/otp";
 
 const ResetPassword = () => {
     const [step, setStep] = useState(1);
@@ -396,11 +396,11 @@ const ResetPassword = () => {
                                 <div className="bobbyFlayStrength">
                                     <div
                                         className={`strengthBar ${newPassword.length >= 8 &&
-                                                ["@", "#", "$", "&", "^", "!", "(", ")", "-", "+", "=", "{", "}", "[", "]", "|"].some(
-                                                    (char) => newPassword.includes(char)
-                                                )
-                                                ? "active"
-                                                : ""
+                                            ["@", "#", "$", "&", "^", "!", "(", ")", "-", "+", "=", "{", "}", "[", "]", "|"].some(
+                                                (char) => newPassword.includes(char)
+                                            )
+                                            ? "active"
+                                            : ""
                                             } ${newPassword.length >= 12 &&
                                                 ["@", "#", "$", "&", "^", "!", "(", ")", "-", "+", "=", "{", "}", "[", "]", "|"].some(
                                                     (char) => newPassword.includes(char)

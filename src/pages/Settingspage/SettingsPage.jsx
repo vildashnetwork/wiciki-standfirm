@@ -70,7 +70,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
     try {
       setloadsave(true)
       const method = user?.email != null ? "email" : "sms";
-      const updateprivacy = await axios.post("https://wicikibackend.onrender.com/decode/update/privacy",
+      const updateprivacy = await axios.post("https://wiciki-media-backend.onrender.com/decode/update/privacy",
         {
           profilevissibility: settings.profileVisibility,
           twofactorenabled: settings.twoFactorAuth,
@@ -99,7 +99,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
     e.preventDefault()
     try {
       setloadsavegeneral(true)
-      const updateprivacy = await axios.post("https://wicikibackend.onrender.com/decode/update/notifications",
+      const updateprivacy = await axios.post("https://wiciki-media-backend.onrender.com/decode/update/notifications",
         {
           PushNotifications: settings.pushNotifications,
           emailsmsNotifications: settings.emailNotifications,
@@ -127,7 +127,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
     e.preventDefault()
     try {
       setloadsaveappearance(true)
-      const updateprivacy = await axios.post("https://wicikibackend.onrender.com/decode/update/display",
+      const updateprivacy = await axios.post("https://wiciki-media-backend.onrender.com/decode/update/display",
         {
           FontSize: settings.fontSize,
           ReduceMotion: settings.reduceMotion,
@@ -153,7 +153,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
     e.preventDefault()
     try {
       setloadsaveappearance(true)
-      const updateprivacy = await axios.post("https://wicikibackend.onrender.com/decode/update/deactivate",
+      const updateprivacy = await axios.post("https://wiciki-media-backend.onrender.com/decode/update/deactivate",
         {
           Deactivate: settings.Deactivate
         })
@@ -190,7 +190,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
     e.preventDefault()
     try {
       setloadsaveappearance(true)
-      const updateprivacy = await axios.post("https://wicikibackend.onrender.com/decode/update/bio",
+      const updateprivacy = await axios.post("https://wiciki-media-backend.onrender.com/decode/update/bio",
         {
           BIO: userbio
         })
@@ -283,7 +283,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
     //   }
     //   try {
     //     setLoading(true);
-    //     const res = await axios.get("https://wicikibackend.onrender.com/decode/me", {
+    //     const res = await axios.get("https://wiciki-media-backend.onrender.com/decode/me", {
     //       headers: { Authorization: `Bearer ${token}` }
     //     });
 
@@ -354,7 +354,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
 
       try {
         setLoading(true);
-        const res = await axios.get("https://wicikibackend.onrender.com/decode/me", {
+        const res = await axios.get("https://wiciki-media-backend.onrender.com/decode/me", {
           headers: { Authorization: `Bearer ${token}` }
         });
 
@@ -552,7 +552,7 @@ const SettingsPage = ({ isOpen, onClose }) => {
       };
 
       const response = await axios.post(
-        "https://wicikibackend.onrender.com/decode/update/work",
+        "https://wiciki-media-backend.onrender.com/decode/update/work",
         payload,
         { headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" } }
       );

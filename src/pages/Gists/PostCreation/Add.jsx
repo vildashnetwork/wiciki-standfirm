@@ -108,7 +108,7 @@ const PostCreatePage = ({ onCreatePost }) => {
             }
 
             const response = await axios.post(
-                "https://wicikibackend.onrender.com/api/posts",
+                "https://wiciki-media-backend.onrender.com/api/posts",
                 postData,
                 {
                     headers: {

@@ -298,7 +298,7 @@ import Feed from "./Feed/Feed";
 import Sidebar from "./Sidebar/Sidebar";
 import StatusModal from "./StatusModal/StatusModal";
 
-const BACKEND_POSTS_URL = "https://wicikibackend.onrender.com/api/posts";
+const BACKEND_POSTS_URL = "https://wiciki-media-backend.onrender.com/api/posts";
 
 const GistsPage = () => {
     const storage = {

@@ -62,7 +62,7 @@ const LoginPage = () => {
 
     try {
       const response = await axios.post(
-        "https://wicikibackend.onrender.com/auth-user/login",
+        "https://wiciki-media-backend.onrender.com/auth-user/login",
         {
           email: loginEmail,
           password: loginPassword,
@@ -124,7 +124,7 @@ const LoginPage = () => {
 
     try {
       const res = await axios.post(
-        `https://wicikibackend.onrender.com/verify/check-email`, {
+        `https://wiciki-media-backend.onrender.com/verify/check-email`, {
         email
       }
       );
@@ -182,7 +182,7 @@ const LoginPage = () => {
       }
 
       const res = await axios.post(
-        "https://wicikibackend.onrender.com/auth-user/register",
+        "https://wiciki-media-backend.onrender.com/auth-user/register",
         {
           name: signupName,
           email: signupEmail,
@@ -216,7 +216,7 @@ const LoginPage = () => {
   const GoogleLogin = () => {
     setloadinggoogle(true);
     // Redirect user to your backend Google auth route
-    window.location.href = "https://wicikibackend.onrender.com/auth/google";
+    window.location.href = "https://wiciki-media-backend.onrender.com/auth/google";
   };
 
 

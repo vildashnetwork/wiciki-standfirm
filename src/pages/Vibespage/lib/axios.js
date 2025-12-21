@@ -1,6 +1,6 @@
 import axios from "axios";
 const axiosInstance = axios.create({
-  baseURL: import.meta.env.MODE === "development" ? "https://wicikichatbackend.onrender.com/api" : "/api",
+  baseURL: import.meta.env.MODE === "development" ? "https://wicikichatbackend-5j7y.onrender.com/api" : "/api",
 
 });
 

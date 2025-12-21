@@ -305,30 +305,40 @@ const FeedPost = ({ post, onLike, onComment, onLikeComment }) => {
                     </div>
                 </div>
 
-                <div className="post-content">{post.content.slice(0, 30)}</div>
+
+                {!post.mediaUrl && <div className="post-conten" style={{ backgroundColor: "#024410ff" }}>
+                    {post.content.slice(0, 100)}
+                </div>
+                }
 
                 {post.mediaUrl && (
-                    <div className="post-media">
-                        {post.type === 'image' ? (
-                            <Link to={`/post/${post.id}`} style={{ textDecoration: "none" }}>
-                                <img
-                                    src={post.mediaUrl}
-                                    alt="Post content"
-                                    className="post-image"
-                                    onError={(e) => e.target.style.display = 'none'}
-                                />
-                            </Link>
-                        ) : post.type === 'video' ? (
-                            <Link to={`/post/${post.id}`} style={{ textDecoration: "none" }}>
-                                <video
-                                    src={post.mediaUrl}
-                                    className="post-video"
-                                    controls
-                                    onError={(e) => e.target.style.display = 'none'}
-                                />
-                            </Link>
-                        ) : null}
-                    </div>
+                    <>
+                        <div className="post-content">{post.content.slice(0, 30)}</div>
+                        <div className="post-media">
+                            {post.type === 'image' ? (
+                                <Link to={`/post/${post.id}`} style={{ textDecoration: "none" }}>
+                                    <img
+                                        src={post.mediaUrl}
+                                        alt="Post content"
+                                        className="post-image"
+                                        onError={(e) => e.target.style.display = 'none'}
+                                    />
+                                </Link>
+                            ) : post.type === 'video' ? (
+                                <Link to={`/post/${post.id}`} style={{ textDecoration: "none" }}>
+                                    <video
+                                        src={post.mediaUrl}
+                                        className="post-video"
+                                        controls
+                                        onError={(e) => e.target.style.display = 'none'}
+                                    />
+                                </Link>
+                            ) : null
+                                // post.type = "text" ? (
+                                // ) : null
+                            }
+                        </div>
+                    </>
                 )}
             </div>
 

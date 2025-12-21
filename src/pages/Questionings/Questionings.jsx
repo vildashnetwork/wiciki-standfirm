@@ -201,7 +201,7 @@ const WICIKIOnboarding = () => {
       // DEBUG: log outgoing payload so you can inspect network body
       console.log(">>> Sending payload to /decode/update:", payload);
 
-      const res = await fetch("https://wiciki-media-backend.onrender.com/decode/update", {
+      const res = await fetch("https://wiciki-media-backend-ahiu.onrender.com/decode/update", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

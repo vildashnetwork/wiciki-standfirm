@@ -94,7 +94,7 @@ const ProfilePage = () => {
     const getProfileUser = async () => {
       try {
         setloading(true);
-        const res = await axios.get(`https://wiciki-media-backend.onrender.com/decode/me/${decodedName}`);
+        const res = await axios.get(`https://wiciki-media-backend-ahiu.onrender.com/decode/me/${decodedName}`);
         if (res.status === 200) {
           setusera(res.data.me);
         } else {
@@ -112,7 +112,7 @@ const ProfilePage = () => {
     const getUserByToken = async () => {
       try {
         setloading(true);
-        const res = await axios.get("https://wiciki-media-backend.onrender.com/decode/me", {
+        const res = await axios.get("https://wiciki-media-backend-ahiu.onrender.com/decode/me", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (res.status === 200) {

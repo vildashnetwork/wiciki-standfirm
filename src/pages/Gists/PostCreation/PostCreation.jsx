@@ -20,7 +20,7 @@ const PostCreation = () => {
 
             try {
                 setLoading(true);
-                const res = await axios.get("https://wiciki-media-backend.onrender.com/decode/me", {
+                const res = await axios.get("https://wiciki-media-backend-ahiu.onrender.com/decode/me", {
                     headers: { Authorization: `Bearer ${token}` },
                 });
 

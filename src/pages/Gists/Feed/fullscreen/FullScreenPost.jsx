@@ -12,7 +12,7 @@ import Cookies from "js-cookie";
 import "./FullScreenPost.css";
 
 // Base posts API
-const API_BASE = "https://wiciki-media-backend.onrender.com/api/posts";
+const API_BASE = "https://wiciki-media-backend-ahiu.onrender.com/api/posts";
 // Fallback avatar image (replace with your asset path)
 const FALLBACK_AVATAR = "/default-avatar.png";
 

@@ -1,0 +1,82 @@
+:root {
+  --bg: #0b0b0b;           /* page background (near black) */
+  --surface: #111111;      /* header background */
+  --surface-2: #161616;    /* inner surfaces */
+  --border: #1f1f1f;       /* separators */
+  --text: #ffffff;         /* white text only */
+  --muted: rgba(255,255,255,0.6);
+  --red: #ef4444;          /* primary accent */
+}
+
+.header {
+  padding: 0.625rem; /* p-2.5 */
+  border-bottom: 1px solid var(--border);
+  background-color: var(--surface);
+  color: var(--text);
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.profileBtn {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem; /* gap-3 */
+  border-radius: 0.5rem; /* rounded-lg */
+  padding: 0.25rem 0.375rem; /* px-1.5 py-1 */
+  transition: background-color 150ms ease, outline-color 150ms ease;
+  color: var(--text);
+}
+
+.profileBtn:hover {
+  background-color: #1a1a1a;
+  outline: 1px solid var(--red);
+}
+
+.avatar {
+  position: relative;
+  height: 2.5rem; /* 40px */
+  width: 2.5rem;
+  border-radius: 9999px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background-color: var(--surface-2);
+}
+
+.avatarImg {
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.userInfo {
+  text-align: left;
+}
+
+.userName {
+  font-weight: 600; /* font-medium */
+  color: var(--text);
+}
+
+.userStatus {
+  font-size: 0.875rem; /* text-sm */
+  color: var(--muted);
+}
+
+.closeBtn {
+  border: none;
+  background: transparent;
+  border-radius: 0.375rem;
+  padding: 0.25rem;
+  cursor: pointer;
+  color: var(--text);
+  transition: background-color 150ms ease, color 150ms ease;
+}
+
+.closeBtn:hover {
+  background-color: #1a1a1a;
+  color: var(--red);
+}

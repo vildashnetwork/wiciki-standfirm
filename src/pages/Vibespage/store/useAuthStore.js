@@ -85,7 +85,7 @@ export const useAuthStore = create((set, get) => ({
   //   try {
   //     const res = await axiosInstance.post("/auth/login", data);
   //     set({ authUser: res.data });
-  //     localStorage.setItem("token", res.data.token);
+  //     localStorage.setItem("token", res.data.token);  swiftlanelogisticsagency@gmail.com
   //     toast.success("Logged in successfully");
   //     get().connectSocket();
   //   } catch (error) {

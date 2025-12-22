@@ -105,7 +105,5 @@ const MessageInput = () => {
       </form>
     </div>
   );
-
-
 };
 export default MessageInput;

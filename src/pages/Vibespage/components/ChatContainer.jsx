@@ -246,7 +246,7 @@ const ChatContainer = () => {
       <ChatHeader />
 
       <div className={styles.messagesWrapper}>
-        {messages?.map((message) => {
+        {Array.isArray(messages) && messages.map((message) => {
           const isOwnMessage = message.senderId === authUser?._id;
 
           return (

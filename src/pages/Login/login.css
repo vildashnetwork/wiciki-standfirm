@@ -28,7 +28,7 @@
     background: linear-gradient(135deg, var(--bg-primary) 0%, var(--bg-secondary) 100%);
 
     background: linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)),
-        url("./back2.jpg");
+        url("/back2.jpg");
     background-size: cover;
     /* better than 100% 100% for responsiveness */
     background-position: center;
